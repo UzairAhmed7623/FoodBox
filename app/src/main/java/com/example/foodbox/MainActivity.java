@@ -213,8 +213,6 @@ public class MainActivity extends AppCompatActivity {
                         String items_count = res.getString(5);
                         String final_price = res.getString(6);
 
-
-
                         Log.d("cartlist", id+" "+pId+" "+title+" "+price+" "+items_count+" "+final_price+" = "+total);
                     }
 
