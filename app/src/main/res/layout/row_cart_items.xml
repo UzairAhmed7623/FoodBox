@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/tvItemTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Item Title"
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/tvRemoveItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:layout_alignParentEnd="true"
+        android:text="Remove"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:textColor="#B22222"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/tvItemTitle">
+
+        <TextView
+            android:id="@+id/tvItemPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:textSize="15sp"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:layout_below="@+id/tvItemTitle"/>
+
+        <TextView
+            android:id="@+id/tvMultiplyLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginStart="10dp"
+            android:text="x"
+            android:textSize="15sp"
+            android:textColor="@android:color/black"
+            android:layout_below="@+id/tvItemTitle"/>
+
+        <ImageButton
+            android:id="@+id/ibRemoveItemCart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/remove_item"
+            android:layout_marginStart="10dp"
+            android:background="@null"
+            android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/tvItemCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:text="1"
+            android:textSize="15sp"
+            android:textColor="@android:color/black" />
+
+        <ImageButton
+            android:id="@+id/ibAddItemCart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/add_item"
+            android:layout_gravity="center_vertical"
+            android:background="@null" />
+
+        <TextView
+            android:id="@+id/tvEqualToLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="="
+            android:textSize="18sp"
+            android:layout_marginStart="5dp"
+            android:textColor="@android:color/black"/>
+
+        <TextView
+            android:id="@+id/tvPriceEach"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0.00"
+            android:textSize="15sp"
+            android:gravity="end"
+            android:layout_marginEnd="5dp"
+            android:textColor="@android:color/black"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="4dp"
+        android:layout_below="@+id/linearLayout"
+        android:background="@color/myColor"/>
+
+</RelativeLayout>

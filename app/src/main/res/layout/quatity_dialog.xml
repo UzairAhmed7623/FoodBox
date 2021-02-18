@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/restaurant_image_shape">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivItem"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/pic1"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/tvItemTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/ivItem"
+            android:layout_marginTop="5sp"
+            android:text="Product title"
+            android:textColor="@android:color/white"/>
+
+        <TextView
+            android:id="@+id/tvItemDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/tvItemTitle"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="0"
+            android:textSize="12sp"
+            android:textColor="@android:color/white"/>
+        
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp">
+
+        <TextView
+            android:id="@+id/tvItemPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Price"
+            android:textColor="@android:color/black"/>
+
+        <TextView
+            android:id="@+id/tvItemPriceFinal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:padding="5dp"
+            android:text="Final Price"
+            android:textAlignment="textStart"
+            android:textColor="@android:color/black"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp">
+
+        <ImageButton
+            android:id="@+id/ibRemoveItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/remove_item"
+            android:background="@null"
+            android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/tvCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center_vertical"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:id="@+id/ibAddItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/add_item"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnAddtoCart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/myColor"
+        android:padding="5dp"
+        android:text="Add To Cart"
+        android:textColor="@android:color/white"
+        android:textAllCaps="false"/>
+
+</LinearLayout>
