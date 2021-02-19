@@ -214,6 +214,14 @@ public class MainActivity extends AppCompatActivity {
                         String final_price = res.getString(6);
 
                         Log.d("cartlist", id+" "+pId+" "+title+" "+price+" "+items_count+" "+final_price+" = "+total);
+                    
+                        firebaseFirestore.collection("Cart").document("").set("sd").addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+
+                            }
+                        });
+                        
                     }
 
 

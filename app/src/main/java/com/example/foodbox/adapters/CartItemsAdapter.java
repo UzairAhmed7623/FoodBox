@@ -63,41 +63,6 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
         holder.tvPriceEach.setText(""+finalPrice);
         holder.tvItemCount.setText(""+Items_Count);
 
-        holder.tvRemoveItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EasyDB easyDB = EasyDB.init(context, "DB")
-                        .setTableName("ITEMS_TABLE")
-                        .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
-                        .addColumn(new Column("pId", new String[]{"text", "not null"}))
-                        .addColumn(new Column("Title", new String[]{"text", "not null"}))
-                        .addColumn(new Column("Price", new String[]{"text", "not null"}))
-                        .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
-                        .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
-//                .addColumn(new Column("Description", new String[]{"text", "not null"}))
-                        .doneTableColumn();
-
-                easyDB.deleteRow(1, id);
-                Toast.makeText(context, "Item Removed!", Toast.LENGTH_SHORT).show();
-
-                cartItems.remove(position);
-                notifyItemChanged(position);
-                notifyDataSetChanged();
-
-                Log.d("id", ""+id);
-
-                double grandTotal = Double.parseDouble((((MainActivity)context).tvGrandTotal.getText().toString().trim().replace("Pkr", "")));
-                double totalPrice = grandTotal - Double.parseDouble(price);
-                double deliveryFee = Double.parseDouble((((MainActivity)context).tvDeliveryFee.getText().toString().trim().replace("Pkr", "")));
-                double subTotal = Double.parseDouble(String.format("%.2f",totalPrice)) - Double.parseDouble(String.format("%.2f", deliveryFee));
-//                ((MainActivity)context).allTotalPrice = 0.00;
-                ((MainActivity)context).tvSubTotal.setText("Pkr" + String.format("%.2f", subTotal));
-                ((MainActivity)context).tvGrandTotal.setText("Pkr" + String.format("%.2f", Double.parseDouble(String.format("%.2f", totalPrice))));
-
-
-            }
-        });
-
         holder.ibAddItemCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,11 +95,14 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
 
                     if (id.equals(String.valueOf(Id))){
                         boolean updated1 = easyDB.updateData(5, itemsCount).rowID(Id);
+                        cartItemsModelClass.setItems_Count(String.valueOf(itemsCount));
 
                         if (updated1){
                             double finalPrice = Double.parseDouble(price) * itemsCount;
 
                             boolean updated2 = easyDB.updateData(6, String.valueOf(finalPrice)).rowID(Id);
+                            cartItemsModelClass.setFinalPrice(String.valueOf(finalPrice));
+
                             if (updated2){
                                 holder.tvPriceEach.setText(""+finalPrice);
                                 Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show();
@@ -199,11 +167,14 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
 
                         if (id.equals(String.valueOf(Id))){
                             boolean updated1 = easyDB.updateData(5, itemsCount).rowID(Id);
+                            cartItemsModelClass.setItems_Count(String.valueOf(itemsCount));
 
                             if (updated1){
                                 double finalPrice = Double.parseDouble(price) * itemsCount;
 
                                 boolean updated2 = easyDB.updateData(6, String.valueOf(finalPrice)).rowID(Id);
+                                cartItemsModelClass.setFinalPrice(String.valueOf(finalPrice));
+
                                 if (updated2){
                                     holder.tvPriceEach.setText(""+finalPrice);
                                     Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show();
@@ -235,6 +206,39 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
             }
         });
 
+        holder.tvRemoveItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EasyDB easyDB = EasyDB.init(context, "DB")
+                        .setTableName("ITEMS_TABLE")
+                        .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
+                        .addColumn(new Column("pId", new String[]{"text", "not null"}))
+                        .addColumn(new Column("Title", new String[]{"text", "not null"}))
+                        .addColumn(new Column("Price", new String[]{"text", "not null"}))
+                        .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
+                        .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
+//                .addColumn(new Column("Description", new String[]{"text", "not null"}))
+                        .doneTableColumn();
+
+                easyDB.deleteRow(1, id);
+                Toast.makeText(context, "Item Removed!", Toast.LENGTH_SHORT).show();
+
+                Log.d("id", ""+id);
+
+                double grandTotal = Double.parseDouble((((MainActivity)context).tvGrandTotal.getText().toString().trim().replace("Pkr", "")));
+                double totalPrice = grandTotal - Double.parseDouble(finalPrice);
+                double deliveryFee = Double.parseDouble((((MainActivity)context).tvDeliveryFee.getText().toString().trim().replace("Pkr", "")));
+                double subTotal = Double.parseDouble(String.format("%.2f",totalPrice)) - Double.parseDouble(String.format("%.2f", deliveryFee));
+                ((MainActivity)context).allTotalPrice = 0.00;
+                ((MainActivity)context).tvSubTotal.setText("Pkr" + String.format("%.2f", subTotal));
+                ((MainActivity)context).tvGrandTotal.setText("Pkr" + String.format("%.2f", Double.parseDouble(String.format("%.2f", totalPrice))));
+
+                cartItems.remove(position);
+                notifyItemChanged(position);
+                notifyDataSetChanged();
+
+            }
+        });
 
     }
 
