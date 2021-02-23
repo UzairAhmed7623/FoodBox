@@ -1,12 +1,16 @@
 package com.example.foodbox;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +30,7 @@ import com.example.foodbox.models.CartItemsModelClass;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -42,7 +47,7 @@ import java.util.List;
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private RecyclerView rvRestaurant;
     private List<String> tvRestaurant = new ArrayList<>();
@@ -51,7 +56,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private String resName, delivery = "45";
-
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
     private ArrayList<CartItemsModelClass> cartItemsList;
     CartItemsAdapter cartItemsAdapter;
     CartItemsModelClass cartItemsModelClass;
@@ -67,6 +73,16 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
+
+        drawerLayout = findViewById(R.id.drawerLayout);
+        navigationView = findViewById(R.id.navView);
+
+        navigationView.bringToFront();
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(MainActivity.this);
+        navigationView.setCheckedItem(R.id.navView);
 
         rvRestaurant = (RecyclerView) findViewById(R.id.rvRestaurantName);
         rvRestaurant.setLayoutManager(new LinearLayoutManager(this));
@@ -96,4 +112,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+        else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        if (item.getItemId() == R.id.orderHistory){
+            Intent intent = new Intent(MainActivity.this, OrderHistory.class);
+            startActivity(intent);
+        }
+        drawerLayout.closeDrawer(GravityCompat.START);
+
+        return true;
+    }
 }

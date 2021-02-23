@@ -266,19 +266,20 @@ public class RestaurantItems extends AppCompatActivity {
                         order1.put("items_count", cartItemsList.get(i).getItems_Count());
                         order1.put("final_price", cartItemsList.get(i).getFinalPrice());
                         order1.put("latlng", latLng);
+//
+//                        HashMap<String, Object> order3 = new HashMap<>();
+//                        order3.put(cartItemsList.get(i).getId(), order1);
 
-                        HashMap<String, Object> order3 = new HashMap<>();
-                        order3.put(cartItemsList.get(i).getId(), order1);
+                        DocumentReference documentReference = firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2").collection("Cart").document(cartItemsList.get(i).getId());
 
-                        DocumentReference documentReference = firebaseFirestore.collection("Cart").document("cb0xbVIcK5dWphXuHIvVoUytfaM2");
-
+                        int finalI = i;
                         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()){
                                     DocumentSnapshot documentSnapshot = task.getResult();
                                     if (documentSnapshot.exists()){
-                                        documentReference.update(order3);
+                                        documentReference.update(order1);
                                         Toast.makeText(RestaurantItems.this, "Order Placed!", Toast.LENGTH_SHORT).show();
 
                                         dialog.dismiss();
@@ -287,7 +288,7 @@ public class RestaurantItems extends AppCompatActivity {
 
                                     }
                                     else {
-                                        firebaseFirestore.collection("Cart").document("cb0xbVIcK5dWphXuHIvVoUytfaM2").set(order3, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2").collection("Cart").document(cartItemsList.get(finalI).getId()).set(order1, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 Toast.makeText(RestaurantItems.this, "Order Placed!", Toast.LENGTH_SHORT).show();
