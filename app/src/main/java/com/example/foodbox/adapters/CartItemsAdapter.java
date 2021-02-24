@@ -72,7 +72,6 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
             @Override
             public void onClick(View v) {
 
-
                 itemsCount = Integer.parseInt(holder.tvItemCount.getText().toString().trim());
                 itemsCount++;
 //                Toast.makeText(context, ""+itemsCount, Toast.LENGTH_SHORT).show();
@@ -141,13 +140,13 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
         holder.ibRemoveItemCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "click", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "click", Toast.LENGTH_SHORT).show();
 
                 itemsCount = Integer.parseInt(holder.tvItemCount.getText().toString().trim());
 
                 if (itemsCount > 1){
                     itemsCount--;
-                    Toast.makeText(context, ""+itemsCount, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context, ""+itemsCount, Toast.LENGTH_SHORT).show();
 //                itemsCount = itemsCount + itemsCount;
 
                     if (allTotalPrice == 0.00){
@@ -209,6 +208,11 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                     itemsCount = 0;
                 }
                 else {
+
+                    if (allTotalPrice == 0.00){
+                        allTotalPrice = Double.parseDouble(((RestaurantItems)context).tvSubTotal.getText().toString().trim().replace("Pkr",""));
+                    }
+
                     EasyDB easyDB = EasyDB.init(context, "DB")
                             .setTableName("ITEMS_TABLE")
                             .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))

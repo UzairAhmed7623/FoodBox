@@ -10,10 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -39,6 +41,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -98,6 +101,8 @@ public class RestaurantItems extends AppCompatActivity {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(RestaurantItems.this);
         getLocation();
+
+        Snackbar.make(findViewById(android.R.id.content), "Minimum order amount is PKR50.", Snackbar.LENGTH_INDEFINITE).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
 
         firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -255,6 +260,10 @@ public class RestaurantItems extends AppCompatActivity {
                 }
                 else {
 
+                    ProgressDialog progressDialog = new ProgressDialog(RestaurantItems.this);
+                    progressDialog.setMessage("Please wait...");
+                    progressDialog.show();
+
                     for (int i=0; i<cartItemsList.size(); i++){
 
                         HashMap<String, Object> order1 = new HashMap<>();
@@ -264,6 +273,7 @@ public class RestaurantItems extends AppCompatActivity {
                         order1.put("price", cartItemsList.get(i).getPrice());
                         order1.put("items_count", cartItemsList.get(i).getItems_Count());
                         order1.put("final_price", cartItemsList.get(i).getFinalPrice());
+                        order1.put("progress", "In progress");
                         order1.put("latlng", latLng);
 //
 //                        HashMap<String, Object> order3 = new HashMap<>();
@@ -271,7 +281,7 @@ public class RestaurantItems extends AppCompatActivity {
 
                         DocumentReference documentReference = firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2").collection("Cart").document(cartItemsList.get(i).getId());
 
-                        int finalI = i;
+                        final int I = i;
                         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -279,7 +289,9 @@ public class RestaurantItems extends AppCompatActivity {
                                     DocumentSnapshot documentSnapshot = task.getResult();
                                     if (documentSnapshot.exists()){
                                         documentReference.update(order1);
-                                        Toast.makeText(RestaurantItems.this, "Order Placed!", Toast.LENGTH_SHORT).show();
+
+                                        Snackbar.make(findViewById(android.R.id.content), "Order Placed!", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
+                                        progressDialog.dismiss();
 
                                         dialog.dismiss();
                                         easyDB.deleteAllDataFromTable();
@@ -287,10 +299,12 @@ public class RestaurantItems extends AppCompatActivity {
 
                                     }
                                     else {
-                                        firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2").collection("Cart").document(cartItemsList.get(finalI).getId()).set(order1, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2").collection("Cart").document(cartItemsList.get(I).getId()).set(order1, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-                                                Toast.makeText(RestaurantItems.this, "Order Placed!", Toast.LENGTH_SHORT).show();
+                                                Snackbar.make(findViewById(android.R.id.content), "Order Placed!", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
+                                                progressDialog.dismiss();
+
                                                 dialog.dismiss();
                                                 easyDB.deleteAllDataFromTable();
                                                 allTotalPrice = 0.00;

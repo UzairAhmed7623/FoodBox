@@ -65,6 +65,7 @@ public class OrderHistory extends AppCompatActivity {
                         String itemCount = documentSnapshot.getString("items_count");
                         String finalPrice = documentSnapshot.getString("final_price");
                         String pId = documentSnapshot.getString("pId");
+                        String progress = documentSnapshot.getString("progress");
 
                         Log.d("asdfgh", ""+id+itemName);
 
@@ -75,6 +76,7 @@ public class OrderHistory extends AppCompatActivity {
                         historyModelClass.setItems_Count(itemCount);
                         historyModelClass.setFinalPrice(finalPrice);
                         historyModelClass.setpId(pId);
+                        historyModelClass.setProgress(progress);
 
 
 

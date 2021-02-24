@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.foodbox.RestaurantItems;
 import com.example.foodbox.models.ItemsModelClass;
 import com.example.foodbox.R;
 import com.google.android.material.snackbar.Snackbar;
@@ -44,7 +45,6 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
     public RestaurentItemsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.restaurant_items_adapter_layout, parent, false);
-        Snackbar.make(parent, "Minimum order amount is PKR50.", Snackbar.LENGTH_INDEFINITE).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
         return new ViewHolder(view);
     }
 
@@ -74,7 +74,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
     private void showQuantityDialog(ItemsModelClass modelClass) {
 
-        View view = LayoutInflater.from(context).inflate(R.layout.quatity_dialog, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.quantity_dialog, null);
 
         CircleImageView ivItem = view.findViewById(R.id.ivItem);
 
@@ -150,7 +150,6 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
                 alertDialog.dismiss();
 
-                Snackbar.make(v, "Added to Cart!", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
             }
         });
 
@@ -184,7 +183,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                 .doneDataAdding();
 
         if (b){
-//            Toast.makeText(context, "Added to cart!", Toast.LENGTH_SHORT).show();
+            Snackbar.make(((RestaurantItems)context).findViewById(android.R.id.content), "Added to Cart!", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
         }
         else {
             Toast.makeText(context, "Error!", Toast.LENGTH_SHORT).show();

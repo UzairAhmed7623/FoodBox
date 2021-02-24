@@ -45,12 +45,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         String itemCount = historyModelClass.getItems_Count();
         String finalPrice = historyModelClass.getFinalPrice();
         String pId = historyModelClass.getpId();
+        String progress = historyModelClass.getProgress();
 
         holder.tvItemHistory.setText(itemName);
-        holder.tvOrderDateHistory.setText(pId);
-        holder.tvItemPriceHistory.setText(price);
+        holder.tvOrderDateHistory.setText("Order date: " + pId);
+        holder.tvItemPriceHistory.setText("Price: " + price);
         holder.tvItemCountHistory.setText(itemCount);
         holder.tvTotalHistory.setText(finalPrice);
+        holder.tvProgressHistory.setText(progress);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
