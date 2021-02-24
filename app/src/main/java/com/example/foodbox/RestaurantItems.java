@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -95,12 +96,10 @@ public class RestaurantItems extends AppCompatActivity {
         rvItems = (RecyclerView) findViewById(R.id.rvItems);
         rvItems.setLayoutManager(new LinearLayoutManager(this));
 
-        Context context;
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(RestaurantItems.this);
         getLocation();
-        //Biryai = items krna ha firsore mn.
 
-        firebaseFirestore.collection("Restaurants").document(restaurant).collection("Biryai").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
@@ -326,4 +325,53 @@ public class RestaurantItems extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        EasyDB easyDB = EasyDB.init(RestaurantItems.this, "DB")
+                .setTableName("ITEMS_TABLE")
+                .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
+                .addColumn(new Column("pId", new String[]{"text", "not null"}))
+                .addColumn(new Column("Title", new String[]{"text", "not null"}))
+                .addColumn(new Column("Price", new String[]{"text", "not null"}))
+                .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
+                .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
+//                .addColumn(new Column("Description", new String[]{"text", "not null"}))
+                .doneTableColumn();
+
+        Cursor data = easyDB.getAllData();
+
+        if (data.getCount() != 0){
+            AlertDialog.Builder alertDialog = new Builder(RestaurantItems.this);
+            alertDialog.setTitle("Cart Alert")
+                    .setMessage("If you go back your cart data will be deleted. Would you want to go back?")
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            deleteCartData();
+                            RestaurantItems.super.onBackPressed();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setCancelable(false)
+                    .show();
+        }
+        else {
+            super.onBackPressed();
+        }
+    }
+
+    private void deleteCartData() {
+        EasyDB easyDB = EasyDB.init(RestaurantItems.this, "DB")
+                .setTableName("ITEMS_TABLE")
+                .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
+                .addColumn(new Column("pId", new String[]{"text", "not null"}))
+                .addColumn(new Column("Title", new String[]{"text", "not null"}))
+                .addColumn(new Column("Price", new String[]{"text", "not null"}))
+                .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
+                .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
+//                .addColumn(new Column("Description", new String[]{"text", "not null"}))
+                .doneTableColumn();
+
+        easyDB.deleteAllDataFromTable();
+    }
 }

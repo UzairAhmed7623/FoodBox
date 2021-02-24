@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ import com.example.foodbox.MainActivity;
 import com.example.foodbox.R;
 import com.example.foodbox.RestaurantItems;
 import com.example.foodbox.models.CartItemsModelClass;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +80,6 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                     allTotalPrice = Double.parseDouble(((RestaurantItems)context).tvSubTotal.getText().toString().trim().replace("Pkr",""));
                 }
 
-
                 EasyDB easyDB = EasyDB.init(context, "DB")
                         .setTableName("ITEMS_TABLE")
                         .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
@@ -106,7 +107,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
 
                             if (updated2){
                                 holder.tvPriceEach.setText(""+finalPrice);
-                                Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show();
+                                Snackbar.make(, "Item has been added into cart!",Snackbar.LENGTH_INDEFINITE).show();
 
                                 Price = cursor.getDouble(4);
 
@@ -120,7 +121,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                                 Toast.makeText(context, "error", Toast.LENGTH_SHORT).show();
 
                             }
-                            Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show();
                         }
                         else {
                             Toast.makeText(context, "error", Toast.LENGTH_SHORT).show();

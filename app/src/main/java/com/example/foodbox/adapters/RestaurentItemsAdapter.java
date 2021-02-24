@@ -169,7 +169,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
         Log.d("btnAddtoCart3", productId + title + price + finalPrice + itemCount);
 
-        Boolean b = easyDB
+        boolean b = easyDB
                 .addData("Item_Id", itemId)
                 .addData("pId", productId)
                 .addData("Title", title)
