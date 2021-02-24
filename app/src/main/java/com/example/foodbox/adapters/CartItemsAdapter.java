@@ -3,6 +3,7 @@ package com.example.foodbox.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.print.PrintDocumentInfo;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodbox.MainActivity;
@@ -73,7 +75,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
 
                 itemsCount = Integer.parseInt(holder.tvItemCount.getText().toString().trim());
                 itemsCount++;
-                Toast.makeText(context, ""+itemsCount, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, ""+itemsCount, Toast.LENGTH_SHORT).show();
 //                itemsCount = itemsCount + itemsCount;
 
                 if (allTotalPrice == 0.00){
@@ -107,7 +109,8 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
 
                             if (updated2){
                                 holder.tvPriceEach.setText(""+finalPrice);
-                                Snackbar.make(, "Item has been added into cart!",Snackbar.LENGTH_INDEFINITE).show();
+
+//                                Snackbar.make(v, "Added!", Snackbar.LENGTH_LONG).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
 
                                 Price = cursor.getDouble(4);
 
@@ -179,7 +182,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
 
                                 if (updated2){
                                     holder.tvPriceEach.setText(""+finalPrice);
-                                    Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show();
+//                                    Snackbar.make(v, "Deleted!", Snackbar.LENGTH_LONG).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
 
                                     Price = cursor.getDouble(4);
 
@@ -193,7 +196,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                                     Toast.makeText(context, "error", Toast.LENGTH_SHORT).show();
 
                                 }
-                                Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show();
                             }
                             else {
                                 Toast.makeText(context, "error", Toast.LENGTH_SHORT).show();
@@ -233,7 +236,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
 
                                 if (updated2){
                                     holder.tvPriceEach.setText(""+finalPrice);
-                                    Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show();
 
                                     Price = cursor.getDouble(4);
 
@@ -247,7 +250,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                                     Toast.makeText(context, "error", Toast.LENGTH_SHORT).show();
 
                                 }
-                                Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show();
                             }
                             else {
                                 Toast.makeText(context, "error", Toast.LENGTH_SHORT).show();
@@ -255,7 +258,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                         }
                     }
                     easyDB.deleteRow(1, id);
-                    Toast.makeText(context, "Item Removed!", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(v, "Item deleted!", Snackbar.LENGTH_LONG).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
                     cartItems.remove(position);
                     notifyItemChanged(position);
                     notifyDataSetChanged();

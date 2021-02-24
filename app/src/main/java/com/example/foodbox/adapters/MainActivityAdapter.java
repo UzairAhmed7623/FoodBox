@@ -77,6 +77,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                                 Intent intent = new Intent(context, RestaurantItems.class);
                                 intent.putExtra("restaurant", resName);
                                 intent.putExtra("name", name);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 context.startActivity(intent);
                             }
                         }

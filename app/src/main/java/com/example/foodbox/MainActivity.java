@@ -102,6 +102,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         });
+
+        deleteCartItems();
+    }
+
+    private void deleteCartItems() {
+        EasyDB easyDB = EasyDB.init(MainActivity.this, "DB")
+                .setTableName("ITEMS_TABLE")
+                .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
+                .addColumn(new Column("pId", new String[]{"text", "not null"}))
+                .addColumn(new Column("Title", new String[]{"text", "not null"}))
+                .addColumn(new Column("Price", new String[]{"text", "not null"}))
+                .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
+                .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
+//                .addColumn(new Column("Description", new String[]{"text", "not null"}))
+                .doneTableColumn();
+
+        easyDB.deleteAllDataFromTable();
     }
 
     @Override

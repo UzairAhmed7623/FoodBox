@@ -3,6 +3,7 @@ package com.example.foodbox.adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.foodbox.models.ItemsModelClass;
 import com.example.foodbox.R;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -42,6 +44,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
     public RestaurentItemsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.restaurant_items_adapter_layout, parent, false);
+        Snackbar.make(parent, "Minimum order amount is PKR50.", Snackbar.LENGTH_INDEFINITE).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
         return new ViewHolder(view);
     }
 
@@ -147,6 +150,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
                 alertDialog.dismiss();
 
+                Snackbar.make(v, "Added to Cart!", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
             }
         });
 
@@ -180,7 +184,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                 .doneDataAdding();
 
         if (b){
-            Toast.makeText(context, "Added to cart!", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "Added to cart!", Toast.LENGTH_SHORT).show();
         }
         else {
             Toast.makeText(context, "Error!", Toast.LENGTH_SHORT).show();
