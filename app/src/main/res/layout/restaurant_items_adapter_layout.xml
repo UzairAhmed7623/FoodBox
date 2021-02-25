@@ -58,7 +58,7 @@
                         android:text="Restaurant item name"
                         android:textAllCaps="true"
                         android:textColor="@android:color/white"
-                        android:textSize="15sp"
+                        android:textSize="12sp"
                         android:fontFamily="@font/poppins_medium"
                         android:background="?attr/selectableItemBackgroundBorderless" />
 
@@ -93,7 +93,7 @@
                                 android:visibility="visible"
                                 android:src="@drawable/add_to_cart"
                                 android:background="@android:color/transparent"
-                                android:layout_marginEnd="40dp"/>
+                                android:layout_marginEnd="30dp"/>
 
                             <TextView
                                 android:id="@+id/tvaddItem"
@@ -105,7 +105,7 @@
                                 android:textSize="9sp"
                                 android:visibility="visible"
                                 android:layout_gravity="end"
-                                android:layout_marginEnd="15dp" />
+                                android:layout_marginEnd="8dp" />
 
                         </LinearLayout>
 

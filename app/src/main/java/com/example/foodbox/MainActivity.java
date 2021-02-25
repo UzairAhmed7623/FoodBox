@@ -137,6 +137,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (item.getItemId() == R.id.orderHistory){
             Intent intent = new Intent(MainActivity.this, OrderHistory.class);
             startActivity(intent);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        }
+        else if (item.getItemId() == R.id.trackOrder) {
+            Intent intent = new Intent(MainActivity.this, TrackOrders.class);
+            startActivity(intent);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
         drawerLayout.closeDrawer(GravityCompat.START);
 

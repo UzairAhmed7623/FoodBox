@@ -45,14 +45,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         String itemCount = historyModelClass.getItems_Count();
         String finalPrice = historyModelClass.getFinalPrice();
         String pId = historyModelClass.getpId();
-        String progress = historyModelClass.getProgress();
+        String status = historyModelClass.getStatus();
 
         holder.tvItemHistory.setText(itemName);
         holder.tvOrderDateHistory.setText("Order date: " + pId);
         holder.tvItemPriceHistory.setText("Price: " + price);
         holder.tvItemCountHistory.setText(itemCount);
         holder.tvTotalHistory.setText(finalPrice);
-        holder.tvProgressHistory.setText(progress);
+        holder.tvStatusHistory.setText(status);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +69,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvItemHistory, tvOrderDateHistory, tvItemPriceHistory, tvItemCountHistory, tvTotalHistory, tvProgressHistory;
+        private TextView tvItemHistory, tvOrderDateHistory, tvItemPriceHistory, tvItemCountHistory, tvTotalHistory, tvStatusHistory;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -79,7 +79,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             tvItemPriceHistory = itemView.findViewById(R.id.tvItemPriceHistory);
             tvItemCountHistory = itemView.findViewById(R.id.tvItemCountHistory);
             tvTotalHistory = itemView.findViewById(R.id.tvTotalHistory);
-            tvProgressHistory = itemView.findViewById(R.id.tvProgressHistory);
+            tvStatusHistory = itemView.findViewById(R.id.tvStatusHistory);
 
 
         }

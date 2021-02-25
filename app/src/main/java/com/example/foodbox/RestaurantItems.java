@@ -13,6 +13,7 @@ import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -273,7 +274,7 @@ public class RestaurantItems extends AppCompatActivity {
                         order1.put("price", cartItemsList.get(i).getPrice());
                         order1.put("items_count", cartItemsList.get(i).getItems_Count());
                         order1.put("final_price", cartItemsList.get(i).getFinalPrice());
-                        order1.put("progress", "In progress");
+                        order1.put("status", "In progress");
                         order1.put("latlng", latLng);
 //
 //                        HashMap<String, Object> order3 = new HashMap<>();
@@ -290,7 +291,6 @@ public class RestaurantItems extends AppCompatActivity {
                                     if (documentSnapshot.exists()){
                                         documentReference.update(order1);
 
-                                        Snackbar.make(findViewById(android.R.id.content), "Order Placed!", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
                                         progressDialog.dismiss();
 
                                         dialog.dismiss();
@@ -302,7 +302,6 @@ public class RestaurantItems extends AppCompatActivity {
                                         firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2").collection("Cart").document(cartItemsList.get(I).getId()).set(order1, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-                                                Snackbar.make(findViewById(android.R.id.content), "Order Placed!", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
                                                 progressDialog.dismiss();
 
                                                 dialog.dismiss();
@@ -318,6 +317,7 @@ public class RestaurantItems extends AppCompatActivity {
                     }
 
                 }
+                Snackbar.make(findViewById(android.R.id.content), "Order Placed!", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
             }
         });
     }

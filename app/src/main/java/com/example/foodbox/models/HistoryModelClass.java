@@ -1,19 +1,19 @@
 package com.example.foodbox.models;
 
 public class HistoryModelClass {
-    private String id, pId, itemName, finalPrice, price,  Items_Count, progress;
+    private String id, pId, itemName, finalPrice, price,  Items_Count, status;
 
     public HistoryModelClass() {
     }
 
-    public HistoryModelClass(String id, String pId, String itemName, String finalPrice, String price, String items_Count, String progress) {
+    public HistoryModelClass(String id, String pId, String itemName, String finalPrice, String price, String items_Count, String status) {
         this.id = id;
         this.pId = pId;
         this.itemName = itemName;
         this.finalPrice = finalPrice;
         this.price = price;
         Items_Count = items_Count;
-        this.progress = progress;
+        this.status = status;
     }
 
     public String getId() {
@@ -64,11 +64,11 @@ public class HistoryModelClass {
         Items_Count = items_Count;
     }
 
-    public String getProgress() {
-        return progress;
+    public String getStatus() {
+        return status;
     }
 
-    public void setProgress(String progress) {
-        this.progress = progress;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
