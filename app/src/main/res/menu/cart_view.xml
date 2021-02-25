@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/cart"
+        android:id="@+id/cartIcon"
         app:showAsAction="always"
-        android:icon="@drawable/cart"
-        android:title="Cart" />
+        android:title="Cart"
+        android:actionLayout="@layout/cart_notification_icon"/>
 </menu>

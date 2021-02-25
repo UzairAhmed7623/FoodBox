@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -56,6 +57,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
+import com.nex3z.notificationbadge.NotificationBadge;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -77,6 +79,7 @@ public class RestaurantItems extends AppCompatActivity {
     private String delivery = "45";
     private LatLng latLng;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    NotificationBadge notificationBadge;
 
     private ArrayList<CartItemsModelClass> cartItemsList;
     private CartItemsAdapter cartItemsAdapter;
@@ -103,7 +106,12 @@ public class RestaurantItems extends AppCompatActivity {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(RestaurantItems.this);
         getLocation();
 
-        Snackbar.make(findViewById(android.R.id.content), "Minimum order amount is PKR50.", Snackbar.LENGTH_INDEFINITE).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Snackbar.make(findViewById(android.R.id.content), "Minimum order amount is PKR50.", Snackbar.LENGTH_INDEFINITE).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
+            }
+        });
 
         firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -148,12 +156,48 @@ public class RestaurantItems extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.cart_view, menu);
+        View view = menu.findItem(R.id.cartIcon).getActionView();
+        notificationBadge = (NotificationBadge) view.findViewById(R.id.notificationBadge);
+        updateCartCount();
         return true;
+    }
+
+    private void updateCartCount() {
+        if (notificationBadge == null){
+            Toast.makeText(this, "null", Toast.LENGTH_SHORT).show();
+        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                EasyDB easyDB = EasyDB.init(RestaurantItems.this, "DB")
+                        .setTableName("ITEMS_TABLE")
+                        .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
+                        .addColumn(new Column("pId", new String[]{"text", "not null"}))
+                        .addColumn(new Column("Title", new String[]{"text", "not null"}))
+                        .addColumn(new Column("Price", new String[]{"text", "not null"}))
+                        .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
+                        .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
+//                .addColumn(new Column("Description", new String[]{"text", "not null"}))
+                        .doneTableColumn();
+
+                Cursor res = easyDB.getAllData();
+                int c = res.getCount();
+                if (c == 0){
+                    notificationBadge.setVisibility(View.GONE);
+                    Toast.makeText(RestaurantItems.this, ""+c, Toast.LENGTH_SHORT).show();
+                    Log.d("sasas",""+c);
+                }
+                else {
+                    notificationBadge.setVisibility(View.VISIBLE);
+                    notificationBadge.setText(String.valueOf(c));
+                }
+            }
+        });
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.cart) {
+        if (item.getItemId() == R.id.cartIcon) {
             Dexter.withContext(RestaurantItems.this).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
                 @Override
                 public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
