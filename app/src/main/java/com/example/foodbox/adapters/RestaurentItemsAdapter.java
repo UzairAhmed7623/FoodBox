@@ -62,7 +62,8 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
             @Override
             public void onClick(View v) {
 
-                showQuantityDialog(modelClass);
+                showQuantityDialog(modelClass, holder);
+
             }
         });
 
@@ -72,7 +73,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
     private double finalPrice = 0;
     private int itemCount = 0;
 
-    private void showQuantityDialog(ItemsModelClass modelClass) {
+    private void showQuantityDialog(ItemsModelClass modelClass, RestaurentItemsAdapter.ViewHolder holder) {
 
         View view = LayoutInflater.from(context).inflate(R.layout.quantity_dialog, null);
 
@@ -150,9 +151,12 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
                 alertDialog.dismiss();
 
+                holder.tvaddItem.setVisibility(View.GONE);
+                holder.ibSelectItem.setVisibility(View.GONE);
+                holder.tvAdded.setVisibility(View.VISIBLE);
+
             }
         });
-
     }
 
     private int itemId = 0;
@@ -195,7 +199,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
             boolean update = easyDB.updateData(1,id).rowID(Integer.valueOf(id));
         }
 
-
+        RestaurantItems.getInstance().updateCartCount();
     }
 
     @Override
@@ -205,7 +209,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvItem, tvItemPrice, tvaddItem, tvCount;
+        private TextView tvItem, tvItemPrice, tvaddItem, tvAdded,  tvCount;
         private ImageButton ibSelectItem, ibAddItem, ibRemoveItem;
         private ImageView ivItem;
 
@@ -214,6 +218,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
             tvItem = itemView.findViewById(R.id.tvItem);
             tvaddItem = itemView.findViewById(R.id.tvaddItem);
+            tvAdded = itemView.findViewById(R.id.tvAdded);
             ibSelectItem = itemView.findViewById(R.id.ibSelectItem);
             tvItemPrice = itemView.findViewById(R.id.tvItemPrice);
             ivItem = itemView.findViewById(R.id.ivItem);

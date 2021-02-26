@@ -107,6 +107,19 @@
                                 android:layout_gravity="end"
                                 android:layout_marginEnd="8dp" />
 
+                            <TextView
+                                android:id="@+id/tvAdded"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Added\nsuccessfully!"
+                                android:textColor="@android:color/white"
+                                android:fontFamily="@font/poppins_medium"
+                                android:textSize="12sp"
+                                android:visibility="gone"
+                                android:layout_gravity="end"
+                                android:gravity="center"
+                                android:layout_marginEnd="8dp" />
+
                         </LinearLayout>
 
                 </LinearLayout>

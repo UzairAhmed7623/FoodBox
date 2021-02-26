@@ -6,19 +6,22 @@
     style="@android:style/Widget.ActionButton">
 
     <ImageView
-        android:id="@+id/cartIcon"
+        android:id="@+id/cartIcon2"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:src="@drawable/cart"/>
+        android:src="@drawable/cart" />
 
     <com.nex3z.notificationbadge.NotificationBadge
         android:id="@+id/notificationBadge"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_toRightOf="@+id/cartIcon"
-        android:layout_alignTop="@+id/cartIcon"
+        android:layout_toRightOf="@+id/cartIcon2"
+        android:layout_alignTop="@+id/cartIcon2"
         android:layout_marginLeft="-10dp"
         android:layout_marginTop="-10dp"
+        app:nbBackground="@drawable/notification_badge_shape"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
         app:nbMaxTextLength="2"/>
 
 

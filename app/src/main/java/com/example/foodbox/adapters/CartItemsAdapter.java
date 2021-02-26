@@ -134,6 +134,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                 holder.tvItemCount.setText(""+itemsCount);
 
                 itemsCount = 0;
+
             }
         });
 
@@ -266,6 +267,9 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                     cartItems.remove(position);
                     notifyItemChanged(position);
                     notifyDataSetChanged();
+
+                    RestaurantItems.getInstance().updateCartCount();
+
                 }
             }
         });
