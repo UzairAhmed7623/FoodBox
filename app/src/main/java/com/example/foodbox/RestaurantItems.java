@@ -78,6 +78,7 @@ public class RestaurantItems extends AppCompatActivity {
     private FusedLocationProviderClient fusedLocationProviderClient;
     private NotificationBadge notificationBadge;
     private ImageView cartIcon2;
+    private boolean status = false;
 
     private ArrayList<CartItemsModelClass> cartItemsList;
     private CartItemsAdapter cartItemsAdapter;
@@ -172,7 +173,6 @@ public class RestaurantItems extends AppCompatActivity {
         cartIcon2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final boolean[] status = {false};
                 firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2")
                         .collection("Cart").whereEqualTo("status", "In progress")
                         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -181,16 +181,15 @@ public class RestaurantItems extends AppCompatActivity {
                         if (task.isComplete()){
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
                                 if (documentSnapshot.exists()){
-                                    status[0] = true;
+                                    status = true;
                                 }
                             }
                         }
                     }
                 });
-                if (status[0]){
+                if (status){
                     Snackbar.make(findViewById(android.R.id.content), "Your orders are already in progress.", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
                 }
-
                 else {
                     Dexter.withContext(RestaurantItems.this).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
                         @Override
@@ -323,7 +322,6 @@ public class RestaurantItems extends AppCompatActivity {
                 @Override
                 public void onCancel(DialogInterface dialog) {
                     allTotalPrice = 0.00;
-
                 }
             });
 
@@ -336,70 +334,53 @@ public class RestaurantItems extends AppCompatActivity {
                         Toast.makeText(RestaurantItems.this,"no Item Found" , Toast.LENGTH_SHORT).show();
                     }
                     else {
-
                         ProgressDialog progressDialog = new ProgressDialog(RestaurantItems.this);
                         progressDialog.setMessage("Please wait...");
                         progressDialog.show();
 
-                        for (int i=0; i<cartItemsList.size(); i++){
+                        HashMap<String, Object> order1 = new HashMap<>();
+                        order1.put("restaurant name", restaurant);
+                        order1.put("total", total);
+                        order1.put("Time", getDateTime());
+                        order1.put("status", "In progress");
 
-                            HashMap<String, Object> order1 = new HashMap<>();
-                            order1.put("id", cartItemsList.get(i).getId());
-                            order1.put("pId", cartItemsList.get(i).getpId());
-                            order1.put("title", cartItemsList.get(i).getItemName());
-                            order1.put("price", cartItemsList.get(i).getPrice());
-                            order1.put("items_count", cartItemsList.get(i).getItems_Count());
-                            order1.put("final_price", cartItemsList.get(i).getFinalPrice());
-                            order1.put("status", "In progress");
-                            order1.put("latlng", latLng);
-//
-//                        HashMap<String, Object> order3 = new HashMap<>();
-//                        order3.put(cartItemsList.get(i).getId(), order1);
+                        firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2")
+                                .collection("Cart").document(restaurant+" "+getDateTime())
+                                .set(order1, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        for (int i = 0; i<cartItemsList.size(); i++) {
+                                            HashMap<String, Object> order2 = new HashMap<>();
+                                            order2.put("id", cartItemsList.get(i).getId());
+                                            order2.put("pId", cartItemsList.get(i).getpId());
+                                            order2.put("title", cartItemsList.get(i).getItemName());
+                                            order2.put("price", cartItemsList.get(i).getPrice());
+                                            order2.put("items_count", cartItemsList.get(i).getItems_Count());
+                                            order2.put("final_price", cartItemsList.get(i).getFinalPrice());
+                                            order2.put("latlng", latLng);
 
-                            DocumentReference documentReference = firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2").collection("Cart").document(cartItemsList.get(i).getId());
-
-                            final int I = i;
-                            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()){
-                                        DocumentSnapshot documentSnapshot = task.getResult();
-                                        if (documentSnapshot.exists()){
-                                            documentReference.update(order1);
-
-                                            progressDialog.dismiss();
-
-                                            dialog.dismiss();
-                                            easyDB.deleteAllDataFromTable();
-                                            updateCartCount();
-                                            allTotalPrice = 0.00;
-
+                                            firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2")
+                                                    .collection("Cart").document(restaurant+" "+getDateTime())
+                                                    .collection("Orders").document(cartItemsList.get(i).getId())
+                                                    .set(order2, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            Toast.makeText(RestaurantItems.this, "Completed!", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
                                         }
-                                        else {
-                                            firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2").collection("Cart").document(cartItemsList.get(I).getId()).set(order1, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    progressDialog.dismiss();
-
-                                                    dialog.dismiss();
-                                                    easyDB.deleteAllDataFromTable();
-                                                    updateCartCount();
-                                                    allTotalPrice = 0.00;
-
-                                                }
-                                            });
-                                        }
+                                        progressDialog.dismiss();
+                                        dialog.dismiss();
+                                        easyDB.deleteAllDataFromTable();
+                                        updateCartCount();
+                                        allTotalPrice = 0.00;
                                     }
-                                }
-                            });
+                                });
                         }
-                    }
                     Snackbar.make(findViewById(android.R.id.content), "Order Placed!", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
                 }
             });
         }
-
-
     }
 
     private void getLocation() {

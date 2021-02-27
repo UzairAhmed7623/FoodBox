@@ -1,12 +1,22 @@
 package com.example.foodbox.models;
 
 public class HistoryModelClass {
-    private String id, pId, itemName, finalPrice, price,  Items_Count, status;
+    private String resId, id, pId, itemName, finalPrice, price,  Items_Count, status, resName, totalPrice, date;
+    private boolean expanded;
+
+    public boolean isExpanded() {
+        return expanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
+    }
 
     public HistoryModelClass() {
     }
 
-    public HistoryModelClass(String id, String pId, String itemName, String finalPrice, String price, String items_Count, String status) {
+    public HistoryModelClass(String resId, String id, String pId, String itemName, String finalPrice, String price, String items_Count, String status, String resName, String totalPrice, String date) {
+        this.resId = resId;
         this.id = id;
         this.pId = pId;
         this.itemName = itemName;
@@ -14,6 +24,10 @@ public class HistoryModelClass {
         this.price = price;
         Items_Count = items_Count;
         this.status = status;
+        this.resName = resName;
+        this.totalPrice = totalPrice;
+        this.date = date;
+        this.expanded = false;
     }
 
     public String getId() {
@@ -70,5 +84,37 @@ public class HistoryModelClass {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getResName() {
+        return resName;
+    }
+
+    public void setResName(String resName) {
+        this.resName = resName;
+    }
+
+    public String getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(String totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getResId() {
+        return resId;
+    }
+
+    public void setResId(String resId) {
+        this.resId = resId;
     }
 }

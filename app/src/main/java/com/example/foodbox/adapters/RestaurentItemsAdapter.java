@@ -151,9 +151,9 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
                 alertDialog.dismiss();
 
-                holder.tvaddItem.setVisibility(View.GONE);
-                holder.ibSelectItem.setVisibility(View.GONE);
-                holder.tvAdded.setVisibility(View.VISIBLE);
+//                holder.tvaddItem.setVisibility(View.GONE);
+//                holder.ibSelectItem.setVisibility(View.GONE);
+//                holder.tvAdded.setVisibility(View.VISIBLE);
 
             }
         });
