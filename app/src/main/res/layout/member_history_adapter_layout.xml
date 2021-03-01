@@ -18,10 +18,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="?attr/selectableItemBackgroundBorderless">
+        android:background="?attr/selectableItemBackgroundBorderless" >
 
         <TextView
-            android:id="@+id/tvItemNameTrack"
+            android:id="@+id/tvItemNameHistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -31,7 +31,7 @@
             android:textAllCaps="true"
             android:textColor="@android:color/black"
             android:textSize="15sp"
-            android:fontFamily="@font/poppins_medium" />
+            android:fontFamily="@font/poppins_medium"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,7 +41,7 @@
             android:layout_gravity="center_vertical">
 
             <TextView
-                android:id="@+id/tvItemPriceTrack"
+                android:id="@+id/tvItemPriceHistory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -55,7 +55,7 @@
                 android:paddingEnd="5dp" />
 
             <TextView
-                android:id="@+id/tvMultiplyLabelTrack"
+                android:id="@+id/tvMultiplyLabelHistory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="start"
@@ -68,7 +68,7 @@
                 android:paddingEnd="5dp" />
 
             <TextView
-                android:id="@+id/tvItemCountTrack"
+                android:id="@+id/tvItemCountHistory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="start"
@@ -81,7 +81,7 @@
                 android:paddingEnd="5dp" />
 
             <TextView
-                android:id="@+id/tvEqualToLabelTrack"
+                android:id="@+id/tvEqualToLabelHistory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="start"
@@ -94,7 +94,7 @@
                 android:paddingEnd="5dp" />
 
             <TextView
-                android:id="@+id/tvTotalTrack"
+                android:id="@+id/tvTotalHistory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="start"
@@ -107,7 +107,7 @@
                 android:layout_marginEnd="5dp" />
 
             <TextView
-                android:id="@+id/tvOrderDateTrack"
+                android:id="@+id/tvOrderDateHistory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"

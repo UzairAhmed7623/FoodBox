@@ -32,8 +32,6 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
     private Context context;
     private List<HistoryModelClass> trackOrders = new ArrayList<>();
     private FirebaseFirestore firebaseFirestore;
-    HistoryModelClass historyModelClass;
-
 
     public TrackOrdersAdapter(Context context, List<HistoryModelClass> trackOrders) {
         this.context = context;
@@ -92,7 +90,7 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
                         String finalPrice = documentSnapshot1.getString("final_price");
                         String pId = documentSnapshot1.getString("pId");
 
-                        historyModelClass = new HistoryModelClass();
+                        HistoryModelClass historyModelClass = new HistoryModelClass();
 
                         historyModelClass.setId(id);
                         historyModelClass.setItemName(itemName);
@@ -119,7 +117,7 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvItemTrack, tvItemPriceTrack, tvItemCountTrack, tvTotalTrack, tvOrderDateTrack, tvStatusTrack, tvResNameTrack, tvDateTrack, tvGradTotalTrack;
+        private TextView tvStatusTrack, tvResNameTrack, tvDateTrack, tvGradTotalTrack;
         private LinearLayout expandablelLayoutTrack;
         private RecyclerView rvMember;
 

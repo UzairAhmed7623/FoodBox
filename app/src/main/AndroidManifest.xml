@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/food_box_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodBox">
-        <activity android:name=".TrackOrders"></activity>
+        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".TrackOrders" />
         <activity android:name=".OrderHistory" />
         <activity android:name=".RestaurantItems" />
         <activity android:name=".MainActivity">

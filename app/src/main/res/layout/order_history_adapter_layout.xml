@@ -11,7 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:padding="8dp"
         android:background="@drawable/history_item_shape">
 
@@ -26,143 +26,88 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@android:color/white">
+                android:background="?attr/selectableItemBackground">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvResNameHistory"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:layout_marginTop="5dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_gravity="left|center_vertical"
+                        android:text="Restaurant Name"
+                        android:textAllCaps="true"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp"
+                        android:fontFamily="@font/poppins_medium"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center_vertical">
 
                         <TextView
-                            android:id="@+id/tvItemHistory"
-                            android:layout_width="match_parent"
+                            android:id="@+id/tvDateHistory"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
                             android:layout_marginStart="10dp"
-                            android:layout_gravity="left|center_vertical"
-                            android:text="Item name"
+                            android:gravity="start"
+                            android:text="Date"
                             android:textAllCaps="true"
                             android:textColor="@android:color/black"
                             android:textSize="15sp"
+                            android:fontFamily="@font/poppins_medium"/>
+
+                        <TextView
+                            android:id="@+id/tvStatusHistory"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="5dp"
+                            android:text="In progress"
+                            android:textAllCaps="true"
+                            android:textColor="#00F83E"
                             android:fontFamily="@font/poppins_medium"
-                            android:background="?attr/selectableItemBackgroundBorderless" />
+                            android:textSize="14sp"
+                            android:visibility="visible"
+                            android:layout_gravity="end|center_vertical"
+                            android:gravity="end" />
 
                     </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="start|center_vertical"
-                    android:layout_gravity="center_vertical"
-                    android:background="?attr/selectableItemBackgroundBorderless" >
-
                     <TextView
-                        android:id="@+id/tvItemPriceHistory"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tvGrandTotalHistory"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
                         android:layout_marginStart="10dp"
-                        android:gravity="end"
-                        android:layout_gravity="center_vertical"
-                        android:text="200"
+                        android:layout_gravity="left|center_vertical"
+                        android:text="Total Price"
                         android:textAllCaps="true"
                         android:textColor="@android:color/black"
-                        android:textSize="13sp"
-                        android:fontFamily="@font/poppins_medium"
-                        android:paddingEnd="10dp"
-                        android:background="?attr/selectableItemBackgroundBorderless" />
-
-                    <TextView
-                        android:id="@+id/tvMultiplyLabelHistory"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="start"
-                        android:layout_gravity="center_vertical"
-                        android:text="x"
-                        android:textAllCaps="true"
-                        android:textColor="@android:color/black"
-                        android:textSize="13sp"
-                        android:fontFamily="@font/poppins_medium"
-                        android:paddingEnd="10dp"
-                        android:background="?attr/selectableItemBackgroundBorderless" />
-
-                    <TextView
-                        android:id="@+id/tvItemCountHistory"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="start"
-                        android:layout_gravity="center_vertical"
-                        android:text="3"
-                        android:textAllCaps="true"
-                        android:textColor="@android:color/black"
-                        android:textSize="13sp"
-                        android:fontFamily="@font/poppins_medium"
-                        android:paddingEnd="10dp"
-                        android:background="?attr/selectableItemBackgroundBorderless" />
-
-                    <TextView
-                        android:id="@+id/tvEqualToLabelHistory"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="start"
-                        android:layout_gravity="center_vertical"
-                        android:text="="
-                        android:textAllCaps="true"
-                        android:textColor="@android:color/black"
-                        android:textSize="13sp"
-                        android:fontFamily="@font/poppins_medium"
-                        android:paddingEnd="10dp"
-                        android:background="?attr/selectableItemBackgroundBorderless" />
-
-                    <TextView
-                        android:id="@+id/tvTotalHistory"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="start"
-                        android:layout_gravity="center_vertical"
-                        android:text="600"
-                        android:textAllCaps="true"
-                        android:textColor="@android:color/black"
-                        android:textSize="13sp"
-                        android:fontFamily="@font/poppins_medium"
-                        android:layout_marginEnd="10dp"
-                        android:background="?attr/selectableItemBackgroundBorderless" />
+                        android:textSize="15sp"
+                        android:fontFamily="@font/poppins_medium"/>
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tvOrderDateHistory"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_gravity="left|center_vertical"
-                    android:text="Order date: 12-02-2021"
-                    android:textAllCaps="true"
-                    android:textColor="@android:color/black"
-                    android:textSize="13sp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:background="?attr/selectableItemBackgroundBorderless" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tvStatusHistory"
+                <LinearLayout
+                    android:id="@+id/expandablelLayoutHistory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
-                    android:text="In progress"
-                    android:textAllCaps="true"
-                    android:textColor="#00F83E"
-                    android:fontFamily="@font/poppins_medium"
-                    android:textSize="14sp"
-                    android:visibility="visible"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="end" />
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvMemberHistory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 

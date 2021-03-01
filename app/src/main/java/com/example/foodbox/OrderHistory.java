@@ -60,24 +60,20 @@ public class OrderHistory extends AppCompatActivity {
                 for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
                     if (documentSnapshot.exists()){
 
-                        String id = documentSnapshot.getId();
-                        String itemName = documentSnapshot.getString("title");
-                        String price = documentSnapshot.getString("price");
-                        String itemCount = documentSnapshot.getString("items_count");
-                        String finalPrice = documentSnapshot.getString("final_price");
-                        String pId = documentSnapshot.getString("pId");
+                        String resId = documentSnapshot.getId();
+                        String time = documentSnapshot.getString("Time");
+                        String resName = documentSnapshot.getString("restaurant name");
                         String status = documentSnapshot.getString("status");
+                        String total = documentSnapshot.getString("total");
 
-                        Log.d("asdfgh", ""+id+itemName);
+                        Log.d("asdfgh", ""+resId+time);
 
                         HistoryModelClass historyModelClass = new HistoryModelClass();
-                        historyModelClass.setId(id);
-                        historyModelClass.setItemName(itemName);
-                        historyModelClass.setPrice(price);
-                        historyModelClass.setItems_Count(itemCount);
-                        historyModelClass.setFinalPrice(finalPrice);
-                        historyModelClass.setpId(pId);
+                        historyModelClass.setResId(resId);
+                        historyModelClass.setDate(time);
+                        historyModelClass.setResName(resName);
                         historyModelClass.setStatus(status);
+                        historyModelClass.setTotalPrice(total);
 
 
 

@@ -73,8 +73,6 @@ public class TrackOrders extends AppCompatActivity {
                         trackOrders.add(historyModelClass);
 
                         rvTrack.setAdapter(new TrackOrdersAdapter(TrackOrders.this, trackOrders));
-
-
                     }
                     else {
                         Toast.makeText(TrackOrders.this, "Data not found!", Toast.LENGTH_SHORT).show();
