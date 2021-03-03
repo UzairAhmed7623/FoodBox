@@ -254,7 +254,6 @@ public class CartActivity extends AppCompatActivity {
                     catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Toast.makeText(CartActivity.this, ""+latLng, Toast.LENGTH_SHORT).show();
                 }
                 else {
 //                    Toast.makeText(RestaurantItems.this, "Null", Toast.LENGTH_SHORT).show();
