@@ -1,21 +1,17 @@
 package com.example.foodbox;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,10 +19,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodbox.adapters.CartItemsAdapter;
 import com.example.foodbox.models.CartItemsModelClass;
+import com.example.foodbox.models.ItemsModelClass;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
@@ -36,20 +34,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
-import com.nex3z.notificationbadge.NotificationBadge;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import p32929.androideasysql_library.Column;
@@ -57,16 +48,21 @@ import p32929.androideasysql_library.EasyDB;
 
 public class CartActivity extends AppCompatActivity {
 
+    private TextView tvShopName, Address, UserName;
+    private RecyclerView rvCartItems;
+    private Button btnCheckOut;
+
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private String delivery = "45";
-    private String restaurant;
-    private LatLng latLng;
-    private FusedLocationProviderClient fusedLocationProviderClient;
+    private String restaurant, add;
 
     private ArrayList<CartItemsModelClass> cartItemsList;
     private CartItemsAdapter cartItemsAdapter;
     private CartItemsModelClass cartItemsModelClass;
+
+    private LatLng latLng;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,38 +71,48 @@ public class CartActivity extends AppCompatActivity {
 
         restaurant = getIntent().getStringExtra("restaurant");
 
+        cartItemsList = new ArrayList<>();
+
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
+        UserName = (TextView) findViewById(R.id.UserName);
+        Address = (TextView) findViewById(R.id.Address);
+        tvShopName = (TextView) findViewById(R.id.tvShopName);
+        tvSubTotal = (TextView) findViewById(R.id.tvSubTotal);
+        tvDeliveryFee = (TextView) findViewById(R.id.tvDeliveryFee);
+        tvGrandTotal = (TextView) findViewById(R.id.tvGrandTotal);
+        rvCartItems = (RecyclerView) findViewById(R.id.rvCartItems);
+        btnCheckOut = (Button) findViewById(R.id.btnCheckOut);
+
+        rvCartItems.setLayoutManager(new LinearLayoutManager(CartActivity.this));
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(CartActivity.this);
 
+        ItemsModelClass itemsModelClass = new ItemsModelClass();
+        String userName = itemsModelClass.getUserName();
+        UserName.setText(userName);
+
+        getCurrentLocation();
+
+        Address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CartActivity.this, MapsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        showCartDialog();
 
     }
-
 
     public double allTotalPrice = 0.00;
     public TextView tvSubTotal, tvDeliveryFee, tvGrandTotal;
 
     private void showCartDialog() {
 
-        cartItemsList = new ArrayList<>();
-
-        View view = LayoutInflater.from(CartActivity.this).inflate(R.layout.activity_cart, null);
-        TextView tvShopName;
-        RecyclerView rvCartItems;
-        Button btnCheckOut;
-
-        tvShopName = (TextView) view.findViewById(R.id.tvShopName);
-        tvSubTotal = (TextView) view.findViewById(R.id.tvSubTotal);
-        tvDeliveryFee = (TextView) view.findViewById(R.id.tvDeliveryFee);
-        tvGrandTotal = (TextView) view.findViewById(R.id.tvGrandTotal);
-        rvCartItems = (RecyclerView) view.findViewById(R.id.rvCartItems);
-        btnCheckOut = (Button) view.findViewById(R.id.btnCheckOut);
-
         tvShopName.setText(restaurant);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(CartActivity.this);
-        builder.setView(view);
 
         EasyDB easyDB = EasyDB.init(CartActivity.this, "DB")
                 .setTableName("ITEMS_TABLE")
@@ -147,33 +153,26 @@ public class CartActivity extends AppCompatActivity {
         rvCartItems.setAdapter(cartItemsAdapter);
 
         tvDeliveryFee.setText(delivery);
-        tvSubTotal.setText("Pkr" + String.format("%.2f", allTotalPrice));
-        tvGrandTotal.setText("Pkr" + (allTotalPrice + Double.parseDouble(delivery.replace("Pkr", ""))));
+        tvSubTotal.setText("PKR" + String.format("%.2f", allTotalPrice));
+        tvGrandTotal.setText("PKR" + (allTotalPrice + Double.parseDouble(delivery.replace("PKR", ""))));
 
         if (res.getCount() == 0){
-            Snackbar.make(findViewById(android.R.id.content), "You have not added any product till now!", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
-        }else {
-            AlertDialog dialog = builder.create();
-            dialog.show();
-
-            dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    allTotalPrice = 0.00;
-                }
-            });
+            Snackbar.make(findViewById(android.R.id.content), "No Item Found", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
+        }
+        else {
 
             btnCheckOut.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String total = tvGrandTotal.getText().toString().trim().replace("Pkr", "");
+                    String total = tvGrandTotal.getText().toString().trim().replace("PKR", "");
 
                     if (cartItemsList.size() == 0){
-                        Toast.makeText(CartActivity.this,"no Item Found" , Toast.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(android.R.id.content), "No Item Found", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
                     }
                     else {
                         ProgressDialog progressDialog = new ProgressDialog(CartActivity.this);
-                        progressDialog.setMessage("Please wait...");
+                        progressDialog.setTitle("Please Wait");
+                        progressDialog.setMessage("Order is placing...");
                         progressDialog.show();
 
                         HashMap<String, Object> order1 = new HashMap<>();
@@ -203,12 +202,11 @@ public class CartActivity extends AppCompatActivity {
                                             .set(order2, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            Toast.makeText(CartActivity.this, "Completed!", Toast.LENGTH_SHORT).show();
+
                                         }
                                     });
                                 }
                                 progressDialog.dismiss();
-                                dialog.dismiss();
                                 easyDB.deleteAllDataFromTable();
 //                                updateCartCount();
                                 allTotalPrice = 0.00;
@@ -216,26 +214,12 @@ public class CartActivity extends AppCompatActivity {
                         });
                     }
                     Snackbar.make(findViewById(android.R.id.content), "Order Placed!", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
+                    Intent intent = new Intent(CartActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
             });
         }
-    }
-
-    private void getLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if (location != null){
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-
-                    latLng = new LatLng(latitude, longitude);
-                }
-            }
-        });
     }
 
     private String getDateTime() {
@@ -248,6 +232,50 @@ public class CartActivity extends AppCompatActivity {
         String date = DateFormat.format("dd-MM-yyyy hh-mm",calendar).toString();
 
         return date;
+    }
+
+    private void getCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null){
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
+
+                    latLng = new LatLng(latitude, longitude);
+
+                    try {
+                        add = showAddress(latLng);
+                        Address.setText("" + add);
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Toast.makeText(CartActivity.this, ""+latLng, Toast.LENGTH_SHORT).show();
+                }
+                else {
+//                    Toast.makeText(RestaurantItems.this, "Null", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private String showAddress(LatLng latLng) throws IOException {
+        Geocoder geocoder;
+        List<android.location.Address> addresses;
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+
+        String address = addresses.get(0).getAddressLine(0);
+//        String city = addresses.get(0).getLocality();
+//        String state = addresses.get(0).getAdminArea();
+//        String country = addresses.get(0).getCountryName();
+        return  address;
+
     }
 
 }

@@ -70,10 +70,10 @@ public class RestaurantItems extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private String Name, restaurant;
+    private int badgeCount;
     private NotificationBadge notificationBadge;
     private boolean status = false;
     private ImageView cartIcon2;
-
 
     static RestaurantItems instance;
 
@@ -150,30 +150,36 @@ public class RestaurantItems extends AppCompatActivity {
         cartIcon2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2")
-                        .collection("Cart").whereEqualTo("status", "In progress")
-                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isComplete()){
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                                if (documentSnapshot.exists()){
-                                    status = true;
-                                }
-                            }
-                        }
-                    }
-                });
-                if (status){
-                    Snackbar.make(findViewById(android.R.id.content), "Your orders are already in progress.", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
-                }
-                else {
-                    Dexter.withContext(RestaurantItems.this).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
+//                firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2")
+//                        .collection("Cart").whereEqualTo("status", "In progress")
+//                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isComplete()){
+//                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
+//                                if (documentSnapshot.exists()){
+//                                    status = true;
+//                                }
+//                            }
+//                        }
+//                    }
+//                });
+//                if (status){
+//                    Snackbar.make(findViewById(android.R.id.content), "Your orders are already in progress.", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
+//                }
+//                else {
+
+                Dexter.withContext(RestaurantItems.this).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
                         @Override
                         public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                            Intent intent = new Intent(RestaurantItems.this, CartActivity.class);
-                            intent.putExtra("restaurant", restaurant);
-                            startActivity(intent);
+                            if (badgeCount == 0){
+                                Snackbar.make(findViewById(android.R.id.content), "You have not added any product till now!", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
+                            }
+                            else {
+                                Intent intent = new Intent(RestaurantItems.this, CartActivity.class);
+                                intent.putExtra("restaurant", restaurant);
+                                startActivity(intent);
+                            }
                         }
 
                         @Override
@@ -186,7 +192,7 @@ public class RestaurantItems extends AppCompatActivity {
                             permissionToken.continuePermissionRequest();
                         }
                     }).check();
-                }
+//                }
             }
         });
         return true;
@@ -227,15 +233,17 @@ public class RestaurantItems extends AppCompatActivity {
                 if (c == 0){
                     notificationBadge.setText(String.valueOf(0));
                     notificationBadge.setVisibility(View.INVISIBLE);
-                    Log.d("sasas",""+c);
+                    badgeCount = c;
                 }
                 else {
+                    badgeCount = c;
                     notificationBadge.setVisibility(View.VISIBLE);
                     notificationBadge.setText(String.valueOf(c));
                 }
             }
         });
     }
+
 
     @Override
     public void onBackPressed() {

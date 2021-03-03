@@ -1,48 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".CartActivity">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/textView"
+        style="@style/TextAppearance.AppCompat.Headline"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:text="Order to"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/TextAppearance.AppCompat.Headline"
-            android:textColor="@android:color/black"
-            android:text="Order to"
-            android:textAllCaps="true"
-            android:textAlignment="center"
-            android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/tvShopName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Restaurant"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-        <TextView
-            android:id="@+id/tvShopName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:text="Order to"
-            android:textAllCaps="true"
-            android:textAlignment="center"
-            android:textStyle="bold"/>
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/myColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvShopName" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/myColor"/>
+    <TextView
+        android:id="@+id/UserName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:text="Beneficiary Name: "
+        android:textColor="@android:color/black"
+        android:textSize="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/view2" />
+
+    <TextView
+        android:id="@+id/locationLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="20dp"
+        android:text="Deliever to: "
+        android:textColor="@android:color/black"
+        android:textSize="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/UserName" />
+
+    <TextView
+        android:id="@+id/Address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Address"
+        android:textColor="@android:color/black"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/locationLabel" />
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/myColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Address" />
+
+    <LinearLayout
+        android:id="@+id/layout2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view3">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvCartItems"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_height="match_parent"
             android:padding="5dp"
-            tools:listitem="@layout/row_cart_items"/>
+            tools:listitem="@layout/row_cart_items" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/layoutCheckOut"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <RelativeLayout
             android:id="@+id/prices"
@@ -54,75 +128,88 @@
                 android:id="@+id/tvSubTotalLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
                 android:padding="5dp"
                 android:text="Sub Total"
-                android:textStyle="bold"
-                android:layout_alignParentStart="true"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvSubTotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
                 android:padding="5dp"
                 android:text="0.0"
-                android:textStyle="bold"
-                android:layout_alignParentEnd="true"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvDeliveryFeeLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/tvSubTotalLabel"
                 android:padding="5dp"
                 android:text="Delivery Fee"
-                android:textStyle="bold"
-                android:layout_below="@+id/tvSubTotalLabel"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvDeliveryFee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/tvSubTotal"
                 android:layout_alignParentEnd="true"
                 android:padding="5dp"
                 android:text="0.0"
-                android:textStyle="bold"
-                android:layout_below="@+id/tvSubTotal"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvGrandTotalLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/tvDeliveryFeeLabel"
                 android:padding="5dp"
                 android:text="Grand Total"
-                android:textStyle="bold"
-                android:layout_below="@+id/tvDeliveryFeeLabel"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvGrandTotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/tvDeliveryFee"
                 android:layout_alignParentEnd="true"
                 android:padding="5dp"
                 android:text="0.0"
-                android:textStyle="bold"
-                android:layout_below="@+id/tvDeliveryFee"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
 
         </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutCheckOut"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/myColor"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/btnCheckOut"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/myColor"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="5dp"
             android:text="Confirm Order"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white" />
 
     </LinearLayout>
 
-</ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

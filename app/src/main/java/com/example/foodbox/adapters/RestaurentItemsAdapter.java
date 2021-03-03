@@ -96,8 +96,8 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
         String description = modelClass.getItemDescription();
         String image = modelClass.getImageUri();
 
-        price = Double.parseDouble(Price.replace("Pkr ",""));
-        finalPrice = Double.parseDouble(Price.replace("Pkr ",""));
+        price = Double.parseDouble(Price.replace("PKR ",""));
+        finalPrice = Double.parseDouble(Price.replace("PKR ",""));
         itemCount = 1;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -106,8 +106,8 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
         Glide.with(context).load(image).into(ivItem);
         tvItemTitle.setText("" + title);
         tvItemDescription.setText("" + description);
-        tvItemPrice.setText("Pkr " + price);
-        tvItemPriceFinal.setText("Pkr " + finalPrice);
+        tvItemPrice.setText("PKR " + price);
+        tvItemPriceFinal.setText("PKR " + finalPrice);
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
@@ -118,7 +118,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                 finalPrice = finalPrice + price;
                 itemCount++;
 
-                tvItemPriceFinal.setText("Pkr " + finalPrice);
+                tvItemPriceFinal.setText("PKR " + finalPrice);
                 tvCount.setText("" + itemCount);
             }
         });
@@ -130,7 +130,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                     finalPrice = finalPrice - price;
                     itemCount--;
 
-                    tvItemPriceFinal.setText("Pkr " + finalPrice);
+                    tvItemPriceFinal.setText("PKR " + finalPrice);
                     tvCount.setText("" + itemCount);
                 }
             }
@@ -140,8 +140,8 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
             @Override
             public void onClick(View v) {
                 String title = tvItemTitle.getText().toString().trim();
-                String price = tvItemPrice.getText().toString().trim().replace("Pkr ","");
-                String finalPrice = tvItemPriceFinal.getText().toString().trim().replace("Pkr ","");
+                String price = tvItemPrice.getText().toString().trim().replace("PKR ","");
+                String finalPrice = tvItemPriceFinal.getText().toString().trim().replace("PKR ","");
                 String description = tvItemDescription.getText().toString().trim();
                 String itemCount = tvCount.getText().toString().trim();
 
