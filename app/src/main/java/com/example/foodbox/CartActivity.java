@@ -1,6 +1,7 @@
 package com.example.foodbox;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -35,6 +36,10 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.sucho.placepicker.AddressData;
+import com.sucho.placepicker.Constants;
+import com.sucho.placepicker.MapType;
+import com.sucho.placepicker.PlacePicker;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,6 +53,7 @@ import p32929.androideasysql_library.EasyDB;
 
 public class CartActivity extends AppCompatActivity {
 
+    private static final String GOOGLE_API_KEY = "AIzaSyBa4XZ09JsXD8KYZr5wdle--0TQFpfyGew";
     private TextView tvShopName, Address, UserName;
     private RecyclerView rvCartItems;
     private Button btnCheckOut;
@@ -98,8 +104,28 @@ public class CartActivity extends AppCompatActivity {
         Address.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CartActivity.this, MapsActivity.class);
-                startActivity(intent);
+
+                Intent intent = new PlacePicker.IntentBuilder()
+                        .setLatLong(latLng.latitude, latLng.longitude)  // Initial Latitude and Longitude the Map will load into
+                        .setMapZoom(14.0f)  // Map Zoom Level. Default: 14.0
+                        .setAddressRequired(true) // Set If return only Coordinates if cannot fetch Address for the coordinates. Default: True
+                        .hideMarkerShadow(true) // Hides the shadow under the map marker. Default: False
+                        .setMarkerDrawable(R.drawable.marker) // Change the default Marker Image
+                        .setMarkerImageImageColor(R.color.colorPrimary)
+                        .setFabColor(R.color.myColor)
+                        .setPrimaryTextColor(R.color.black) // Change text color of Shortened Address
+                        .setSecondaryTextColor(R.color.black) // Change text color of full Address
+                        .setBottomViewColor(R.color.white) // Change Address View Background Color (Default: White)
+                        .setMapRawResourceStyle(R.raw.map_style)  //Set Map Style (https://mapstyle.withgoogle.com/)
+                        .setMapType(MapType.NORMAL)
+                        .setPlaceSearchBar(true, GOOGLE_API_KEY) //Activate GooglePlace Search Bar. Default is false/not activated. SearchBar is a chargeable feature by Google
+                        .onlyCoordinates(true)  //Get only Coordinates from Place Picker
+                        .hideLocationButton(false)   //Hide Location Button (Default: false)
+                        .disableMarkerAnimation(false)   //Disable Marker Animation (Default: false)
+                        .build(CartActivity.this);
+
+                startActivityForResult(intent, Constants.PLACE_PICKER_REQUEST);
+
             }
         });
 
@@ -275,6 +301,25 @@ public class CartActivity extends AppCompatActivity {
 //        String country = addresses.get(0).getCountryName();
         return  address;
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == Constants.PLACE_PICKER_REQUEST) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                AddressData addressData = data.getParcelableExtra(Constants.ADDRESS_INTENT);
+                try {
+                    latLng = new LatLng(addressData.getLatitude(), addressData.getLongitude() );
+                    add = showAddress(latLng);
+                    Address.setText(add);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
 }
