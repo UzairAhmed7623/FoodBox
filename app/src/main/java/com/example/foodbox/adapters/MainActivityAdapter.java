@@ -73,10 +73,12 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                             DocumentSnapshot documentSnapshot = task.getResult();
                             if (documentSnapshot.exists()){
 
-                                String name = documentSnapshot.getString("First Name");
+                                String first_name = documentSnapshot.getString("First Name");
+                                String last_name = documentSnapshot.getString("Last Name");
                                 Intent intent = new Intent(context, RestaurantItems.class);
                                 intent.putExtra("restaurant", resName);
-                                intent.putExtra("name", name);
+                                intent.putExtra("first_name", first_name);
+                                intent.putExtra("last_name", last_name);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 context.startActivity(intent);
                             }

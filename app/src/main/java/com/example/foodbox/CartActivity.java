@@ -3,14 +3,18 @@ package com.example.foodbox;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,6 +22,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,12 +32,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.foodbox.adapters.CartItemsAdapter;
 import com.example.foodbox.models.CartItemsModelClass;
 import com.example.foodbox.models.ItemsModelClass;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -41,8 +57,11 @@ import com.sucho.placepicker.Constants;
 import com.sucho.placepicker.MapType;
 import com.sucho.placepicker.PlacePicker;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +73,8 @@ import p32929.androideasysql_library.EasyDB;
 public class CartActivity extends AppCompatActivity {
 
     private static final String GOOGLE_API_KEY = "AIzaSyBa4XZ09JsXD8KYZr5wdle--0TQFpfyGew";
+    private static int AUTOCOMPLETE_REQUEST_CODE = 1;
+
     private TextView tvShopName, Address, UserName;
     private RecyclerView rvCartItems;
     private Button btnCheckOut;
@@ -75,6 +96,10 @@ public class CartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), GOOGLE_API_KEY, Locale.getDefault()   );
+        }
+
         restaurant = getIntent().getStringExtra("restaurant");
 
         cartItemsList = new ArrayList<>();
@@ -95,9 +120,10 @@ public class CartActivity extends AppCompatActivity {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(CartActivity.this);
 
-        ItemsModelClass itemsModelClass = new ItemsModelClass();
-        String userName = itemsModelClass.getUserName();
-        UserName.setText(userName);
+        String first_name = getIntent().getStringExtra("first_name");
+        String last_name = getIntent().getStringExtra("last_name");
+
+        UserName.setText("Name: " + first_name +" "+ last_name);
 
         getCurrentLocation();
 
@@ -129,14 +155,14 @@ public class CartActivity extends AppCompatActivity {
             }
         });
 
-        showCartDialog();
+        showCart();
 
     }
 
     public double allTotalPrice = 0.00;
     public TextView tvSubTotal, tvDeliveryFee, tvGrandTotal;
 
-    private void showCartDialog() {
+    private void showCart() {
 
         tvShopName.setText(restaurant);
 
@@ -182,70 +208,86 @@ public class CartActivity extends AppCompatActivity {
         tvSubTotal.setText("PKR" + String.format("%.2f", allTotalPrice));
         tvGrandTotal.setText("PKR" + (allTotalPrice + Double.parseDouble(delivery.replace("PKR", ""))));
 
-        if (res.getCount() == 0){
-            Snackbar.make(findViewById(android.R.id.content), "No Item Found", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
-        }
-        else {
+        btnCheckOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String total = tvGrandTotal.getText().toString().trim().replace("PKR", "");
 
-            btnCheckOut.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String total = tvGrandTotal.getText().toString().trim().replace("PKR", "");
+                if (cartItemsList.size() == 0){
+                    Snackbar.make(findViewById(android.R.id.content), "No Item Found", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
+                }
+                else {
 
-                    if (cartItemsList.size() == 0){
-                        Snackbar.make(findViewById(android.R.id.content), "No Item Found", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
-                    }
-                    else {
-                        ProgressDialog progressDialog = new ProgressDialog(CartActivity.this);
-                        progressDialog.setTitle("Please Wait");
-                        progressDialog.setMessage("Order is placing...");
-                        progressDialog.show();
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(CartActivity.this);
+                    alertDialog.setTitle("Confirm Address").setMessage(add)
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ProgressDialog progressDialog = new ProgressDialog(CartActivity.this);
+                                    progressDialog.setTitle("Please Wait");
+                                    progressDialog.setMessage("Order is placing...");
+                                    progressDialog.show();
 
-                        HashMap<String, Object> order1 = new HashMap<>();
-                        order1.put("restaurant name", restaurant);
-                        order1.put("total", total);
-                        order1.put("Time", getDateTime());
-                        order1.put("status", "In progress");
-
-                        firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2")
-                                .collection("Cart").document(restaurant+" "+getDateTime())
-                                .set(order1, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                for (int i = 0; i<cartItemsList.size(); i++) {
-                                    HashMap<String, Object> order2 = new HashMap<>();
-                                    order2.put("id", cartItemsList.get(i).getId());
-                                    order2.put("pId", cartItemsList.get(i).getpId());
-                                    order2.put("title", cartItemsList.get(i).getItemName());
-                                    order2.put("price", cartItemsList.get(i).getPrice());
-                                    order2.put("items_count", cartItemsList.get(i).getItems_Count());
-                                    order2.put("final_price", cartItemsList.get(i).getFinalPrice());
-                                    order2.put("latlng", latLng);
+                                    HashMap<String, Object> order1 = new HashMap<>();
+                                    order1.put("restaurant name", restaurant);
+                                    order1.put("total", total);
+                                    order1.put("Time", getDateTime());
+                                    order1.put("status", "In progress");
 
                                     firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2")
                                             .collection("Cart").document(restaurant+" "+getDateTime())
-                                            .collection("Orders").document(cartItemsList.get(i).getId())
-                                            .set(order2, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            .set(order1, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
+                                            for (int i = 0; i<cartItemsList.size(); i++) {
+                                                HashMap<String, Object> order2 = new HashMap<>();
+                                                order2.put("id", cartItemsList.get(i).getId());
+                                                order2.put("pId", cartItemsList.get(i).getpId());
+                                                order2.put("title", cartItemsList.get(i).getItemName());
+                                                order2.put("price", cartItemsList.get(i).getPrice());
+                                                order2.put("items_count", cartItemsList.get(i).getItems_Count());
+                                                order2.put("final_price", cartItemsList.get(i).getFinalPrice());
+                                                order2.put("latlng", latLng);
 
+                                                firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2")
+                                                        .collection("Cart").document(restaurant+" "+getDateTime())
+                                                        .collection("Orders").document(cartItemsList.get(i).getId())
+                                                        .set(order2, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+
+                                                    }
+                                                });
+                                            }
+                                            progressDialog.dismiss();
+                                            easyDB.deleteAllDataFromTable();
+//                                          updateCartCount();
+                                            allTotalPrice = 0.00;
+
+                                            Snackbar.make(findViewById(android.R.id.content), "Order Placed!", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
+
+                                            Handler handler = new Handler();
+                                            handler.postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Intent intent = new Intent(CartActivity.this, MainActivity.class);
+                                                    startActivity(intent);
+                                                    finish();
+                                                }
+                                            }, 100);
                                         }
                                     });
                                 }
-                                progressDialog.dismiss();
-                                easyDB.deleteAllDataFromTable();
-//                                updateCartCount();
-                                allTotalPrice = 0.00;
-                            }
-                        });
+                            }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                  dialog.dismiss();
+                                }
+                            }).show();
                     }
-                    Snackbar.make(findViewById(android.R.id.content), "Order Placed!", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
-                    Intent intent = new Intent(CartActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+
                 }
             });
-        }
     }
 
     private String getDateTime() {
@@ -296,11 +338,8 @@ public class CartActivity extends AppCompatActivity {
         addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
 
         String address = addresses.get(0).getAddressLine(0);
-//        String city = addresses.get(0).getLocality();
-//        String state = addresses.get(0).getAdminArea();
-//        String country = addresses.get(0).getCountryName();
-        return  address;
 
+        return  address;
     }
 
     @Override

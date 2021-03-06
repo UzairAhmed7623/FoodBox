@@ -69,7 +69,7 @@ public class RestaurantItems extends AppCompatActivity {
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-    private String Name, restaurant;
+    private String first_name,last_name, restaurant;
     private int badgeCount;
     private NotificationBadge notificationBadge;
     private boolean status = false;
@@ -96,7 +96,8 @@ public class RestaurantItems extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         restaurant = getIntent().getStringExtra("restaurant");
-        Name = getIntent().getStringExtra("name");
+        first_name = getIntent().getStringExtra("first_name");
+        last_name = getIntent().getStringExtra("last_name");
 
         rvItems = (RecyclerView) findViewById(R.id.rvItems);
         rvItems.setLayoutManager(new LinearLayoutManager(this));
@@ -120,7 +121,7 @@ public class RestaurantItems extends AppCompatActivity {
 
                             ItemsModelClass modelClass = new ItemsModelClass();
 
-                            modelClass.setUserName(Name);
+                            modelClass.setUserName(first_name+last_name);
                             modelClass.setItemName(name);
                             modelClass.setPrice(price);
                             modelClass.setImageUri(image);
@@ -178,6 +179,8 @@ public class RestaurantItems extends AppCompatActivity {
                             else {
                                 Intent intent = new Intent(RestaurantItems.this, CartActivity.class);
                                 intent.putExtra("restaurant", restaurant);
+                                intent.putExtra("first_name", first_name);
+                                intent.putExtra("last_name", last_name);
                                 startActivity(intent);
                             }
                         }
