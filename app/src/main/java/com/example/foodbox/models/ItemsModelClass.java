@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public class ItemsModelClass implements Serializable {
-    private String UserName, id, itemName, price, imageUri, itemDescription, timestamp;
+    private String UserName, id, itemName, price, imageUri, itemDescription, timestamp, availability, schedule;
 
     public ItemsModelClass() {
     }
 
-    public ItemsModelClass(String userName, String id, String itemName, String price, String imageUri, String itemDescription, String timestamp) {
+    public ItemsModelClass(String userName, String id, String itemName, String price, String imageUri, String itemDescription, String timestamp, String availability, String schedule) {
         UserName = userName;
         this.id = id;
         this.itemName = itemName;
@@ -17,6 +17,8 @@ public class ItemsModelClass implements Serializable {
         this.imageUri = imageUri;
         this.itemDescription = itemDescription;
         this.timestamp = timestamp;
+        this.availability = availability;
+        this.schedule = schedule;
     }
 
     public String getUserName() {
@@ -73,5 +75,21 @@ public class ItemsModelClass implements Serializable {
 
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(String availability) {
+        this.availability = availability;
+    }
+
+    public String getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(String schedule) {
+        this.schedule = schedule;
     }
 }

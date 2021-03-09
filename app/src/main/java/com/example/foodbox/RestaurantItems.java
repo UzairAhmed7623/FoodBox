@@ -118,6 +118,7 @@ public class RestaurantItems extends AppCompatActivity {
                             String name = documentSnapshot.getId();
                             String price = documentSnapshot.get("price").toString();
                             String image = documentSnapshot.get("imageUri").toString();
+                            String schedule = documentSnapshot.getString("schedule");
 
                             ItemsModelClass modelClass = new ItemsModelClass();
 
@@ -126,6 +127,7 @@ public class RestaurantItems extends AppCompatActivity {
                             modelClass.setPrice(price);
                             modelClass.setImageUri(image);
                             modelClass.setId(getDateTime());
+                            modelClass.setSchedule(schedule);
 
                             productList.add(modelClass);
 

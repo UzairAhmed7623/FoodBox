@@ -28,7 +28,7 @@
                 android:layout_height="200dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/pic1"
+                android:src="@drawable/placeholder"
                 android:focusable="true"
                 android:background="?attr/selectableItemBackgroundBorderless" />
 

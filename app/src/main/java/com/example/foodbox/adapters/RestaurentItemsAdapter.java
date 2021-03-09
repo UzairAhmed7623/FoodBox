@@ -54,7 +54,8 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
         holder.tvItem.setText(modelClass.getItemName());
         holder.tvItemPrice.setText(modelClass.getPrice());
-        Glide.with(context).load(modelClass.getImageUri()).into(holder.ivItem);
+        Glide.with(context).load(modelClass.getImageUri()).placeholder(R.drawable.placeholder).fitCenter().into(holder.ivItem);
+        holder.tvItemSchedule.setText("Available from: "+ modelClass.getSchedule());
 
         name = modelClass.getUserName();
 
@@ -80,7 +81,6 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
         CircleImageView ivItem = view.findViewById(R.id.ivItem);
 
         TextView tvItemTitle = view.findViewById(R.id.tvItemTitle);
-        TextView tvItemDescription = view.findViewById(R.id.tvItemDescription);
         TextView tvItemPrice = view.findViewById(R.id.tvItemPrice);
         TextView tvItemPriceFinal = view.findViewById(R.id.tvItemPriceFinal);
         TextView tvCount = view.findViewById(R.id.tvCount);
@@ -105,7 +105,6 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
         Glide.with(context).load(image).into(ivItem);
         tvItemTitle.setText("" + title);
-        tvItemDescription.setText("" + description);
         tvItemPrice.setText("PKR " + price);
         tvItemPriceFinal.setText("PKR " + finalPrice);
 
@@ -142,7 +141,6 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                 String title = tvItemTitle.getText().toString().trim();
                 String price = tvItemPrice.getText().toString().trim().replace("PKR ","");
                 String finalPrice = tvItemPriceFinal.getText().toString().trim().replace("PKR ","");
-                String description = tvItemDescription.getText().toString().trim();
                 String itemCount = tvCount.getText().toString().trim();
 
                 addToCart(productId, title, price, finalPrice, itemCount);
@@ -209,7 +207,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvItem, tvItemPrice, tvaddItem, tvAdded,  tvCount;
+        private TextView tvItem, tvItemPrice, tvaddItem, tvAdded,  tvCount, tvItemSchedule;
         private ImageButton ibSelectItem, ibAddItem, ibRemoveItem;
         private ImageView ivItem;
 
@@ -225,6 +223,8 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
             ibAddItem = itemView.findViewById(R.id.ibAddItem);
             ibRemoveItem = itemView.findViewById(R.id.ibRemoveItem);
             tvCount = itemView.findViewById(R.id.tvCount);
+            tvItemSchedule = (TextView) itemView.findViewById(R.id.tvItemSchedule);
+
 
         }
     }

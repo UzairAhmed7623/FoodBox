@@ -53,7 +53,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         holder.tvRestaurant.setText(resName);
 
         String imageUri = imagesUri.get(position);
-        Glide.with(context).load(imageUri).into(holder.ivRestaurant);
+        Glide.with(context).load(imageUri).placeholder(R.drawable.placeholder).fitCenter().into(holder.ivRestaurant);
 
         holder.itemView.setSelected(checkedPosition == position);
 
