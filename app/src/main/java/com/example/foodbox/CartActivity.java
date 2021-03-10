@@ -60,12 +60,14 @@ import com.sucho.placepicker.PlacePicker;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
@@ -228,11 +230,15 @@ public class CartActivity extends AppCompatActivity {
                                     progressDialog.setMessage("Order is placing...");
                                     progressDialog.show();
 
+                                    String address = Address.getText().toString();
+
                                     HashMap<String, Object> order1 = new HashMap<>();
                                     order1.put("restaurant name", restaurant);
                                     order1.put("total", total);
                                     order1.put("Time", getDateTime());
                                     order1.put("status", "In progress");
+                                    order1.put("ID", shortUUID());
+                                    order1.put("address", address);
 
                                     firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2")
                                             .collection("Cart").document(restaurant+" "+getDateTime())
@@ -350,6 +356,7 @@ public class CartActivity extends AppCompatActivity {
                 try {
                     latLng = new LatLng(addressData.getLatitude(), addressData.getLongitude() );
                     add = showAddress(latLng);
+
                     Address.setText(add);
 
                 } catch (IOException e) {
@@ -361,4 +368,9 @@ public class CartActivity extends AppCompatActivity {
         }
     }
 
+    public static String shortUUID() {
+        UUID uuid = UUID.randomUUID();
+        long l = ByteBuffer.wrap(uuid.toString().getBytes()).getLong();
+        return Long.toString(l, Character.MAX_RADIX);
+    }
 }
