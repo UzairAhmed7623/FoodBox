@@ -236,7 +236,7 @@ public class CartActivity extends AppCompatActivity {
                                     order1.put("restaurant name", restaurant);
                                     order1.put("total", total);
                                     order1.put("Time", getDateTime());
-                                    order1.put("status", "In progress");
+                                    order1.put("status", "Pending");
                                     order1.put("ID", shortUUID());
                                     order1.put("address", address);
 
