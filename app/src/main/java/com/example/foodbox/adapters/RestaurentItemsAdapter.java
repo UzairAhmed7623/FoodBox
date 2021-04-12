@@ -185,7 +185,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                 .doneDataAdding();
 
         if (b){
-            Snackbar.make(((RestaurantItems)context).findViewById(android.R.id.content), "Added to Cart!", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
+            Snackbar.make(((RestaurantItems)context).findViewById(android.R.id.content), "Added to Cart!", Snackbar.LENGTH_SHORT).setBackgroundTint(context.getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
         }
         else {
             Toast.makeText(context, "Error!", Toast.LENGTH_SHORT).show();

@@ -3,48 +3,35 @@ package com.example.foodbox;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.foodbox.adapters.CartItemsAdapter;
 import com.example.foodbox.adapters.RestaurentItemsAdapter;
-import com.example.foodbox.models.CartItemsModelClass;
 import com.example.foodbox.models.ItemsModelClass;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -55,7 +42,6 @@ import com.nex3z.notificationbadge.NotificationBadge;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -74,6 +60,8 @@ public class RestaurantItems extends AppCompatActivity {
     private NotificationBadge notificationBadge;
     private boolean status = false;
     private ImageView cartIcon2;
+
+
 
     static RestaurantItems instance;
 
@@ -95,19 +83,13 @@ public class RestaurantItems extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
+
         restaurant = getIntent().getStringExtra("restaurant");
         first_name = getIntent().getStringExtra("first_name");
         last_name = getIntent().getStringExtra("last_name");
 
         rvItems = (RecyclerView) findViewById(R.id.rvItems);
         rvItems.setLayoutManager(new LinearLayoutManager(this));
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Snackbar.make(findViewById(android.R.id.content), "Minimum order amount is PKR50.", Snackbar.LENGTH_INDEFINITE).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
-            }
-        });
 
         firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -168,7 +150,7 @@ public class RestaurantItems extends AppCompatActivity {
 //                    }
 //                });
 //                if (status){
-//                    Snackbar.make(findViewById(android.R.id.content), "Your orders are already in progress.", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
+//                    Snackbar.make(findViewById(android.R.id.content), "Your orders are already in progress.", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.).setTextColor(Color.WHITE).show();
 //                }
 //                else {
 
@@ -176,7 +158,7 @@ public class RestaurantItems extends AppCompatActivity {
                         @Override
                         public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
                             if (badgeCount == 0){
-                                Snackbar.make(findViewById(android.R.id.content), "You have not added any product till now!", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
+                                Snackbar.make(findViewById(android.R.id.content), "You have not added any product till now!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                             }
                             else {
                                 Intent intent = new Intent(RestaurantItems.this, CartActivity.class);
@@ -189,7 +171,8 @@ public class RestaurantItems extends AppCompatActivity {
 
                         @Override
                         public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                            Toast.makeText(RestaurantItems.this, "Please accept the permission!", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(findViewById(android.R.id.content), "Please accept the permission!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+
                         }
 
                         @Override

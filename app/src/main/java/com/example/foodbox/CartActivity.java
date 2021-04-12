@@ -13,6 +13,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
@@ -139,7 +140,7 @@ public class CartActivity extends AppCompatActivity {
                         .setAddressRequired(true) // Set If return only Coordinates if cannot fetch Address for the coordinates. Default: True
                         .hideMarkerShadow(true) // Hides the shadow under the map marker. Default: False
                         .setMarkerDrawable(R.drawable.marker) // Change the default Marker Image
-                        .setMarkerImageImageColor(R.color.colorPrimary)
+                        .setMarkerImageImageColor(R.color.myColor)
                         .setFabColor(R.color.myColor)
                         .setPrimaryTextColor(R.color.black) // Change text color of Shortened Address
                         .setSecondaryTextColor(R.color.black) // Change text color of full Address
@@ -216,7 +217,7 @@ public class CartActivity extends AppCompatActivity {
                 String total = tvGrandTotal.getText().toString().trim().replace("PKR", "");
 
                 if (cartItemsList.size() == 0){
-                    Snackbar.make(findViewById(android.R.id.content), "No Item Found", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
+                    Snackbar.make(findViewById(android.R.id.content), "No Item Found", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                 }
                 else {
 
@@ -239,6 +240,7 @@ public class CartActivity extends AppCompatActivity {
                                     order1.put("status", "Pending");
                                     order1.put("ID", shortUUID());
                                     order1.put("address", address);
+                                    order1.put("latlng", latLng);
 
                                     firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2")
                                             .collection("Cart").document(restaurant+" "+getDateTime())
@@ -253,7 +255,6 @@ public class CartActivity extends AppCompatActivity {
                                                 order2.put("price", cartItemsList.get(i).getPrice());
                                                 order2.put("items_count", cartItemsList.get(i).getItems_Count());
                                                 order2.put("final_price", cartItemsList.get(i).getFinalPrice());
-                                                order2.put("latlng", latLng);
 
                                                 firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2")
                                                         .collection("Cart").document(restaurant+" "+getDateTime())
@@ -270,17 +271,17 @@ public class CartActivity extends AppCompatActivity {
 //                                          updateCartCount();
                                             allTotalPrice = 0.00;
 
-                                            Snackbar.make(findViewById(android.R.id.content), "Order Placed!", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
+                                            Snackbar.make(findViewById(android.R.id.content), "Order Placed!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
 
-                                            Handler handler = new Handler();
+                                            Handler handler = new Handler(Looper.myLooper());
                                             handler.postDelayed(new Runnable() {
                                                 @Override
                                                 public void run() {
                                                     Intent intent = new Intent(CartActivity.this, MainActivity.class);
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                     startActivity(intent);
-                                                    finish();
                                                 }
-                                            }, 100);
+                                            }, 1000);
                                         }
                                     });
                                 }

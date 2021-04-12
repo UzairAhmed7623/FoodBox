@@ -102,9 +102,10 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
                         Log.d("asdfgh2", ""+id+itemName+price+itemCount+finalPrice+pId);
 
                         arrayListMember.add(historyModelClass);
-                        holder.rvMember.setAdapter(new MemberTrackOrdersAdapter(arrayListMember));
 
                     }
+                    holder.rvMember.setAdapter(new MemberTrackOrdersAdapter(arrayListMember));
+
                 }
             }
         });
