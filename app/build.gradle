@@ -8,7 +8,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.example.foodbox"
+        applicationId "com.inkhornsolutions.foodbox"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
@@ -60,6 +60,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.maps.android:android-maps-utils:2.2.0'
 
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
+
     implementation 'com.karumi:dexter:6.2.2'
 
     implementation 'com.nex3z:notification-badge:1.0.2'
@@ -74,5 +77,7 @@ dependencies {
     // If you want to use the GPU Filters
     implementation 'jp.co.cyberagent.android:gpuimage:2.0.4'
     implementation 'com.github.dhaval2404:imagepicker:1.8'
+
+    implementation 'com.github.jrvansuita:PickImage:v2.5.2'
 
 }

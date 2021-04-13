@@ -1,42 +1,153 @@
 {
   "project_info": {
-    "project_number": "646529714095",
-    "firebase_url": "https://cook-house-junction-default-rtdb.firebaseio.com",
-    "project_id": "cook-house-junction",
-    "storage_bucket": "cook-house-junction.appspot.com"
+    "project_number": "438055928659",
+    "firebase_url": "https://dashboard-1-77897.firebaseio.com",
+    "project_id": "dashboard-1-77897",
+    "storage_bucket": "dashboard-1-77897.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:646529714095:android:589e3b38cadd48a4bcd15a",
+        "mobilesdk_app_id": "1:438055928659:android:6a2be083e33c12bb2bd7a6",
         "android_client_info": {
-          "package_name": "com.example.foodbox"
+          "package_name": "com.example.dashboard1"
         }
       },
       "oauth_client": [
         {
-          "client_id": "646529714095-noj1bp1o9s6s0lr0brsuas5v1oi94u6b.apps.googleusercontent.com",
+          "client_id": "438055928659-5lplfi2kh93tvt3iu79lptl18rsj3ngl.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.foodbox",
+            "package_name": "com.example.dashboard1",
             "certificate_hash": "1e9cf9319f501b8dc9ff76dc8e7fd037b4a23f0a"
           }
         },
         {
-          "client_id": "646529714095-f0piu7eo5cenjp63vdoiesec162h5asj.apps.googleusercontent.com",
+          "client_id": "438055928659-nma41jf5innq87jfu0aa82c6gh883npu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dashboard1",
+            "certificate_hash": "b38ed978185c324463df960550654183ad8c14c6"
+          }
+        },
+        {
+          "client_id": "438055928659-mv9a4btuqrgkdcp8tl3oat19kntkd4b3.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDz5SGuMt1WYXUOyLUDi2-SC1a7Vki90Ds"
+          "current_key": "AIzaSyALFgAH2XfwOFMG5TYwSmIIOO8fQ5kmUiQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "646529714095-f0piu7eo5cenjp63vdoiesec162h5asj.apps.googleusercontent.com",
+              "client_id": "438055928659-mv9a4btuqrgkdcp8tl3oat19kntkd4b3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:438055928659:android:cc3f02fe7f53c6de2bd7a6",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "438055928659-mv9a4btuqrgkdcp8tl3oat19kntkd4b3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALFgAH2XfwOFMG5TYwSmIIOO8fQ5kmUiQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "438055928659-mv9a4btuqrgkdcp8tl3oat19kntkd4b3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:438055928659:android:d58ba900e6dc76ae2bd7a6",
+        "android_client_info": {
+          "package_name": "com.inkhornsolutions.foodbox"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "438055928659-ui85g5tt9h72uubtb29eodt6v8vlfeud.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.inkhornsolutions.foodbox",
+            "certificate_hash": "1e9cf9319f501b8dc9ff76dc8e7fd037b4a23f0a"
+          }
+        },
+        {
+          "client_id": "438055928659-mv9a4btuqrgkdcp8tl3oat19kntkd4b3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALFgAH2XfwOFMG5TYwSmIIOO8fQ5kmUiQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "438055928659-mv9a4btuqrgkdcp8tl3oat19kntkd4b3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:438055928659:android:c1db25f96160a8882bd7a6",
+        "android_client_info": {
+          "package_name": "com.inkhornsolutions.kitchen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "438055928659-btee9uf09j6dh7scd99smg47c83h45fp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.inkhornsolutions.kitchen",
+            "certificate_hash": "1e9cf9319f501b8dc9ff76dc8e7fd037b4a23f0a"
+          }
+        },
+        {
+          "client_id": "438055928659-mv9a4btuqrgkdcp8tl3oat19kntkd4b3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALFgAH2XfwOFMG5TYwSmIIOO8fQ5kmUiQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "438055928659-mv9a4btuqrgkdcp8tl3oat19kntkd4b3.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
