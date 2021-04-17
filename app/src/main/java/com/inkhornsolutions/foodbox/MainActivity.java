@@ -99,13 +99,11 @@ public class MainActivity extends AppCompatActivity  {
         rvRestaurant = (RecyclerView) findViewById(R.id.rvRestaurantName);
         rvRestaurant.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
-        View view = LayoutInflater.from(this).inflate(R.layout.progress_bar, null);
-
-        ProgressDialog dialog = new ProgressDialog(this);
-        dialog.show();
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.progress_bar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.show();
+        progressDialog.setCancelable(false);
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         firebaseFirestore.collection("Restaurants").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -120,6 +118,7 @@ public class MainActivity extends AppCompatActivity  {
                     }
                     rvRestaurant.setAdapter(new MainActivityAdapter(getApplicationContext(), tvRestaurant, ivRestaurant));
                 }
+                progressDialog.dismiss();
             }
         });
 
