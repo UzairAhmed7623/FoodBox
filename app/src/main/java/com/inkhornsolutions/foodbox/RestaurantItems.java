@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
@@ -57,9 +58,6 @@ public class RestaurantItems extends AppCompatActivity {
     private NotificationBadge notificationBadge;
     private boolean status = false;
     private ImageView cartIcon2;
-
-
-
     static RestaurantItems instance;
 
     public static RestaurantItems getInstance() {
@@ -79,6 +77,8 @@ public class RestaurantItems extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
+
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
 
         restaurant = getIntent().getStringExtra("restaurant");

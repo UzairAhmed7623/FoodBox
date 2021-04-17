@@ -52,7 +52,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         holder.tvRestaurant.setText(resName);
 
         String imageUri = imagesUri.get(position);
-        Glide.with(context).load(imageUri).placeholder(R.drawable.placeholder).fitCenter().into(holder.ivRestaurant);
+        Glide.with(context).load(imageUri).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivRestaurant);
 
         holder.itemView.setSelected(checkedPosition == position);
 
@@ -65,7 +65,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
                 String resName = holder.tvRestaurant.getText().toString();
 
-                firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()){

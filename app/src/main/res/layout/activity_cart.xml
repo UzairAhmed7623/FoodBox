@@ -16,6 +16,7 @@
         android:textAllCaps="true"
         android:textColor="@android:color/black"
         android:textStyle="bold"
+        android:fontFamily="@font/uber_move_bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,6 +29,7 @@
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textColor="@android:color/black"
+        android:fontFamily="@font/uber_move"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,18 +44,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvShopName" />
 
-    <TextView
-        android:id="@+id/UserName"
+    <RelativeLayout
+        android:id="@+id/layout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:text="Name: "
-        android:textColor="@android:color/black"
-        android:textSize="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/view2" />
+        app:layout_constraintTop_toTopOf="@+id/view2">
+
+        <TextView
+            android:id="@+id/UserNamePlaceHolder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:text="Name: "
+            android:fontFamily="@font/poppins_medium"
+            android:textColor="@android:color/black"
+            android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/UserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="User Name "
+            android:textColor="@android:color/black"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            android:fontFamily="@font/poppins_medium"
+            android:layout_toEndOf="@+id/UserNamePlaceHolder"/>
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/locationLabel"
@@ -63,11 +85,12 @@
         android:layout_marginTop="25dp"
         android:text="Deliever to: "
         android:textColor="@android:color/black"
-        android:textSize="16dp"
+        android:textSize="14dp"
+        android:fontFamily="@font/poppins_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/UserName" />
+        app:layout_constraintTop_toTopOf="@+id/layout1" />
 
     <TextView
         android:id="@+id/Address"
@@ -77,9 +100,10 @@
         android:padding="10dp"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:text="Address"
+        android:text="Delivery Address"
         android:textColor="@android:color/black"
-        android:textSize="16dp"
+        android:textSize="14dp"
+        android:fontFamily="@font/poppins_medium"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -135,6 +159,7 @@
                 android:layout_alignParentStart="true"
                 android:padding="5dp"
                 android:text="Sub Total"
+                android:fontFamily="@font/uber_move_bold"
                 android:textColor="@android:color/black"
                 android:textStyle="bold" />
 
@@ -144,6 +169,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:padding="5dp"
+                android:fontFamily="@font/uber_move_bold"
                 android:text="0.0"
                 android:textColor="@android:color/black"
                 android:textStyle="bold" />
@@ -154,6 +180,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvSubTotalLabel"
                 android:padding="5dp"
+                android:fontFamily="@font/uber_move_bold"
                 android:text="Delivery Fee"
                 android:textColor="@android:color/black"
                 android:textStyle="bold" />
@@ -165,6 +192,7 @@
                 android:layout_below="@+id/tvSubTotal"
                 android:layout_alignParentEnd="true"
                 android:padding="5dp"
+                android:fontFamily="@font/uber_move_bold"
                 android:text="0.0"
                 android:textColor="@android:color/black"
                 android:textStyle="bold" />
@@ -175,6 +203,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvDeliveryFeeLabel"
                 android:padding="5dp"
+                android:fontFamily="@font/uber_move_bold"
                 android:text="Grand Total"
                 android:textColor="@android:color/black"
                 android:textStyle="bold" />
@@ -186,6 +215,7 @@
                 android:layout_below="@+id/tvDeliveryFee"
                 android:layout_alignParentEnd="true"
                 android:padding="5dp"
+                android:fontFamily="@font/uber_move_bold"
                 android:text="0.0"
                 android:textColor="@android:color/black"
                 android:textStyle="bold" />

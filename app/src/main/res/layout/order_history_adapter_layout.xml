@@ -28,72 +28,63 @@
                 android:orientation="vertical"
                 android:background="?attr/selectableItemBackground">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvResNameHistory"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_gravity="left|center_vertical"
-                        android:text="Restaurant Name"
-                        android:textAllCaps="true"
-                        android:textColor="@android:color/black"
-                        android:textSize="15sp"
-                        android:fontFamily="@font/poppins_medium"/>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_gravity="center_vertical">
-
-                        <TextView
-                            android:id="@+id/tvDateHistory"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginStart="10dp"
-                            android:gravity="start"
-                            android:text="Date"
-                            android:textAllCaps="true"
-                            android:textColor="@android:color/black"
-                            android:textSize="15sp"
-                            android:fontFamily="@font/poppins_medium"/>
-
-                        <TextView
-                            android:id="@+id/tvStatusHistory"
+                        <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:text="In progress"
-                            android:textAllCaps="true"
-                            android:textColor="#00F83E"
-                            android:fontFamily="@font/poppins_medium"
-                            android:textSize="14sp"
-                            android:visibility="visible"
-                            android:layout_gravity="end|center_vertical"
-                            android:gravity="end" />
+                            android:orientation="horizontal"
+                            android:layout_gravity="center_vertical">
 
-                    </LinearLayout>
+                            <TextView
+                                android:id="@+id/tvResNameHistory"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginStart="10dp"
+                                android:layout_gravity="left|center_vertical"
+                                android:text="Restaurant Name"
+                                android:textAllCaps="true"
+                                android:textColor="@android:color/black"
+                                android:textSize="15sp"
+                                android:fontFamily="@font/poppins_medium"/>
 
-                    <TextView
-                        android:id="@+id/tvGrandTotalHistory"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_gravity="left|center_vertical"
-                        android:text="Total Price"
-                        android:textAllCaps="true"
-                        android:textColor="@android:color/black"
-                        android:textSize="15sp"
-                        android:fontFamily="@font/poppins_medium"/>
+                            <TextView
+                                android:id="@+id/tvDateHistory"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/tvResNameHistory"
+                                android:layout_marginStart="10dp"
+                                android:gravity="start"
+                                android:text="Date"
+                                android:textAllCaps="true"
+                                android:textColor="@android:color/black"
+                                android:textSize="15sp"
+                                android:fontFamily="@font/poppins_medium"/>
 
-                </LinearLayout>
+                            <TextView
+                                android:id="@+id/tvGrandTotalHistory"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/ivStatusHistory"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginStart="10dp"
+                                android:layout_gravity="left|center_vertical"
+                                android:text="Total Price"
+                                android:textAllCaps="true"
+                                android:textColor="@android:color/black"
+                                android:textSize="15sp"
+                                android:fontFamily="@font/poppins_medium"/>
+
+                            <ImageView
+                                android:id="@+id/ivStatusHistory"
+                                android:layout_width="100dp"
+                                android:layout_height="50dp"
+                                android:layout_marginEnd="15dp"
+                                android:src="@drawable/completed"
+                                android:layout_centerVertical="true"
+                                android:layout_alignParentEnd="true" />
+
+                        </RelativeLayout>
+
 
                 <LinearLayout
                     android:id="@+id/expandablelLayoutHistory"

@@ -11,7 +11,7 @@ android {
         applicationId "com.inkhornsolutions.foodbox"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 1
+        versionCode 6
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -79,5 +79,12 @@ dependencies {
     implementation 'com.github.dhaval2404:imagepicker:1.8'
 
     implementation 'com.github.jrvansuita:PickImage:v2.5.2'
+
+    implementation 'com.github.Yalantis:pull-to-make-soup:1.0.2'
+    implementation 'com.mxn.soul:flowingdrawer-core:2.1.0'
+    implementation 'com.nineoldandroids:library:2.4.0'
+
+    implementation 'com.airbnb.android:lottie:3.6.0'
+
 
 }

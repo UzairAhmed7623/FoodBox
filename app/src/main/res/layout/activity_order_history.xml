@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".OrderHistory">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarHistory"
@@ -19,21 +19,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/layout"
+    <com.yalantis.pulltomakesoup.PullToRefreshView
+        android:id="@+id/pull_to_refresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbarHistory">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvHistory"
+        <LinearLayout
+            android:id="@+id/layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:padding="5dp"
+            android:focusable="true">
 
-    </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvHistory"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+    </com.yalantis.pulltomakesoup.PullToRefreshView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

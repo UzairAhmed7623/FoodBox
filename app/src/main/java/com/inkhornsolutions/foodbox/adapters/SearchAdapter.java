@@ -56,7 +56,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
         holder.tvItemSearch.setText(itemname);
         holder.tvItemPriceSearch.setText("PKR"+price);
-        Glide.with(context).load(imageUri).placeholder(R.drawable.placeholder).fitCenter().into(holder.ivItemSearch);
+        Glide.with(context).load(imageUri).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivItemSearch);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

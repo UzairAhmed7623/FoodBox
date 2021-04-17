@@ -5,13 +5,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.inkhornsolutions.foodbox.R;
 import com.inkhornsolutions.foodbox.models.HistoryModelClass;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -55,7 +58,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         holder.tvResNameHistory.setText(resName);
         holder.tvGrandTotalHistory.setText("Price: " + totalPrice);
         holder.tvDateHistory.setText("Date: " + date);
-        holder.tvStatusHistory.setText(status);
+        Glide.with(context).load(ContextCompat.getDrawable(context,R.drawable.completed)).into(holder.ivStatusHistory);
 
         boolean isExpanded = history.get(position).isExpanded();
 
@@ -113,7 +116,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvStatusHistory, tvResNameHistory, tvDateHistory, tvGrandTotalHistory;
+        private TextView tvResNameHistory, tvDateHistory, tvGrandTotalHistory;
+        private ImageView ivStatusHistory;
         private LinearLayout expandablelLayoutHistory;
         private RecyclerView rvMemberHistory;
 
@@ -121,7 +125,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             super(itemView);
 
             firebaseFirestore = FirebaseFirestore.getInstance();
-            tvStatusHistory = (TextView) itemView.findViewById(R.id.tvStatusHistory);
+            ivStatusHistory = (ImageView) itemView.findViewById(R.id.ivStatusHistory);
             tvResNameHistory = (TextView) itemView.findViewById(R.id.tvResNameHistory);
             tvDateHistory = (TextView) itemView.findViewById(R.id.tvDateHistory);
             tvGrandTotalHistory = (TextView) itemView.findViewById(R.id.tvGrandTotalHistory);

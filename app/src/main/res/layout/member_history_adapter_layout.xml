@@ -6,7 +6,8 @@
     android:orientation="horizontal"
     android:gravity="center"
     android:padding="4dp"
-    android:background="?attr/selectableItemBackgroundBorderless" >
+    android:background="#4D228B22"
+    android:foreground="?attr/selectableItemBackgroundBorderless" >
 
     <View
         android:layout_width="10dp"

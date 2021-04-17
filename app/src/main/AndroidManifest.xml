@@ -13,9 +13,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -48,9 +45,9 @@
             android:label="@string/title_activity_maps" />
         <activity android:name="com.inkhornsolutions.foodbox.CartActivity" />
         <activity android:name="com.inkhornsolutions.foodbox.SearchActivity" />
-        <activity android:name="com.inkhornsolutions.foodbox.TrackOrders" />
-        <activity android:name="com.inkhornsolutions.foodbox.OrderHistory" />
-        <activity android:name="com.inkhornsolutions.foodbox.RestaurantItems" />
+        <activity android:name="com.inkhornsolutions.foodbox.TrackOrders" android:parentActivityName=".MainActivity" />
+        <activity android:name="com.inkhornsolutions.foodbox.OrderHistory" android:parentActivityName=".MainActivity"/>
+        <activity android:name="com.inkhornsolutions.foodbox.RestaurantItems" android:parentActivityName=".MainActivity" />
         <activity android:name="com.inkhornsolutions.foodbox.MainActivity"/>
         <activity android:name="com.inkhornsolutions.foodbox.Profile" android:parentActivityName=".MainActivity"/>
 

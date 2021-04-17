@@ -7,9 +7,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="myColor">#228B22</color>
-    <color name="myColorSecond">#70228B22</color>
-    <color name="statusBar">#B5228B22</color>
+    <color name="myColor">#cc0000</color>
+    <color name="myColorSecond">#e60000</color>
+    <color name="statusBar">#ff3333</color>
 
     <color name="profileBackground">#fff</color>
     <color name="profileAccentColor">#F7F7F7</color>
@@ -21,6 +21,6 @@
     <color name="grey_60">#666666</color>
     <color name="grey_80">#37474F</color>
     <color name="grey_90">#263238</color>
-    <color name="white_greyish">#EEEEEE</color>
+    <color name="white_greyish">#45000000</color>
     <color name="button_selectorcolor">#9E9E9E</color>
 </resources>

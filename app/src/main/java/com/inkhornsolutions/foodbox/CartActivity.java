@@ -109,7 +109,7 @@ public class CartActivity extends AppCompatActivity {
         String first_name = getIntent().getStringExtra("first_name");
         String last_name = getIntent().getStringExtra("last_name");
 
-        UserName.setText("Name: " + first_name +" "+ last_name);
+        UserName.setText(first_name +" "+ last_name);
 
         getCurrentLocation();
 

@@ -54,7 +54,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
         holder.tvItem.setText(modelClass.getItemName());
         holder.tvItemPrice.setText(modelClass.getPrice());
-        Glide.with(context).load(modelClass.getImageUri()).placeholder(R.drawable.placeholder).fitCenter().into(holder.ivItem);
+        Glide.with(context).load(modelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivItem);
         holder.tvItemSchedule.setText("Available from: "+ modelClass.getSchedule());
 
         name = modelClass.getUserName();

@@ -15,7 +15,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/placeholder"
+            android:src="@drawable/food_placeholder"
             android:layout_marginTop="10dp"/>
 
         <TextView

@@ -21,6 +21,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class TrackOrders extends AppCompatActivity {
 
@@ -42,6 +43,7 @@ public class TrackOrders extends AppCompatActivity {
         toolbarTrack = (Toolbar) findViewById(R.id.toolbarTrack);
 
         setSupportActionBar(toolbarTrack);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         rvTrack = (RecyclerView) findViewById(R.id.rvTrack);
         rvTrack.setLayoutManager(new LinearLayoutManager(this));

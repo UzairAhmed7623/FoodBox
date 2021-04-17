@@ -3,19 +3,28 @@ package com.inkhornsolutions.foodbox;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,15 +41,18 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.mxn.soul.flowingdrawer_core.ElasticDrawer;
+import com.mxn.soul.flowingdrawer_core.FlowingDrawer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity  {
 
     private RecyclerView rvRestaurant;
     private List<String> tvRestaurant = new ArrayList<>();
@@ -49,11 +61,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private String resName, delivery = "45";
-    private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private FlowingDrawer drawerLayout;
     private TextView tvUserName;
     private CircleImageView ivProfileImage;
     private ImageView ivProfileSettings;
+    private RelativeLayout layout;
+    private TextView orderHistory;
+    private TextView trackOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,39 +79,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        layout = (RelativeLayout) findViewById(R.id.layout);
+        trackOrder = (TextView) findViewById(R.id.trackOrder);
+        orderHistory = (TextView) findViewById(R.id.orderHistory);
+        tvUserName = (TextView) findViewById(R.id.tvUserName);
+        ivProfileImage = (CircleImageView) findViewById(R.id.ivProfileImage);
+        ivProfileSettings = (ImageView) findViewById(R.id.ivProfileSettings);
+        drawerLayout = (FlowingDrawer) findViewById(R.id.drawerLayout);
 
         setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        drawerLayout = findViewById(R.id.drawerLayout);
-        navigationView = findViewById(R.id.navView);
-        View header_View = navigationView.getHeaderView(0);
+        toolbar.setNavigationIcon(R.drawable.ic_menu);
 
-        navigationView.bringToFront();
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-        navigationView.setNavigationItemSelectedListener(MainActivity.this);
-        navigationView.setCheckedItem(R.id.navView);
-
-        tvUserName = (TextView) header_View.findViewById(R.id.tvUserName);
         headerTextView();
 
-        ivProfileImage = (CircleImageView) header_View.findViewById(R.id.ivProfileImage);
         headerImage();
-
-        ivProfileSettings = (ImageView) header_View.findViewById(R.id.ivProfileSettings);
-        ivProfileSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Profile.class);
-                startActivity(intent);
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                drawerLayout.closeDrawer(GravityCompat.START);
-            }
-        });
 
         rvRestaurant = (RecyclerView) findViewById(R.id.rvRestaurantName);
         rvRestaurant.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+
+        View view = LayoutInflater.from(this).inflate(R.layout.progress_bar, null);
+
+        ProgressDialog dialog = new ProgressDialog(this);
+        dialog.show();
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.progress_bar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         firebaseFirestore.collection("Restaurants").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -115,6 +124,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         deleteCartItems();
+
+        drawerLayout.setTouchMode(ElasticDrawer.TOUCH_MODE_BEZEL);
+        drawerLayout.setOnDrawerStateChangeListener(new ElasticDrawer.OnDrawerStateChangeListener() {
+            @Override
+            public void onDrawerStateChange(int oldState, int newState) {
+                if (newState == ElasticDrawer.STATE_CLOSED) {
+                    Log.i("MainActivity", "Drawer STATE_CLOSED");
+                    layout.setForeground(new ColorDrawable(ContextCompat.getColor(getApplicationContext(), android.R.color.transparent)));
+                }
+                else if (newState == ElasticDrawer.STATE_OPEN){
+                    Log.i("MainActivity", "Drawer STATE_OPEN");
+
+
+                    orderHistory.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(MainActivity.this, OrderHistory.class);
+                            startActivity(intent);
+                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                            drawerLayout.closeMenu();
+                        }
+                    });
+                    trackOrder.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(MainActivity.this, TrackOrders.class);
+                            startActivity(intent);
+                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                            drawerLayout.closeMenu();
+                        }
+                    });
+                    ivProfileSettings.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(MainActivity.this, Profile.class);
+                            startActivity(intent);
+                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                            drawerLayout.closeMenu();
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onDrawerSlide(float openRatio, int offsetPixels) {
+                Log.i("MainActivity", "openRatio=" + openRatio + " ,offsetPixels=" + offsetPixels);
+                if (openRatio > 0){
+                    layout.setForeground(new ColorDrawable(ContextCompat.getColor(getApplicationContext(), R.color.white_greyish)));
+                }
+            }
+        });
     }
 
     public void headerTextView(){
@@ -195,8 +254,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)){
-            drawerLayout.closeDrawer(GravityCompat.START);
+        if (drawerLayout.isMenuVisible()){
+            drawerLayout.closeMenu();
         }
         else {
             super.onBackPressed();
@@ -217,24 +276,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
-        return true;
-    }
+        else if (item.getItemId() == android.R.id.home) {
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            drawerLayout.toggleMenu();
 
-        if (item.getItemId() == R.id.orderHistory){
-            Intent intent = new Intent(MainActivity.this, OrderHistory.class);
-            startActivity(intent);
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
-        else if (item.getItemId() == R.id.trackOrder) {
-            Intent intent = new Intent(MainActivity.this, TrackOrders.class);
-            startActivity(intent);
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        }
-        drawerLayout.closeDrawer(GravityCompat.START);
-
         return true;
     }
 

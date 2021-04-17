@@ -35,9 +35,8 @@
                     android:layout_height="200dp"
                     android:adjustViewBounds="true"
                     android:scaleType="fitXY"
-                    android:src="@drawable/placeholder"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackgroundBorderless" />
+                    android:src="@drawable/food_placeholder"
+                    android:focusable="true"/>
 
                 <TextView
                     android:id="@+id/tvRestaurant"
@@ -50,9 +49,7 @@
                     android:textAllCaps="true"
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:background="?attr/selectableItemBackgroundBorderless" />
-
+                    android:fontFamily="@font/poppins_medium"/>
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>

@@ -19,9 +19,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.yalantis.pulltomakesoup.PullToRefreshView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class OrderHistory extends AppCompatActivity {
 
@@ -30,6 +32,7 @@ public class OrderHistory extends AppCompatActivity {
     private List<HistoryModelClass> OrderHistory = new ArrayList<>();
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
+    PullToRefreshView mPullToRefreshView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,15 +45,37 @@ public class OrderHistory extends AppCompatActivity {
         toolbarHistory = (Toolbar) findViewById(R.id.toolbarHistory);
 
         setSupportActionBar(toolbarHistory);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+        mPullToRefreshView = (PullToRefreshView) findViewById(R.id.pull_to_refresh);
 
         rvHistory = (RecyclerView) findViewById(R.id.rvHistory);
         rvHistory.setLayoutManager(new LinearLayoutManager(this));
 
+        loadData();
+
+        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                mPullToRefreshView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        loadData();
+                    }
+                }, 3000);
+            }
+        });
+    }
+
+    private void loadData(){
         firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2")
-                .collection("Cart").whereEqualTo("status", "completed")
+                .collection("Cart").whereEqualTo("status", "Completed")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                OrderHistory.clear();
                 for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
                     if (documentSnapshot.exists()){
 
@@ -80,6 +105,7 @@ public class OrderHistory extends AppCompatActivity {
                         Toast.makeText(OrderHistory.this, "Data not found!", Toast.LENGTH_SHORT).show();
                     }
                 }
+                mPullToRefreshView.setRefreshing(false);
             }
         });
     }

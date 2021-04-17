@@ -55,7 +55,7 @@
                 android:id="@+id/ibRemoveItemCart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@null"
+                android:background="?attr/selectableItemBackground"
                 android:layout_alignParentStart="true"
                 android:src="@drawable/remove_item" />
 
@@ -75,7 +75,7 @@
                 android:id="@+id/ibAddItemCart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@null"
+                android:background="?attr/selectableItemBackground"
                 android:layout_toEndOf="@+id/tvItemCount"
                 android:src="@drawable/add_item" />
 
