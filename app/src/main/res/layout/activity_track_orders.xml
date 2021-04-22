@@ -6,34 +6,36 @@
     android:layout_height="match_parent"
     tools:context=".TrackOrders">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarTrack"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:title="Your Orders"
-        android:background="@color/myColor"
-        app:titleTextColor="@android:color/white"
-        app:layout_constraintVertical_bias="0.0"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <LinearLayout
-        android:id="@+id/layoutTrack"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarTrack">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvTrack"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarTrack"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@color/myColor"
+            app:title="Your Orders"
+            app:titleTextColor="@android:color/white" />
 
-    </LinearLayout>
+        <com.yalantis.pulltomakesoup.PullToRefreshView
+            android:id="@+id/refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbarTrack">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvTrack"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </com.yalantis.pulltomakesoup.PullToRefreshView>
+
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

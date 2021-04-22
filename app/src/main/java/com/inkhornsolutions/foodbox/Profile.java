@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -66,10 +68,7 @@ public class Profile extends AppCompatActivity {
     public static final int REQUEST_IMAGE = 1002;
     private TextView tvFirstName, tvLastName, tvEmailAddress;
     private TextView tvName, tvMobile, tvEmail, tvAddress, tvDateOfBirth;
-    private Button btnSave;
-    private ImageButton ivAddImage;
     private CircleImageView ivProfile;
-    private Uri imageUri;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
     private FirebaseStorage firebaseStorage;
@@ -77,7 +76,7 @@ public class Profile extends AppCompatActivity {
     private Toolbar toolbar;
     private CoordinatorLayout rootLayout;
     private DatePickerDialog datePickerDialog;
-    private ProgressDialog dialog;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,10 +105,11 @@ public class Profile extends AppCompatActivity {
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        dialog = new ProgressDialog(this);
-        dialog.setMessage("Please wait...");
-        dialog.setCancelable(false);
-        dialog.show();
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
+        progressDialog.setCancelable(false);
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -146,13 +146,13 @@ public class Profile extends AppCompatActivity {
                     }
 
                 }
-                dialog.dismiss();
+                progressDialog.dismiss();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).show();
-                dialog.dismiss();
+                progressDialog.dismiss();
             }
         });
 
@@ -160,12 +160,13 @@ public class Profile extends AppCompatActivity {
         EditText editText = (EditText) view.findViewById(R.id.editText);
         EditText editText2 = (EditText) view.findViewById(R.id.editText2);
         TextInputLayout TextInputLayout2 = (TextInputLayout) view.findViewById(R.id.TextInputLayout2);
-        Button btnAdd = (Button) view.findViewById(R.id.btnAdd);
+        TextView btnAdd = (TextView) view.findViewById(R.id.tvSave);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
         builder.setView(view);
 
         AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
 
         tvName.setOnClickListener(new View.OnClickListener() {
@@ -458,13 +459,13 @@ public class Profile extends AppCompatActivity {
                         .listener(new RequestListener<Drawable>() {
                             @Override
                             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                dialog.dismiss();
+                                progressDialog.dismiss();
                                 return false; // important to return false so the error placeholder can be placed
                             }
 
                             @Override
                             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                dialog.dismiss();
+                                progressDialog.dismiss();
                                 return false;
                             }
                         })
@@ -485,7 +486,7 @@ public class Profile extends AppCompatActivity {
 
     private void uploadImage(Uri imageUri) {
 
-        dialog.show();
+        progressDialog.show();
 
         String someFilepath = String.valueOf(imageUri);
         String extension = someFilepath.substring(someFilepath.lastIndexOf("."));
@@ -511,14 +512,14 @@ public class Profile extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                dialog.dismiss();
+                                progressDialog.dismiss();
                                 Snackbar.make(findViewById(android.R.id.content), "Image Uploaded", Snackbar.LENGTH_LONG).setBackgroundTint(getResources().getColor(R.color.myColor)).show();
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                dialog.dismiss();
+                                progressDialog.dismiss();
                                 Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getResources().getColor(R.color.myColor)).show();
                             }
                         });
@@ -527,7 +528,7 @@ public class Profile extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        dialog.dismiss();
+                        progressDialog.dismiss();
                         Snackbar.make(findViewById(android.R.id.content), "Failed to Upload", Snackbar.LENGTH_LONG).setBackgroundTint(getResources().getColor(R.color.myColor)).show();
                     }
                 });

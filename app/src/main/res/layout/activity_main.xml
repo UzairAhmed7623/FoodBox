@@ -49,7 +49,6 @@
                     android:id="@+id/tvAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cavelry Ground Lahore"
                     android:layout_gravity="center_vertical"
                     android:textColor="@android:color/white"
                     android:textSize="16dp"
@@ -60,11 +59,18 @@
 
         </androidx.core.widget.NestedScrollView>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvRestaurantName"
+        <com.yalantis.pulltomakesoup.PullToRefreshView
+            android:id="@+id/pull_to_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/bottemSheet"/>
+            android:layout_below="@+id/bottemSheet">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvRestaurantName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </com.yalantis.pulltomakesoup.PullToRefreshView>
 
     </RelativeLayout>
 

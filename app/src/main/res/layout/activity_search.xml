@@ -8,15 +8,16 @@
     tools:context=".SearchActivity">
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:padding="5dp"
-        app:layout_constraintVertical_bias="0.0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout"
@@ -32,46 +33,34 @@
                 android:id="@+id/etSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
+                android:drawableStart="@drawable/search"
+                android:drawableTint="@color/myColor"
                 android:hint="Search"
-                android:singleLine="true"
                 android:imeOptions="actionSearch"
-                android:drawableEnd="@drawable/search"
-                android:drawableTint="@color/myColor"/>
+                android:padding="10dp"
+                android:singleLine="true" />
 
         </com.google.android.material.textfield.TextInputLayout>
-
-        <LinearLayout
-            android:id="@+id/layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignTop="@+id/text_input_layout"
-            android:layout_alignEnd="@+id/text_input_layout"
-            android:layout_alignStart="@+id/text_input_layout"
-            android:layout_alignBottom="@+id/text_input_layout"
-            android:gravity="center_vertical|end">
-
-            <Button
-                android:id="@+id/btnSearch"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginEnd="20.6dp"
-                android:layout_marginTop="2.8dp"
-                android:background="@drawable/search"
-                android:text="Search" />
-
-        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/layout"
+            android:layout_below="@+id/text_input_layout"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"/>
+            android:layout_alignParentBottom="true" />
 
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/ivSearchBackground"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/search_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

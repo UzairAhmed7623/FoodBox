@@ -5,12 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.inkhornsolutions.foodbox.adapters.HistoryAdapter;
 import com.inkhornsolutions.foodbox.models.HistoryModelClass;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,7 +36,8 @@ public class OrderHistory extends AppCompatActivity {
     private List<HistoryModelClass> OrderHistory = new ArrayList<>();
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-    PullToRefreshView mPullToRefreshView;
+    private PullToRefreshView mPullToRefreshView;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +56,12 @@ public class OrderHistory extends AppCompatActivity {
 
         rvHistory = (RecyclerView) findViewById(R.id.rvHistory);
         rvHistory.setLayoutManager(new LinearLayoutManager(this));
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
+        progressDialog.setCancelable(false);
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         loadData();
 
@@ -102,10 +113,17 @@ public class OrderHistory extends AppCompatActivity {
 
                     }
                     else {
-                        Toast.makeText(OrderHistory.this, "Data not found!", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(android.R.id.content), "Data not found!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                     }
                 }
                 mPullToRefreshView.setRefreshing(false);
+                progressDialog.dismiss();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressDialog.dismiss();
+                Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
             }
         });
     }

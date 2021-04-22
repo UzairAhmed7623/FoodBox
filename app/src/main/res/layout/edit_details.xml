@@ -4,12 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/edit_details_background"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/add_details_back"
+        android:background="@drawable/edit_details_background"
         android:orientation="vertical">
 
         <com.google.android.material.textfield.TextInputLayout
@@ -59,19 +60,32 @@
 
     </LinearLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnAdd"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/bottemSheet"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:layout_marginTop="10dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="15dp"
-        android:elevation="5dp"
-        android:text="Add"
-        android:textSize="16dp"
-        android:layout_gravity="center"
-        app:cornerRadius="10dp"
-        style="@style/Widget.MaterialComponents.Button" />
+        android:background="@drawable/add_details_back"
+        android:foreground="?attr/selectableItemBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/tvSave"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:elevation="5dp"
+            android:layout_marginTop="1dp"
+            android:text="Save"
+            android:fontFamily="@font/poppins_medium"
+            android:textAllCaps="true"
+            android:textSize="18dp"
+            android:textColor="@color/white"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_horizontal"
+            android:foreground="?attr/selectableItemBackground" />
+
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

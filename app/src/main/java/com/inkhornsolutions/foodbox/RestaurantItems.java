@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -59,6 +60,7 @@ public class RestaurantItems extends AppCompatActivity {
     private boolean status = false;
     private ImageView cartIcon2;
     static RestaurantItems instance;
+    private ProgressDialog progressDialog;
 
     public static RestaurantItems getInstance() {
         return instance;
@@ -88,6 +90,12 @@ public class RestaurantItems extends AppCompatActivity {
         rvItems = (RecyclerView) findViewById(R.id.rvItems);
         rvItems.setLayoutManager(new LinearLayoutManager(this));
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
+        progressDialog.setCancelable(false);
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
         firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -113,6 +121,7 @@ public class RestaurantItems extends AppCompatActivity {
                             rvItems.setAdapter(new RestaurentItemsAdapter(RestaurantItems.this, productList));
                         }
                     }
+                    progressDialog.dismiss();
                 }
             }
         });

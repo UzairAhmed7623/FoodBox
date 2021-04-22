@@ -46,6 +46,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.mxn.soul.flowingdrawer_core.ElasticDrawer;
 import com.mxn.soul.flowingdrawer_core.FlowingDrawer;
+import com.yalantis.pulltomakesoup.PullToRefreshView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +73,8 @@ public class MainActivity extends AppCompatActivity  {
     private RelativeLayout layout;
     private TextView orderHistory, tvAddress;
     private TextView trackOrder;
+    private PullToRefreshView mPullToRefreshView;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,11 +93,28 @@ public class MainActivity extends AppCompatActivity  {
         ivProfileSettings = (ImageView) findViewById(R.id.ivProfileSettings);
         drawerLayout = (FlowingDrawer) findViewById(R.id.drawerLayout);
         tvAddress = (TextView) findViewById(R.id.tvAddress);
+        mPullToRefreshView = (PullToRefreshView) findViewById(R.id.pull_to_refresh);
 
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         toolbar.setNavigationIcon(R.drawable.ic_menu);
+
+        loadData();
+
+        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                mPullToRefreshView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        loadData();
+                    }
+                }, 3000);
+            }
+        });
 
         headerTextView();
 
@@ -103,34 +123,11 @@ public class MainActivity extends AppCompatActivity  {
         rvRestaurant = (RecyclerView) findViewById(R.id.rvRestaurantName);
         rvRestaurant.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
-        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog = new ProgressDialog(this);
         progressDialog.show();
         progressDialog.setCancelable(false);
         progressDialog.setContentView(R.layout.progress_bar);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
-        firebaseFirestore.collection("Restaurants").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                        resName = documentSnapshot.getId();
-                        String imageUri = documentSnapshot.get("imageUri").toString();
-
-                        if (resName != null && imageUri != null){
-                            tvRestaurant.add(resName);
-                            ivRestaurant.add(imageUri);
-                        }
-                        else {
-                            Snackbar.make(findViewById(android.R.id.content), "Data not found!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
-                        }
-
-                    }
-                    rvRestaurant.setAdapter(new MainActivityAdapter(getApplicationContext(), tvRestaurant, ivRestaurant));
-                }
-                progressDialog.dismiss();
-            }
-        });
 
         firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -210,6 +207,38 @@ public class MainActivity extends AppCompatActivity  {
                 if (openRatio > 0){
                     layout.setForeground(new ColorDrawable(ContextCompat.getColor(getApplicationContext(), R.color.white_greyish)));
                 }
+            }
+        });
+    }
+
+    private void loadData(){
+        firebaseFirestore.collection("Restaurants").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                        resName = documentSnapshot.getId();
+                        String imageUri = documentSnapshot.get("imageUri").toString();
+
+                        if (resName != null && imageUri != null){
+                            tvRestaurant.add(resName);
+                            ivRestaurant.add(imageUri);
+                        }
+                        else {
+                            Snackbar.make(findViewById(android.R.id.content), "Data not found!", Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                        }
+
+                    }
+                    rvRestaurant.setAdapter(new MainActivityAdapter(getApplicationContext(), tvRestaurant, ivRestaurant));
+                }
+                progressDialog.dismiss();
+                mPullToRefreshView.setRefreshing(false);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressDialog.dismiss();
+                Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
             }
         });
     }

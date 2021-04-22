@@ -9,7 +9,7 @@
     <gradient
         android:angle="0"
         android:centerX="50%"
-        android:startColor="@color/myColor"
+        android:startColor="@color/statusBar"
         android:endColor="@color/myColorSecond"
         android:type="linear" />
 
