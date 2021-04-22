@@ -31,6 +31,9 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.inkhornsolutions.foodbox.adapters.MainActivityAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity  {
     private CircleImageView ivProfileImage;
     private ImageView ivProfileSettings;
     private RelativeLayout layout;
-    private TextView orderHistory;
+    private TextView orderHistory, tvAddress;
     private TextView trackOrder;
 
     @Override
@@ -86,6 +89,7 @@ public class MainActivity extends AppCompatActivity  {
         ivProfileImage = (CircleImageView) findViewById(R.id.ivProfileImage);
         ivProfileSettings = (ImageView) findViewById(R.id.ivProfileSettings);
         drawerLayout = (FlowingDrawer) findViewById(R.id.drawerLayout);
+        tvAddress = (TextView) findViewById(R.id.tvAddress);
 
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -113,12 +117,47 @@ public class MainActivity extends AppCompatActivity  {
                         resName = documentSnapshot.getId();
                         String imageUri = documentSnapshot.get("imageUri").toString();
 
-                        tvRestaurant.add(resName);
-                        ivRestaurant.add(imageUri);
+                        if (resName != null && imageUri != null){
+                            tvRestaurant.add(resName);
+                            ivRestaurant.add(imageUri);
+                        }
+                        else {
+                            Snackbar.make(findViewById(android.R.id.content), "Data not found!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                        }
+
                     }
                     rvRestaurant.setAdapter(new MainActivityAdapter(getApplicationContext(), tvRestaurant, ivRestaurant));
                 }
                 progressDialog.dismiss();
+            }
+        });
+
+        firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()){
+                    String address = documentSnapshot.getString("address");
+                    if (address != null){
+                        tvAddress.setText(address);
+                    }
+                    else {
+                        Snackbar.make(findViewById(android.R.id.content), "Address not found!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                    }
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                    }
+                });
+
+        tvAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Profile.class);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         });
 
