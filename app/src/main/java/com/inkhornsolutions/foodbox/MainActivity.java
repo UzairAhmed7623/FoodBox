@@ -100,22 +100,6 @@ public class MainActivity extends AppCompatActivity  {
 
         toolbar.setNavigationIcon(R.drawable.ic_menu);
 
-        loadData();
-
-        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-                mPullToRefreshView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        loadData();
-                    }
-                }, 3000);
-            }
-        });
-
         headerTextView();
 
         headerImage();
@@ -129,13 +113,40 @@ public class MainActivity extends AppCompatActivity  {
         progressDialog.setContentView(R.layout.progress_bar);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        firebaseFirestore.collection("Users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()){
                     String address = documentSnapshot.getString("address");
                     if (address != null){
                         tvAddress.setText(address);
+
+                        boolean walton = tvAddress.getText().toString().contains("Walton");
+                        boolean cavalry = tvAddress.getText().toString().contains("Cavalry");
+
+                        if (walton || cavalry){
+
+                            loadData();
+
+                            mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+                                @Override
+                                public void onRefresh() {
+
+                                    mPullToRefreshView.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+                                            loadData();
+                                        }
+                                    }, 3000);
+                                }
+                            });
+                        }
+                        else {
+                            mPullToRefreshView.setRefreshing(false);
+                            progressDialog.dismiss();
+                            Snackbar.make(findViewById(android.R.id.content), "We don't serve in your area!", Snackbar.LENGTH_INDEFINITE).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                        }
                     }
                     else {
                         Snackbar.make(findViewById(android.R.id.content), "Address not found!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
