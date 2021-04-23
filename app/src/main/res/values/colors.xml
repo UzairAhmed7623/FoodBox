@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="myColor">#cc0000</color>
     <color name="myColorSecond">#e60000</color>
+    <color name="myColorthird">#ffcccb</color>
     <color name="statusBar">#ff3333</color>
 
     <color name="profileBackground">#fff</color>

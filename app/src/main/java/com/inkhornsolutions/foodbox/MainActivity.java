@@ -23,14 +23,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.location.Geofence;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
@@ -53,10 +58,14 @@ import java.util.List;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.nlopez.smartlocation.OnGeofencingTransitionListener;
+import io.nlopez.smartlocation.SmartLocation;
+import io.nlopez.smartlocation.geofencing.model.GeofenceModel;
+import io.nlopez.smartlocation.geofencing.utils.TransitionGeofence;
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private RecyclerView rvRestaurant;
     private List<String> tvRestaurant = new ArrayList<>();
@@ -71,10 +80,12 @@ public class MainActivity extends AppCompatActivity  {
     private CircleImageView ivProfileImage;
     private ImageView ivProfileSettings;
     private RelativeLayout layout;
-    private TextView orderHistory, tvAddress;
+    private TextView orderHistory;
+    private Spinner spAddress;
     private TextView trackOrder;
     private PullToRefreshView mPullToRefreshView;
     private ProgressDialog progressDialog;
+    private LinearLayout addressLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +103,9 @@ public class MainActivity extends AppCompatActivity  {
         ivProfileImage = (CircleImageView) findViewById(R.id.ivProfileImage);
         ivProfileSettings = (ImageView) findViewById(R.id.ivProfileSettings);
         drawerLayout = (FlowingDrawer) findViewById(R.id.drawerLayout);
-        tvAddress = (TextView) findViewById(R.id.tvAddress);
+        spAddress = (Spinner) findViewById(R.id.spAddress);
         mPullToRefreshView = (PullToRefreshView) findViewById(R.id.pull_to_refresh);
+        addressLayout = (LinearLayout) findViewById(R.id.addressLayout);
 
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -113,40 +125,76 @@ public class MainActivity extends AppCompatActivity  {
         progressDialog.setContentView(R.layout.progress_bar);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
+        GeofenceModel cavalry_Ground = new GeofenceModel.Builder("cavalry_Ground")
+                .setTransition(Geofence.GEOFENCE_TRANSITION_ENTER)
+                .setLatitude(31.500668557055956)
+                .setLongitude(74.36623054805328)
+                .setRadius(2000)
+                .build();
+
+        GeofenceModel cuenca = new GeofenceModel.Builder("id_cuenca")
+                .setTransition(Geofence.GEOFENCE_TRANSITION_EXIT)
+                .setLatitude(40.0703925)
+                .setLongitude(-2.1374161999999615)
+                .setRadius(2000)
+                .build();
+
+        SmartLocation.with(this).geofencing()
+                .add(cavalry_Ground)
+                .remove("cavalry_Ground")
+                .start(new OnGeofencingTransitionListener() {
+                    @Override
+                    public void onGeofenceTransition(TransitionGeofence transitionGeofence) {
+
+                        Toast.makeText(MainActivity.this, ""
+                                +transitionGeofence.getGeofenceModel().getTransition()
+                                +" "
+                                +transitionGeofence.getTransitionType(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
         firebaseFirestore.collection("Users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()){
                     String address = documentSnapshot.getString("address");
+                    mPullToRefreshView.setRefreshing(false);
+                    progressDialog.dismiss();
                     if (address != null){
-                        tvAddress.setText(address);
 
-                        boolean walton = tvAddress.getText().toString().contains("Walton");
-                        boolean cavalry = tvAddress.getText().toString().contains("Cavalry");
+                        List<String> addressList = new ArrayList<>();
+                        addressList.add(address);
 
-                        if (walton || cavalry){
+                        ArrayAdapter<String> Adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_item, addressList);
+                        Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spAddress.setAdapter(Adapter);
+                        spAddress.setOnItemSelectedListener(MainActivity.this);
+//                        boolean walton = tvAddress.getText().toString().contains("Walton");
+//                        boolean cavalry = tvAddress.getText().toString().contains("Cavalry");
 
-                            loadData();
-
-                            mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
-                                @Override
-                                public void onRefresh() {
-
-                                    mPullToRefreshView.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-
-                                            loadData();
-                                        }
-                                    }, 3000);
-                                }
-                            });
-                        }
-                        else {
-                            mPullToRefreshView.setRefreshing(false);
-                            progressDialog.dismiss();
-                            Snackbar.make(findViewById(android.R.id.content), "We don't serve in your area!", Snackbar.LENGTH_INDEFINITE).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
-                        }
+//                        if (walton || cavalry){
+//
+//                            loadData();
+//
+//                            mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+//                                @Override
+//                                public void onRefresh() {
+//
+//                                    mPullToRefreshView.postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//
+//                                            loadData();
+//                                        }
+//                                    }, 3000);
+//                                }
+//                            });
+//                        }
+//                        else {
+//                            mPullToRefreshView.setRefreshing(false);
+//                            progressDialog.dismiss();
+//                            Snackbar.make(findViewById(android.R.id.content), "We don't serve in your area!", Snackbar.LENGTH_INDEFINITE).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+//                        }
                     }
                     else {
                         Snackbar.make(findViewById(android.R.id.content), "Address not found!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
@@ -160,7 +208,7 @@ public class MainActivity extends AppCompatActivity  {
                     }
                 });
 
-        tvAddress.setOnClickListener(new View.OnClickListener() {
+        addressLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Profile.class);
@@ -362,4 +410,16 @@ public class MainActivity extends AppCompatActivity  {
         return true;
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (position == 0){
+            Toast.makeText(this, "0", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }

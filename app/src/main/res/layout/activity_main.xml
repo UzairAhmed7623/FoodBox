@@ -24,46 +24,44 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/myColor"
-            app:titleTextColor="@android:color/white"
-            android:layout_alignParentTop="true" />
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/bottemSheet"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:background="@color/myColor"
-            android:layout_below="@+id/toolbar"
-            android:foreground="?attr/selectableItemBackground"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            android:layout_alignParentTop="true" >
 
             <LinearLayout
+                android:id="@+id/addressLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:gravity="center_horizontal">
+                android:layout_marginEnd="16dp"
+                style="@style/TextAppearance.AppCompat.Button"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvAddress"
+                    android:id="@+id/tvTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_gravity="center_horizontal"
                     android:textColor="@android:color/white"
                     android:textSize="16dp"
+                    android:text="Delivering to"
+                    android:textAllCaps="true"
                     android:textStyle="bold"
                     android:fontFamily="@font/uber_move_bold"/>
 
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
+                    android:spinnerMode="dialog" />
+
             </LinearLayout>
 
-        </androidx.core.widget.NestedScrollView>
+        </androidx.appcompat.widget.Toolbar>
 
         <com.yalantis.pulltomakesoup.PullToRefreshView
             android:id="@+id/pull_to_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/bottemSheet">
+            android:layout_below="@+id/toolbar">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvRestaurantName"
@@ -188,8 +186,6 @@
                         android:layout_marginTop="20dp"/>
 
                 </RelativeLayout>
-
-
 
             </LinearLayout>
 

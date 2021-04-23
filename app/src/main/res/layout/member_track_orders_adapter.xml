@@ -6,13 +6,14 @@
     android:orientation="horizontal"
     android:gravity="center"
     android:padding="4dp"
-    android:background="@color/myColorSecond">
+    android:background="@color/myColorthird">
 
     <View
         android:layout_width="10dp"
         android:layout_height="10dp"
         android:layout_marginStart="10dp"
-        android:background="@color/myColor"/>
+        android:backgroundTint="@color/myColor"
+        android:background="@drawable/edit_details_background"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -109,7 +110,7 @@
                 android:id="@+id/tvOrderDateTrack"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_gravity="end|center_vertical"
                 android:gravity="end"
                 android:text="date: 12-02-2021"
