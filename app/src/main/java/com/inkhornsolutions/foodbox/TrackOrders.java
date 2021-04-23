@@ -79,7 +79,7 @@ public class TrackOrders extends AppCompatActivity {
     }
 
     private void loadData(){
-        firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2")
+        firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
                 .collection("Cart")
                 .whereIn("status", Arrays.asList("Pending","In progress","Rejected"))
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {

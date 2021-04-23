@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 import com.inkhornsolutions.foodbox.R;
 import com.inkhornsolutions.foodbox.models.HistoryModelClass;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,6 +32,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     private Context context;
     private List<HistoryModelClass> history = new ArrayList<>();
     private FirebaseFirestore firebaseFirestore;
+    private FirebaseAuth firebaseAuth;
 
     public HistoryAdapter(Context context, List<HistoryModelClass> history) {
         this.context = context;
@@ -74,7 +76,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
         ArrayList<HistoryModelClass> arrayListMember = new ArrayList<>();
 
-        firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2")
+        firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
                 .collection("Cart").document(resId)
                 .collection("Orders").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -124,7 +126,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            firebaseAuth = FirebaseAuth.getInstance();
             firebaseFirestore = FirebaseFirestore.getInstance();
+
             ivStatusHistory = (ImageView) itemView.findViewById(R.id.ivStatusHistory);
             tvResNameHistory = (TextView) itemView.findViewById(R.id.tvResNameHistory);
             tvDateHistory = (TextView) itemView.findViewById(R.id.tvDateHistory);

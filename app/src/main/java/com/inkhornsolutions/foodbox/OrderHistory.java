@@ -81,7 +81,7 @@ public class OrderHistory extends AppCompatActivity {
     }
 
     private void loadData(){
-        firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2")
+        firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
                 .collection("Cart").whereEqualTo("status", "Completed")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

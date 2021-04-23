@@ -225,7 +225,7 @@ public class CartActivity extends AppCompatActivity {
                                     order1.put("address", address);
                                     order1.put("latlng", latLng);
 
-                                    firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2")
+                                    firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
                                             .collection("Cart").document(restaurant+" "+getDateTime())
                                             .set(order1, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
@@ -239,7 +239,7 @@ public class CartActivity extends AppCompatActivity {
                                                 order2.put("items_count", cartItemsList.get(i).getItems_Count());
                                                 order2.put("final_price", cartItemsList.get(i).getFinalPrice());
 
-                                                firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2")
+                                                firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
                                                         .collection("Cart").document(restaurant+" "+getDateTime())
                                                         .collection("Orders").document(cartItemsList.get(i).getId())
                                                         .set(order2, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {

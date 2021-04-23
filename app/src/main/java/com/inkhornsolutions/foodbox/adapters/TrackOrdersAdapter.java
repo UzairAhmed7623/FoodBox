@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.inkhornsolutions.foodbox.R;
 import com.inkhornsolutions.foodbox.models.HistoryModelClass;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,6 +29,7 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
     private Context context;
     private List<HistoryModelClass> trackOrders = new ArrayList<>();
     private FirebaseFirestore firebaseFirestore;
+    private FirebaseAuth firebaseAuth;
 
     public TrackOrdersAdapter(Context context, List<HistoryModelClass> trackOrders) {
         this.context = context;
@@ -71,7 +73,7 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
 
         ArrayList<HistoryModelClass> arrayListMember = new ArrayList<>();
 
-        firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2")
+        firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
                 .collection("Cart").document(resId)
                 .collection("Orders").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -121,7 +123,9 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            firebaseAuth = FirebaseAuth.getInstance();
             firebaseFirestore = FirebaseFirestore.getInstance();
+
             tvStatusTrack = (TextView) itemView.findViewById(R.id.tvStatusTrack);
             tvResNameTrack = (TextView) itemView.findViewById(R.id.tvResNameTrack);
             tvDateTrack = (TextView) itemView.findViewById(R.id.tvDateTrack);

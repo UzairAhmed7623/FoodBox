@@ -141,24 +141,6 @@ public class RestaurantItems extends AppCompatActivity {
         cartIcon2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                firebaseFirestore.collection("Users").document("cb0xbVIcK5dWphXuHIvVoUytfaM2")
-//                        .collection("Cart").whereEqualTo("status", "In progress")
-//                        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isComplete()){
-//                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
-//                                if (documentSnapshot.exists()){
-//                                    status = true;
-//                                }
-//                            }
-//                        }
-//                    }
-//                });
-//                if (status){
-//                    Snackbar.make(findViewById(android.R.id.content), "Your orders are already in progress.", Snackbar.LENGTH_SHORT).setBackgroundTint(Color.).setTextColor(Color.WHITE).show();
-//                }
-//                else {
 
                 Dexter.withContext(RestaurantItems.this).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
                         @Override
