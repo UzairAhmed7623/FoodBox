@@ -151,7 +151,7 @@ public class Profile extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).show();
+                Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                 progressDialog.dismiss();
             }
         });
@@ -211,14 +211,16 @@ public class Profile extends AppCompatActivity {
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            Snackbar.make(rootLayout, "Your name is updated successfully!", Snackbar.LENGTH_LONG).show();
+                                            Snackbar.make(rootLayout, "Your name is updated successfully!", Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+
                                             editText.clearComposingText();
                                             editText2.clearComposingText();
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+
                                 }
                             });
 
@@ -264,13 +266,13 @@ public class Profile extends AppCompatActivity {
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            Snackbar.make(rootLayout, "Your email is updated successfully!", Snackbar.LENGTH_LONG).show();
+                                            Snackbar.make(rootLayout, "Your email is updated successfully!", Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                                             editText.clearComposingText();
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(rootLayout, "Your email is updated successfully!", Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                                 }
                             });
 
@@ -363,12 +365,13 @@ public class Profile extends AppCompatActivity {
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        Snackbar.make(rootLayout, "Your DOB is updated successfully!", Snackbar.LENGTH_LONG).show();
+                                        Snackbar.make(rootLayout, "Your DOB is updated successfully!", Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).show();
+                                        Snackbar.make(rootLayout, "Your email is updated successfully!", Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                                     }
                                 });
                     }
@@ -395,7 +398,7 @@ public class Profile extends AppCompatActivity {
                                             .start(REQUEST_IMAGE);
                                 }
                                 else {
-                                    Snackbar.make(rootLayout, report.getDeniedPermissionResponses().toString(), Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(rootLayout, report.getDeniedPermissionResponses().toString(), Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                                 }
                             }
                             @Override
@@ -428,20 +431,21 @@ public class Profile extends AppCompatActivity {
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Snackbar.make(rootLayout, "Your address is updated successfully!", Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(rootLayout, "Your address is updated successfully!", Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                                 }
                             });
 
                 }
             }
-            catch (Exception ex) {
-                Snackbar.make(rootLayout, ex.getMessage(), Snackbar.LENGTH_LONG).show();
+            catch (Exception e) {
+                Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
             }
         }
 
@@ -513,23 +517,24 @@ public class Profile extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 progressDialog.dismiss();
-                                Snackbar.make(findViewById(android.R.id.content), "Image Uploaded", Snackbar.LENGTH_LONG).setBackgroundTint(getResources().getColor(R.color.myColor)).show();
+                                Snackbar.make(rootLayout, "Image uploaded!", Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 progressDialog.dismiss();
-                                Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getResources().getColor(R.color.myColor)).show();
+                                Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                             }
                         });
             }
         })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(@NonNull Exception exception) {
+                    public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
-                        Snackbar.make(findViewById(android.R.id.content), "Failed to Upload", Snackbar.LENGTH_LONG).setBackgroundTint(getResources().getColor(R.color.myColor)).show();
+                        Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                     }
                 });
     }

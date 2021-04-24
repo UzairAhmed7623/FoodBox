@@ -39,6 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
                     android:textColor="@android:color/white"
                     android:textSize="16dp"
                     android:text="Delivering to"
@@ -46,12 +47,27 @@
                     android:textStyle="bold"
                     android:fontFamily="@font/uber_move_bold"/>
 
-                <androidx.appcompat.widget.AppCompatSpinner
+<!--                <com.jaredrummler.materialspinner.MaterialSpinner-->
+<!--                    android:id="@+id/spAddress"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:background="@color/myColor"-->
+<!--                    app:ms_background_color="@color/myColor"-->
+<!--                    app:ms_text_color="@color/white"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    app:ms_arrow_tint="@color/white"-->
+<!--                    android:maxLines="1"-->
+<!--                    app:ms_popup_padding_top="10dp"/>-->
+
+                <org.angmarch.views.NiceSpinner
                     android:id="@+id/spAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/white"
-                    android:spinnerMode="dialog" />
+                    android:backgroundTint="@color/myColor"
+                    app:arrowTint="@color/white"
+                    app:textTint="@color/white"
+                    android:maxLines="1"
+                    app:backgroundSelector="@drawable/sel" />
 
             </LinearLayout>
 
@@ -69,6 +85,8 @@
                 android:layout_height="match_parent" />
 
         </com.yalantis.pulltomakesoup.PullToRefreshView>
+
+
 
     </RelativeLayout>
 

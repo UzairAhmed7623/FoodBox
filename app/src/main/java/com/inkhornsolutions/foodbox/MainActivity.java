@@ -1,44 +1,36 @@
 package com.inkhornsolutions.foodbox;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.location.Geofence;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
+
 import com.inkhornsolutions.foodbox.adapters.MainActivityAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -53,19 +45,18 @@ import com.mxn.soul.flowingdrawer_core.ElasticDrawer;
 import com.mxn.soul.flowingdrawer_core.FlowingDrawer;
 import com.yalantis.pulltomakesoup.PullToRefreshView;
 
+import org.angmarch.views.NiceSpinner;
+import org.angmarch.views.OnSpinnerItemSelectedListener;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.nlopez.smartlocation.OnGeofencingTransitionListener;
-import io.nlopez.smartlocation.SmartLocation;
-import io.nlopez.smartlocation.geofencing.model.GeofenceModel;
-import io.nlopez.smartlocation.geofencing.utils.TransitionGeofence;
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
     private RecyclerView rvRestaurant;
     private List<String> tvRestaurant = new ArrayList<>();
@@ -81,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private ImageView ivProfileSettings;
     private RelativeLayout layout;
     private TextView orderHistory;
-    private Spinner spAddress;
+    private NiceSpinner spAddress;
     private TextView trackOrder;
     private PullToRefreshView mPullToRefreshView;
     private ProgressDialog progressDialog;
@@ -103,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         ivProfileImage = (CircleImageView) findViewById(R.id.ivProfileImage);
         ivProfileSettings = (ImageView) findViewById(R.id.ivProfileSettings);
         drawerLayout = (FlowingDrawer) findViewById(R.id.drawerLayout);
-        spAddress = (Spinner) findViewById(R.id.spAddress);
+        spAddress = (NiceSpinner) findViewById(R.id.spAddress);
         mPullToRefreshView = (PullToRefreshView) findViewById(R.id.pull_to_refresh);
         addressLayout = (LinearLayout) findViewById(R.id.addressLayout);
 
@@ -116,6 +107,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         headerImage();
 
+        loadData();
+
         rvRestaurant = (RecyclerView) findViewById(R.id.rvRestaurantName);
         rvRestaurant.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
@@ -125,95 +118,43 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         progressDialog.setContentView(R.layout.progress_bar);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        GeofenceModel cavalry_Ground = new GeofenceModel.Builder("cavalry_Ground")
-                .setTransition(Geofence.GEOFENCE_TRANSITION_ENTER)
-                .setLatitude(31.500668557055956)
-                .setLongitude(74.36623054805328)
-                .setRadius(2000)
-                .build();
+//        GeofenceModel cavalry_Ground = new GeofenceModel.Builder("cavalry_Ground")
+//                .setTransition(Geofence.GEOFENCE_TRANSITION_ENTER)
+//                .setLatitude(31.500668557055956)
+//                .setLongitude(74.36623054805328)
+//                .setRadius(2000)
+//                .build();
+//
+//        GeofenceModel cuenca = new GeofenceModel.Builder("id_cuenca")
+//                .setTransition(Geofence.GEOFENCE_TRANSITION_EXIT)
+//                .setLatitude(40.0703925)
+//                .setLongitude(-2.1374161999999615)
+//                .setRadius(2000)
+//                .build();
+//
+//        SmartLocation.with(this).geofencing()
+//                .add(cavalry_Ground)
+//                .remove("cavalry_Ground")
+//                .start(new OnGeofencingTransitionListener() {
+//                    @Override
+//                    public void onGeofenceTransition(TransitionGeofence transitionGeofence) {
+//
+//                        Toast.makeText(MainActivity.this, ""
+//                                +transitionGeofence.getGeofenceModel().getTransition()
+//                                +" "
+//                                +transitionGeofence.getTransitionType(), Toast.LENGTH_SHORT).show();
+//                    }
+//                });
 
-        GeofenceModel cuenca = new GeofenceModel.Builder("id_cuenca")
-                .setTransition(Geofence.GEOFENCE_TRANSITION_EXIT)
-                .setLatitude(40.0703925)
-                .setLongitude(-2.1374161999999615)
-                .setRadius(2000)
-                .build();
-
-        SmartLocation.with(this).geofencing()
-                .add(cavalry_Ground)
-                .remove("cavalry_Ground")
-                .start(new OnGeofencingTransitionListener() {
-                    @Override
-                    public void onGeofenceTransition(TransitionGeofence transitionGeofence) {
-
-                        Toast.makeText(MainActivity.this, ""
-                                +transitionGeofence.getGeofenceModel().getTransition()
-                                +" "
-                                +transitionGeofence.getTransitionType(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        firebaseFirestore.collection("Users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()){
-                    String address = documentSnapshot.getString("address");
-                    mPullToRefreshView.setRefreshing(false);
-                    progressDialog.dismiss();
-                    if (address != null){
-
-                        List<String> addressList = new ArrayList<>();
-                        addressList.add(address);
-
-                        ArrayAdapter<String> Adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_item, addressList);
-                        Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spAddress.setAdapter(Adapter);
-                        spAddress.setOnItemSelectedListener(MainActivity.this);
-//                        boolean walton = tvAddress.getText().toString().contains("Walton");
-//                        boolean cavalry = tvAddress.getText().toString().contains("Cavalry");
-
-//                        if (walton || cavalry){
-//
-//                            loadData();
-//
-//                            mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
-//                                @Override
-//                                public void onRefresh() {
-//
-//                                    mPullToRefreshView.postDelayed(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//
-//                                            loadData();
-//                                        }
-//                                    }, 3000);
-//                                }
-//                            });
-//                        }
-//                        else {
-//                            mPullToRefreshView.setRefreshing(false);
-//                            progressDialog.dismiss();
-//                            Snackbar.make(findViewById(android.R.id.content), "We don't serve in your area!", Snackbar.LENGTH_INDEFINITE).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
-//                        }
-                    }
-                    else {
-                        Snackbar.make(findViewById(android.R.id.content), "Address not found!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
-                    }
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
+            public void onRefresh() {
+                mPullToRefreshView.postDelayed(new Runnable() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                    public void run() {
+                        loadData();
                     }
-                });
-
-        addressLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Profile.class);
-                startActivity(intent);
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }, 3000);
             }
         });
 
@@ -268,6 +209,50 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        firebaseFirestore.collection("Users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()){
+                            String address = documentSnapshot.getString("address");
+                            String address1 = documentSnapshot.getString("address");
+
+                            progressDialog.dismiss();
+                            if (address != null){
+
+                                List<String> addressList = new ArrayList<>();
+                                addressList.add(address);
+                                addressList.add(address1);
+
+                                spAddress.attachDataSource(addressList);
+
+                                spAddress.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+                                    @Override
+                                    public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+
+                                        Intent intent = new Intent(MainActivity.this, Profile.class);
+                                        startActivity(intent);
+                                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                    }
+                                });
+                            }
+                            else {
+                                Snackbar.make(findViewById(android.R.id.content), "Address not found!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                    }
+                });
     }
 
     private void loadData(){
@@ -410,16 +395,4 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return true;
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (position == 0){
-            Toast.makeText(this, "0", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
 }

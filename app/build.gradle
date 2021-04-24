@@ -88,4 +88,7 @@ dependencies {
 
     implementation 'io.nlopez.smartlocation:library:3.3.3'
 
+    implementation 'com.github.arcadefire:nice-spinner:1.4.4'
+
+
 }
