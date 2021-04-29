@@ -53,11 +53,20 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
         final ItemsModelClass modelClass = productList.get(position);
 
         holder.tvItem.setText(modelClass.getItemName());
-        holder.tvItemPrice.setText(modelClass.getPrice());
+        holder.tvItemPrice.setText("PKR"+modelClass.getPrice());
         Glide.with(context).load(modelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivItem);
         holder.tvItemSchedule.setText("Available from: "+ modelClass.getSchedule());
 
         name = modelClass.getUserName();
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                showQuantityDialog(modelClass, holder);
+
+            }
+        });
 
         holder.ibSelectItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +76,6 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
             }
         });
-
     }
 
     private double price = 0;
@@ -207,22 +215,17 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvItem, tvItemPrice, tvaddItem, tvAdded,  tvCount, tvItemSchedule;
-        private ImageButton ibSelectItem, ibAddItem, ibRemoveItem;
+        private TextView tvItem, tvItemPrice, tvItemSchedule;
+        private ImageButton ibSelectItem;
         private ImageView ivItem;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tvItem = itemView.findViewById(R.id.tvItem);
-            tvaddItem = itemView.findViewById(R.id.tvaddItem);
-            tvAdded = itemView.findViewById(R.id.tvAdded);
             ibSelectItem = itemView.findViewById(R.id.ibSelectItem);
             tvItemPrice = itemView.findViewById(R.id.tvItemPrice);
             ivItem = itemView.findViewById(R.id.ivItem);
-            ibAddItem = itemView.findViewById(R.id.ibAddItem);
-            ibRemoveItem = itemView.findViewById(R.id.ibRemoveItem);
-            tvCount = itemView.findViewById(R.id.tvCount);
             tvItemSchedule = (TextView) itemView.findViewById(R.id.tvItemSchedule);
 
 

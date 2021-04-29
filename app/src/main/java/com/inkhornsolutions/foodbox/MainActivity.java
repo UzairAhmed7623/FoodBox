@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +33,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.inkhornsolutions.foodbox.adapters.MainActivityAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -59,13 +57,13 @@ import p32929.androideasysql_library.EasyDB;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView rvRestaurant;
-    private List<String> tvRestaurant = new ArrayList<>();
-    private List<String> ivRestaurant = new ArrayList<>();
+    private final List<String> tvRestaurant = new ArrayList<>();
+    private final List<String> ivRestaurant = new ArrayList<>();
+    private final List<String> statusList = new ArrayList<>();
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-    private String resName, delivery = "45";
-    private NavigationView navigationView;
+    private String resName;
     private FlowingDrawer drawerLayout;
     private TextView tvUserName;
     private CircleImageView ivProfileImage;
@@ -76,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView trackOrder;
     private PullToRefreshView mPullToRefreshView;
     private ProgressDialog progressDialog;
-    private LinearLayout addressLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = (FlowingDrawer) findViewById(R.id.drawerLayout);
         spAddress = (NiceSpinner) findViewById(R.id.spAddress);
         mPullToRefreshView = (PullToRefreshView) findViewById(R.id.pull_to_refresh);
-        addressLayout = (LinearLayout) findViewById(R.id.addressLayout);
 
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -214,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        loadData();
         firebaseFirestore.collection("Users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -259,21 +256,26 @@ public class MainActivity extends AppCompatActivity {
         firebaseFirestore.collection("Restaurants").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                tvRestaurant.clear();
+                ivRestaurant.clear();
+                statusList.clear();
+
                 if (task.isSuccessful()){
                     for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
                         resName = documentSnapshot.getId();
+                        String status = documentSnapshot.getString("status");
                         String imageUri = documentSnapshot.get("imageUri").toString();
 
-                        if (resName != null && imageUri != null){
+                        if (resName != null && imageUri != null && status != null){
                             tvRestaurant.add(resName);
                             ivRestaurant.add(imageUri);
+                            statusList.add(status);
                         }
                         else {
                             Snackbar.make(findViewById(android.R.id.content), "Data not found!", Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                         }
-
                     }
-                    rvRestaurant.setAdapter(new MainActivityAdapter(getApplicationContext(), tvRestaurant, ivRestaurant));
+                    rvRestaurant.setAdapter(new MainActivityAdapter(getApplicationContext(), tvRestaurant, ivRestaurant, statusList));
                 }
                 progressDialog.dismiss();
                 mPullToRefreshView.setRefreshing(false);
