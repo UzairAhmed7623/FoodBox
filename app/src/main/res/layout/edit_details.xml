@@ -60,18 +60,7 @@
 
     </LinearLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/bottemSheet"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/add_details_back"
-        android:foreground="?attr/selectableItemBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
+    <Button
             android:id="@+id/tvSave"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -84,8 +73,7 @@
             android:textColor="@color/white"
             android:layout_gravity="center_vertical"
             android:gravity="center_horizontal"
-            android:foreground="?attr/selectableItemBackground" />
-
-    </androidx.core.widget.NestedScrollView>
+            android:background="@drawable/add_details_back"
+            android:foreground="@drawable/ripple" />
 
 </LinearLayout>

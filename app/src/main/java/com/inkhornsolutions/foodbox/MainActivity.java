@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private final List<String> tvRestaurant = new ArrayList<>();
     private final List<String> ivRestaurant = new ArrayList<>();
     private final List<String> statusList = new ArrayList<>();
+    private final List<String> approvalList = new ArrayList<>();
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
@@ -259,23 +260,32 @@ public class MainActivity extends AppCompatActivity {
                 tvRestaurant.clear();
                 ivRestaurant.clear();
                 statusList.clear();
+                approvalList.clear();
 
                 if (task.isSuccessful()){
                     for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
                         resName = documentSnapshot.getId();
                         String status = documentSnapshot.getString("status");
-                        String imageUri = documentSnapshot.get("imageUri").toString();
+                        String imageUri = documentSnapshot.getString("imageUri");
+                        String approved = documentSnapshot.getString("approved");
 
-                        if (resName != null && imageUri != null && status != null){
+                        if (resName != null){
                             tvRestaurant.add(resName);
+                        }
+                        if (imageUri != null){
                             ivRestaurant.add(imageUri);
+                        }
+                        if (status != null){
                             statusList.add(status);
+                        }
+                        if (approved != null) {
+                            approvalList.add(approved);
                         }
                         else {
                             Snackbar.make(findViewById(android.R.id.content), "Data not found!", Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                         }
                     }
-                    rvRestaurant.setAdapter(new MainActivityAdapter(getApplicationContext(), tvRestaurant, ivRestaurant, statusList));
+                    rvRestaurant.setAdapter(new MainActivityAdapter(getApplicationContext(), tvRestaurant, ivRestaurant, statusList, approvalList));
                 }
                 progressDialog.dismiss();
                 mPullToRefreshView.setRefreshing(false);

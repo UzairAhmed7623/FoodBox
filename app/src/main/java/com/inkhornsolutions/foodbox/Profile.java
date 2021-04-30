@@ -392,6 +392,7 @@ public class Profile extends AppCompatActivity {
                             @Override
                             public void onPermissionsChecked(MultiplePermissionsReport report) {
                                 if (report.areAllPermissionsGranted()) {
+
                                     ImagePicker.Companion.with(Profile.this)
                                             .cropSquare()
                                             .compress(1024)
