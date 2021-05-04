@@ -148,7 +148,8 @@ public class Profile extends AppCompatActivity {
                 }
                 progressDialog.dismiss();
             }
-        }).addOnFailureListener(new OnFailureListener() {
+        })
+                .addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();

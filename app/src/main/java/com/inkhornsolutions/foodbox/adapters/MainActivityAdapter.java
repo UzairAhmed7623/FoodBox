@@ -28,6 +28,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.inkhornsolutions.foodbox.models.RestaurantModelClass;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,20 +38,14 @@ import java.util.logging.Logger;
 public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapter.ViewHolder> {
 
     private Context context;
-    private List<String> resturentsNames = new ArrayList<>();
-    private List<String> imagesUri = new ArrayList<>();
-    private List<String> statusList = new ArrayList<>();
-    private List<String> approvalList = new ArrayList<>();
+    private List<RestaurantModelClass> resDetails = new ArrayList<>();
     private int checkedPosition = RecyclerView.NO_POSITION;
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
-    public MainActivityAdapter(Context context, List<String> resturentsNames, List<String> imagesUri, List<String> statusList, List<String> approvalList) {
+    public MainActivityAdapter(Context context, List<RestaurantModelClass> resDetails) {
         this.context = context;
-        this.resturentsNames = resturentsNames;
-        this.imagesUri = imagesUri;
-        this.statusList = statusList;
-        this.approvalList = approvalList;
+        this.resDetails = resDetails;
     }
 
     @NonNull
@@ -63,16 +58,16 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
     @Override
     public void onBindViewHolder(@NonNull MainActivityAdapter.ViewHolder holder, int position) {
-        String resName = resturentsNames.get(position);
-        holder.tvRestaurant.setText(resName);
+        RestaurantModelClass restaurantModelClass = resDetails.get(position);
 
-        String imageUri = imagesUri.get(position);
-        Glide.with(context).load(imageUri).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivRestaurant);
+        holder.tvRestaurant.setText(restaurantModelClass.getResName());
+
+        Glide.with(context).load(restaurantModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivRestaurant);
 
         holder.itemView.setSelected(checkedPosition == position);
 
-        String status = statusList.get(position);
-        String approved = approvalList.get(position);
+        String status = restaurantModelClass.getStatus();
+        String approved = restaurantModelClass.getApproved();
 
         if (approved.equals("yes")){
             if (status.equals("online")){
@@ -130,7 +125,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
     @Override
     public int getItemCount() {
-        return resturentsNames.size();
+        return resDetails.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

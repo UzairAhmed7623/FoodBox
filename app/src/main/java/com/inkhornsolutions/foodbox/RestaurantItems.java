@@ -20,7 +20,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.darwindeveloper.horizontalscrollmenulibrary.custom_views.HorizontalScrollMenuView;
 import com.inkhornsolutions.foodbox.adapters.RestaurentItemsAdapter;
 import com.inkhornsolutions.foodbox.models.ItemsModelClass;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -61,6 +63,7 @@ public class RestaurantItems extends AppCompatActivity {
     private ImageView cartIcon2;
     static RestaurantItems instance;
     private ProgressDialog progressDialog;
+    private HorizontalScrollMenuView menuView;
 
     public static RestaurantItems getInstance() {
         return instance;
@@ -87,6 +90,20 @@ public class RestaurantItems extends AppCompatActivity {
         first_name = getIntent().getStringExtra("first_name");
         last_name = getIntent().getStringExtra("last_name");
 
+        menuView = (HorizontalScrollMenuView) findViewById(R.id.rvTags);
+
+        menuView.addItem("Burger", R.drawable.burger);
+        menuView.addItem("Drinks", R.drawable.drinks);
+        menuView.addItem("Frozen", R.drawable.frozen);
+        menuView.addItem("Desserts", R.drawable.desserts);
+
+        menuView.setOnHSMenuClickListener(new HorizontalScrollMenuView.OnHSMenuClickListener() {
+            @Override
+            public void onHSMClick(com.darwindeveloper.horizontalscrollmenulibrary.extras.MenuItem menuItem, int position) {
+                Toast.makeText(RestaurantItems.this, menuItem.getText(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         rvItems = (RecyclerView) findViewById(R.id.rvItems);
         rvItems.setLayoutManager(new LinearLayoutManager(this));
 
@@ -103,18 +120,19 @@ public class RestaurantItems extends AppCompatActivity {
                     for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
                         if (documentSnapshot.exists()){
                             String name = documentSnapshot.getId();
-                            String price = documentSnapshot.get("price").toString();
-                            String image = documentSnapshot.get("imageUri").toString();
-                            String schedule = documentSnapshot.getString("schedule");
+                            String price = documentSnapshot.getString("price");
+                            String image = documentSnapshot.getString("imageUri");
+                            String from = documentSnapshot.getString("from");
+                            String to = documentSnapshot.getString("to");
 
-                            ItemsModelClass modelClass = new ItemsModelClass();
+                            ItemsModelClass modelClass = documentSnapshot.toObject(ItemsModelClass.class);
 
                             modelClass.setUserName(first_name+last_name);
                             modelClass.setItemName(name);
-                            modelClass.setPrice(price);
-                            modelClass.setImageUri(image);
+//                            modelClass.setPrice(price);
+//                            modelClass.setImageUri(image);
                             modelClass.setId(getDateTime());
-                            modelClass.setSchedule(schedule);
+//                            modelClass.setSchedule(schedule);
 
                             productList.add(modelClass);
 

@@ -39,6 +39,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.inkhornsolutions.foodbox.models.RestaurantModelClass;
 import com.mxn.soul.flowingdrawer_core.ElasticDrawer;
 import com.mxn.soul.flowingdrawer_core.FlowingDrawer;
 import com.yalantis.pulltomakesoup.PullToRefreshView;
@@ -57,10 +58,7 @@ import p32929.androideasysql_library.EasyDB;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView rvRestaurant;
-    private final List<String> tvRestaurant = new ArrayList<>();
-    private final List<String> ivRestaurant = new ArrayList<>();
-    private final List<String> statusList = new ArrayList<>();
-    private final List<String> approvalList = new ArrayList<>();
+    private final List<RestaurantModelClass> resDetails = new ArrayList<>();
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
@@ -257,10 +255,7 @@ public class MainActivity extends AppCompatActivity {
         firebaseFirestore.collection("Restaurants").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                tvRestaurant.clear();
-                ivRestaurant.clear();
-                statusList.clear();
-                approvalList.clear();
+                resDetails.clear();
 
                 if (task.isSuccessful()){
                     for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
@@ -269,23 +264,16 @@ public class MainActivity extends AppCompatActivity {
                         String imageUri = documentSnapshot.getString("imageUri");
                         String approved = documentSnapshot.getString("approved");
 
-                        if (resName != null){
-                            tvRestaurant.add(resName);
-                        }
-                        if (imageUri != null){
-                            ivRestaurant.add(imageUri);
-                        }
-                        if (status != null){
-                            statusList.add(status);
-                        }
-                        if (approved != null) {
-                            approvalList.add(approved);
-                        }
-                        else {
-                            Snackbar.make(findViewById(android.R.id.content), "Data not found!", Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
-                        }
+                        RestaurantModelClass restaurantModelClass = documentSnapshot.toObject(RestaurantModelClass.class);
+//                        restaurantModelClass.setResName(resName);
+
+                        resDetails.add(restaurantModelClass);
+
+//                        else {
+//                            Snackbar.make(findViewById(android.R.id.content), "Data not found!", Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+//                        }
                     }
-                    rvRestaurant.setAdapter(new MainActivityAdapter(getApplicationContext(), tvRestaurant, ivRestaurant, statusList, approvalList));
+                    rvRestaurant.setAdapter(new MainActivityAdapter(getApplicationContext(), resDetails));
                 }
                 progressDialog.dismiss();
                 mPullToRefreshView.setRefreshing(false);
@@ -327,7 +315,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
     }
 
     public void headerImage(){

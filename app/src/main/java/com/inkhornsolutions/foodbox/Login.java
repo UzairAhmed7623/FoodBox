@@ -31,9 +31,7 @@ public class Login extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-
     private String verificationId;
-
     EditText editTextCountryCode, editTextPhone;
     MaterialButton buttonContinue;
     EditText editText;

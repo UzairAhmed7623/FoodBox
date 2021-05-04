@@ -11,8 +11,8 @@ android {
         applicationId "com.inkhornsolutions.foodbox"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 7
-        versionName "1.0"
+        versionCode 9
+        versionName "1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -76,6 +76,7 @@ dependencies {
     implementation 'jp.wasabeef:glide-transformations:4.1.0'
     // If you want to use the GPU Filters
     implementation 'jp.co.cyberagent.android:gpuimage:2.0.4'
+
     implementation 'com.github.dhaval2404:imagepicker:1.8'
 
     implementation 'com.github.jrvansuita:PickImage:v2.5.2'
@@ -90,5 +91,6 @@ dependencies {
 
     implementation 'com.github.arcadefire:nice-spinner:1.4.4'
 
+    implementation 'com.github.MorochoRochaDarwin:HorizontalScrollMenu:2.0.0'
 
 }
