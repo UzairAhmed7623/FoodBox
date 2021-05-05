@@ -3,6 +3,7 @@ package com.inkhornsolutions.foodbox;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +24,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.darwindeveloper.horizontalscrollmenulibrary.custom_views.HorizontalScrollMenuView;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.inkhornsolutions.foodbox.adapters.RestaurentItemsAdapter;
 import com.inkhornsolutions.foodbox.models.ItemsModelClass;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -64,6 +68,7 @@ public class RestaurantItems extends AppCompatActivity {
     static RestaurantItems instance;
     private ProgressDialog progressDialog;
     private HorizontalScrollMenuView menuView;
+    private RestaurentItemsAdapter adapter;
 
     public static RestaurantItems getInstance() {
         return instance;
@@ -80,6 +85,7 @@ public class RestaurantItems extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        menuView = (HorizontalScrollMenuView) findViewById(R.id.rvTags);
 
         setSupportActionBar(toolbar);
 
@@ -90,22 +96,9 @@ public class RestaurantItems extends AppCompatActivity {
         first_name = getIntent().getStringExtra("first_name");
         last_name = getIntent().getStringExtra("last_name");
 
-        menuView = (HorizontalScrollMenuView) findViewById(R.id.rvTags);
-
-        menuView.addItem("Burger", R.drawable.burger);
-        menuView.addItem("Drinks", R.drawable.drinks);
-        menuView.addItem("Frozen", R.drawable.frozen);
-        menuView.addItem("Desserts", R.drawable.desserts);
-
-        menuView.setOnHSMenuClickListener(new HorizontalScrollMenuView.OnHSMenuClickListener() {
-            @Override
-            public void onHSMClick(com.darwindeveloper.horizontalscrollmenulibrary.extras.MenuItem menuItem, int position) {
-                Toast.makeText(RestaurantItems.this, menuItem.getText(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
         rvItems = (RecyclerView) findViewById(R.id.rvItems);
         rvItems.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new RestaurentItemsAdapter(this, productList);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.show();
@@ -113,36 +106,100 @@ public class RestaurantItems extends AppCompatActivity {
         progressDialog.setContentView(R.layout.progress_bar);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        getData();
+
+        menuView.addItem("All", R.drawable.all);
+        menuView.addItem("Burger", R.drawable.burger);
+        menuView.addItem("Drinks", R.drawable.soft_drink);
+        menuView.addItem("Frozen", R.drawable.frozen);
+        menuView.addItem("Desserts", R.drawable.desserts);
+        menuView.addItem("Salads", R.drawable.salad);
+
+        menuView.setOnHSMenuClickListener(new HorizontalScrollMenuView.OnHSMenuClickListener() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                        if (documentSnapshot.exists()){
-                            String name = documentSnapshot.getId();
-                            String price = documentSnapshot.getString("price");
-                            String image = documentSnapshot.getString("imageUri");
-                            String from = documentSnapshot.getString("from");
-                            String to = documentSnapshot.getString("to");
+            public void onHSMClick(com.darwindeveloper.horizontalscrollmenulibrary.extras.MenuItem menuItem, int position) {
+                if (position != 0){
+                    firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
+                            .whereEqualTo("category", menuItem.getText()).get()
+                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
-                            ItemsModelClass modelClass = documentSnapshot.toObject(ItemsModelClass.class);
+                                    productList.clear();
+                                    adapter.notifyDataSetChanged();
 
-                            modelClass.setUserName(first_name+last_name);
-                            modelClass.setItemName(name);
-//                            modelClass.setPrice(price);
-//                            modelClass.setImageUri(image);
-                            modelClass.setId(getDateTime());
-//                            modelClass.setSchedule(schedule);
+                                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
+                                        if (documentSnapshot.exists()){
+                                            String name = documentSnapshot.getId();
 
-                            productList.add(modelClass);
+                                            ItemsModelClass modelClass = documentSnapshot.toObject(ItemsModelClass.class);
 
-                            rvItems.setAdapter(new RestaurentItemsAdapter(RestaurantItems.this, productList));
-                        }
-                    }
-                    progressDialog.dismiss();
+                                            modelClass.setUserName(first_name+last_name);
+                                            modelClass.setItemName(name);
+//                                          modelClass.setPrice(price);
+//                                          modelClass.setImageUri(image);
+                                            modelClass.setId(getDateTime());
+//                                          modelClass.setSchedule(schedule);
+
+                                            productList.add(modelClass);
+
+                                            rvItems.setAdapter(adapter);
+                                        }
+                                    }
+                                    progressDialog.dismiss();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    progressDialog.dismiss();
+                                    Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(getApplicationContext(), R.color.myColor)).show();
+                                }
+                            });
+                }
+                else {
+                    getData();
                 }
             }
         });
+    }
+
+    private void getData(){
+        firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        productList.clear();
+                        adapter.notifyDataSetChanged();
+
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
+                            if (documentSnapshot.exists()) {
+                                String name = documentSnapshot.getId();
+
+                                ItemsModelClass modelClass = documentSnapshot.toObject(ItemsModelClass.class);
+
+                                modelClass.setUserName(first_name + last_name);
+                                modelClass.setItemName(name);
+//                                          modelClass.setPrice(price);
+//                                          modelClass.setImageUri(image);
+                                modelClass.setId(getDateTime());
+//                                          modelClass.setSchedule(schedule);
+
+                                productList.add(modelClass);
+
+                                rvItems.setAdapter(adapter);
+                            }
+                        }
+                        progressDialog.dismiss();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+                        Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(getApplicationContext(), R.color.myColor)).show();
+                    }
+                });
     }
 
     @Override
@@ -237,7 +294,6 @@ public class RestaurantItems extends AppCompatActivity {
             }
         });
     }
-
 
     @Override
     public void onBackPressed() {

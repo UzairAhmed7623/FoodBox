@@ -64,7 +64,6 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
             public void onClick(View v) {
 
                 showQuantityDialog(modelClass, holder);
-
             }
         });
 
@@ -73,7 +72,6 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
             public void onClick(View v) {
 
                 showQuantityDialog(modelClass, holder);
-
             }
         });
     }

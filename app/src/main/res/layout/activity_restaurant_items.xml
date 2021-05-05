@@ -24,10 +24,8 @@
         android:id="@+id/rvTags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="5dp"
-        app:icon_height="40dp"
-        app:icon_width="40dp"
+        app:icon_height="30dp"
+        app:icon_width="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
