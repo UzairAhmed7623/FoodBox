@@ -109,11 +109,11 @@ public class RestaurantItems extends AppCompatActivity {
         getData();
 
         menuView.addItem("All", R.drawable.all);
-        menuView.addItem("Burger", R.drawable.burger);
+        menuView.addItem("Main Course", R.drawable.main_course);
         menuView.addItem("Drinks", R.drawable.soft_drink);
         menuView.addItem("Frozen", R.drawable.frozen);
+        menuView.addItem("Sides", R.drawable.salad);
         menuView.addItem("Desserts", R.drawable.desserts);
-        menuView.addItem("Salads", R.drawable.salad);
 
         menuView.setOnHSMenuClickListener(new HorizontalScrollMenuView.OnHSMenuClickListener() {
             @Override

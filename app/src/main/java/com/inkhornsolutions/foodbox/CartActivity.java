@@ -16,6 +16,7 @@ import android.os.Looper;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -76,6 +77,7 @@ public class CartActivity extends AppCompatActivity {
 
     private LatLng latLng;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private ImageView backArrow;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,6 +103,7 @@ public class CartActivity extends AppCompatActivity {
         tvGrandTotal = (TextView) findViewById(R.id.tvGrandTotal);
         rvCartItems = (RecyclerView) findViewById(R.id.rvCartItems);
         btnCheckOut = (Button) findViewById(R.id.btnCheckOut);
+        backArrow = (ImageView) findViewById(R.id.backArrow);
 
         rvCartItems.setLayoutManager(new LinearLayoutManager(CartActivity.this));
 
@@ -112,6 +115,13 @@ public class CartActivity extends AppCompatActivity {
         UserName.setText(first_name +" "+ last_name);
 
         getCurrentLocation();
+
+        backArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         Address.setOnClickListener(new View.OnClickListener() {
             @Override
