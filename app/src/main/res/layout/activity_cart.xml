@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         app:cardElevation="5dp"
         app:cardBackgroundColor="@color/myColor"
+        app:cardCornerRadius="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -29,7 +30,8 @@
                 android:layout_centerInParent="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="15dp"
-                android:foreground="@drawable/ripple"/>
+                android:foreground="@drawable/ripple"
+                android:background="@android:color/transparent"/>
 
             <TextView
                 android:id="@+id/textView"
@@ -61,23 +63,13 @@
 
     </androidx.cardview.widget.CardView>
 
-    <View
-        android:id="@+id/view2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/myColor"
-        android:layout_marginTop="1dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card" />
-
     <RelativeLayout
         android:id="@+id/layout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/view2">
+        app:layout_constraintTop_toBottomOf="@+id/card">
 
         <TextView
             android:id="@+id/UserNamePlaceHolder"
@@ -109,7 +101,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="30dp"
         android:text="Deliever to: "
         android:includeFontPadding="false"
         android:textColor="@android:color/black"
@@ -125,8 +117,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardElevation="5dp"
-        android:background="@drawable/ripple"
-        android:foreground="?attr/selectableItemBackground"
+        app:cardUseCompatPadding="true"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -164,6 +155,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
+        android:background="#16000000"
         app:layout_constraintBottom_toTopOf="@+id/layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -229,6 +221,19 @@
                     android:padding="5dp"
                     android:fontFamily="@font/uber_move_bold"
                     android:text="Delivery Fee"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvDeliveryPKR"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvSubTotal"
+                    android:layout_toStartOf="@+id/tvDeliveryFee"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:fontFamily="@font/uber_move_bold"
+                    android:text="PKR"
                     android:textColor="@android:color/black"
                     android:textStyle="bold" />
 

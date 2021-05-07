@@ -41,7 +41,7 @@
                     android:weightSum="3"
                     android:gravity="center">
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -49,33 +49,37 @@
 
                         <TextView
                             android:id="@+id/tvItemPricePlace"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
                             android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="PKR"
+                            android:text="PKR "
                             android:layout_weight="1.1"
                             android:textSize="13dp" />
 
                         <TextView
                             android:id="@+id/tvItemPrice"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_toEndOf="@+id/tvItemPricePlace"
                             android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="Price"
+                            android:text="0.00"
                             android:layout_weight="1"
                             android:textSize="13dp" />
 
                         <TextView
                             android:id="@+id/tvMultiplyLabel"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="20dp"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:gravity="center"
                             android:text="x"
                             android:layout_weight="1"
                             android:textSize="13sp" />
 
-                    </LinearLayout>
+                    </RelativeLayout>
 
                     <LinearLayout
                         android:id="@+id/prices1"
@@ -114,43 +118,45 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
 
                         <TextView
                             android:id="@+id/tvEqualToLabel"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAlignment="center"
+                            android:textAlignment="textStart"
                             android:text="="
                             android:layout_weight="1.3"
-                            android:textSize="13sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/tvPriceEachPlace"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_toStartOf="@+id/tvPriceEach"
                             android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="PKR"
-                            android:textAlignment="textStart"
+                            android:text="PKR "
+                            android:textAlignment="textEnd"
                             android:textSize="15dp"
                             android:textStyle="bold"
                             android:layout_weight="1.1" />
 
                         <TextView
                             android:id="@+id/tvPriceEach"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:text="0.00"
-                            android:textAlignment="textStart"
+                            android:textAlignment="textEnd"
                             android:textSize="15dp"
                             android:textStyle="bold"
                             android:layout_weight="0.7" />
 
-                    </LinearLayout>
+                    </RelativeLayout>
 
                 </LinearLayout>
 

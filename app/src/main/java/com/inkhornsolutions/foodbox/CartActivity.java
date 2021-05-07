@@ -201,8 +201,8 @@ public class CartActivity extends AppCompatActivity {
         rvCartItems.setAdapter(cartItemsAdapter);
 
         tvDeliveryFee.setText(delivery);
-        tvSubTotal.setText("PKR" + String.format("%.2f", allTotalPrice));
-        tvGrandTotal.setText("PKR" + (allTotalPrice + Double.parseDouble(delivery.replace("PKR", ""))));
+        tvSubTotal.setText("PKR " + String.format("%.2f", allTotalPrice));
+        tvGrandTotal.setText("PKR " + (allTotalPrice + Double.parseDouble(delivery.replace("PKR ", ""))));
 
         btnCheckOut.setOnClickListener(new View.OnClickListener() {
             @Override

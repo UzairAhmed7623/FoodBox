@@ -21,7 +21,8 @@
             android:layout_alignParentTop="true"
             android:background="@color/myColor"
             app:title="Your Orders"
-            app:titleTextColor="@android:color/white" />
+            app:titleTextColor="@android:color/white"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
         <com.yalantis.pulltomakesoup.PullToRefreshView
             android:id="@+id/refresh"
