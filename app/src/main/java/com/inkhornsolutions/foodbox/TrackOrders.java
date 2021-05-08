@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.inkhornsolutions.foodbox.Common.Common;
+import com.inkhornsolutions.foodbox.EventBus.InProgress;
 import com.inkhornsolutions.foodbox.adapters.TrackOrdersAdapter;
 import com.inkhornsolutions.foodbox.models.HistoryModelClass;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,10 +24,14 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.yalantis.pulltomakesoup.PullToRefreshView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public class TrackOrders extends AppCompatActivity {
 
@@ -34,9 +40,18 @@ public class TrackOrders extends AppCompatActivity {
     private List<HistoryModelClass> trackOrders = new ArrayList<>();
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-    HistoryModelClass historyModelClass;
+    private HistoryModelClass historyModelClass;
     private ProgressDialog progressDialog;
     private PullToRefreshView refresh;
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onTimeUp(InProgress event){
+
+        Common.showNotification(this, new Random().nextInt(),
+                "Alert",
+                "Dear customer, your order has been accepted by the restaurant. Your order will be deliver to you within given time. Thanks ",
+                getIntent());
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
