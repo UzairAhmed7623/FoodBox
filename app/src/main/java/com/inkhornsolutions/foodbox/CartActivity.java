@@ -85,7 +85,7 @@ public class CartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cart);
 
         if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), GOOGLE_API_KEY, Locale.getDefault()   );
+            Places.initialize(getApplicationContext(), GOOGLE_API_KEY, Locale.getDefault());
         }
 
         restaurant = getIntent().getStringExtra("restaurant");

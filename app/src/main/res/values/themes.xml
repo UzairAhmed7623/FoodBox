@@ -11,7 +11,7 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/statusBar</item>
-        <!-- Customize your theme here. -->
+
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
 
     </style>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@android:color/white"
     android:fitsSystemWindows="true"
     tools:context=".Login">
@@ -47,11 +47,11 @@
                 android:id="@+id/editTextCountryCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:enabled="false"
                 android:inputType="phone"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:text="+92"
-                android:enabled="false"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
                 android:textColor="@color/grey_80" />
 
@@ -61,16 +61,17 @@
 
             <EditText
                 android:id="@+id/editTextPhone"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Phone Number"
                 android:inputType="phone"
-                android:maxLines="1"
                 android:maxLength="10"
+                android:maxLines="1"
                 android:singleLine="true"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textColor="@color/grey_90">
+
                 <requestFocus />
 
             </EditText>
@@ -79,12 +80,12 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonContinue"
+            style="@style/Widget.MaterialComponents.Button"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/loginbutton_selector"
+            android:foreground="?attr/selectableItemBackground"
             android:text="CONTINUE"
-            android:textColor="@android:color/white"
-            style="@style/Widget.MaterialComponents.Button"/>
+            android:textColor="@android:color/white" />
 
     </LinearLayout>
 
