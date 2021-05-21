@@ -84,7 +84,9 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
         View view = LayoutInflater.from(context).inflate(R.layout.quantity_dialog, null);
 
-        CircleImageView ivItem = view.findViewById(R.id.ivItem);
+        CircleImageView ivItem1 = view.findViewById(R.id.ivItem1);
+        CircleImageView ivItem2 = view.findViewById(R.id.ivItem2);
+        CircleImageView ivItem3 = view.findViewById(R.id.ivItem3);
 
         TextView tvItemTitle = view.findViewById(R.id.tvItemTitle);
         TextView tvItemPrice = view.findViewById(R.id.tvItemPrice);
@@ -109,7 +111,9 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setView(view);
 
-        Glide.with(context).load(image).into(ivItem);
+        Glide.with(context).load(image).into(ivItem1);
+        Glide.with(context).load(image).into(ivItem2);
+        Glide.with(context).load(image).into(ivItem3);
         tvItemTitle.setText("" + title);
         tvItemPrice.setText("PKR " + price);
         tvItemPriceFinal.setText("PKR " + finalPrice);

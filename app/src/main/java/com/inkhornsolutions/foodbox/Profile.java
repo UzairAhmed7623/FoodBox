@@ -336,7 +336,7 @@ public class Profile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                MapUtility.apiKey = getResources().getString(R.string.google_api_key);
+                MapUtility.apiKey = getResources().getString(R.string.google_maps_key);
                 Intent i = new Intent(Profile.this, LocationPickerActivity.class);
                 startActivityForResult(i, ADDRESS_PICKER_REQUEST);
 

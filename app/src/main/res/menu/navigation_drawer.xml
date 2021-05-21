@@ -3,10 +3,10 @@
 
     <group android:id="@+id/d">
 
-        <item android:id="@+id/trackOrder"
+        <item android:id="@+id/trackOrderr"
             android:title="Track your orders" />
 
-        <item android:id="@+id/orderHistory"
+        <item android:id="@+id/orderHistoryr"
             android:title="Order history" />
 
     </group>
