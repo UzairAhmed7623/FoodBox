@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:id="@+id/d">
+    <group android:id="@+id/d" >
 
-        <item android:id="@+id/trackOrderr"
+        <item android:id="@+id/trackOrder"
             android:title="Track your orders" />
 
-        <item android:id="@+id/orderHistoryr"
+        <item android:id="@+id/orderHistory"
             android:title="Order history" />
 
     </group>

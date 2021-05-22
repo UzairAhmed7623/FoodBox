@@ -69,15 +69,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-    private String resName;
     private AdvanceDrawerLayout drawerLayout;
     private TextView tvUserName;
     private CircleImageView ivProfileImage;
     private ImageView ivProfileSettings;
-    private RelativeLayout layout;
-    private TextView orderHistory;
     private NiceSpinner spAddress;
-    private TextView trackOrder;
     private PullToRefreshView mPullToRefreshView;
     private ProgressDialog progressDialog;
 
@@ -90,12 +86,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        layout = (RelativeLayout) findViewById(R.id.layout);
-        trackOrder = (TextView) findViewById(R.id.trackOrder);
-        orderHistory = (TextView) findViewById(R.id.orderHistory);
-        tvUserName = (TextView) findViewById(R.id.tvUserName);
-        ivProfileImage = (CircleImageView) findViewById(R.id.ivProfileImage);
-        ivProfileSettings = (ImageView) findViewById(R.id.ivProfileSettings);
         drawerLayout = (AdvanceDrawerLayout) findViewById(R.id.drawerLayout);
         spAddress = (NiceSpinner) findViewById(R.id.spAddress);
         mPullToRefreshView = (PullToRefreshView) findViewById(R.id.pull_to_refresh);
@@ -103,27 +93,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        toolbar.setNavigationIcon(R.drawable.ic_menu);
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
         drawerLayout.setViewScale(Gravity.START, 0.8f);
-        drawerLayout.setRadius(Gravity.START, 35);
-        drawerLayout.setViewElevation(Gravity.START, 80);
+        drawerLayout.setRadius(Gravity.START, 0);
+        drawerLayout.setViewElevation(Gravity.START, 100);
 
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
+        View header = navigationView.getHeaderView(0);
+        ivProfileImage = (CircleImageView) header.findViewById(R.id.ivProfileImage);
+        ivProfileSettings = (ImageView) header.findViewById(R.id.ivProfileSettings);
+        tvUserName = (TextView) header.findViewById(R.id.tvUserName);
 
         headerTextView();
 
         headerImage();
+
+        ivProfileSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Profile.class);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                drawerLayout.closeDrawer(GravityCompat.START);
+            }
+        });
 
         loadData();
 
@@ -177,56 +177,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         deleteCartItems();
-
-//        drawerLayout.setTouchMode(ElasticDrawer.TOUCH_MODE_BEZEL);
-//        drawerLayout.setOnDrawerStateChangeListener(new ElasticDrawer.OnDrawerStateChangeListener() {
-//            @Override
-//            public void onDrawerStateChange(int oldState, int newState) {
-//                if (newState == ElasticDrawer.STATE_CLOSED) {
-//                    Log.i("MainActivity", "Drawer STATE_CLOSED");
-//                    layout.setForeground(new ColorDrawable(ContextCompat.getColor(getApplicationContext(), android.R.color.transparent)));
-//                }
-//                else if (newState == ElasticDrawer.STATE_OPEN){
-//                    Log.i("MainActivity", "Drawer STATE_OPEN");
-//
-//
-//                    orderHistory.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            Intent intent = new Intent(MainActivity.this, OrderHistory.class);
-//                            startActivity(intent);
-//                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-//                            drawerLayout.closeMenu();
-//                        }
-//                    });
-//                    trackOrder.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            Intent intent = new Intent(MainActivity.this, TrackOrders.class);
-//                            startActivity(intent);
-//                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-//                            drawerLayout.closeMenu();
-//                        }
-//                    });
-//                    ivProfileSettings.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            Intent intent = new Intent(MainActivity.this, Profile.class);
-//                            startActivity(intent);
-//                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-//                            drawerLayout.closeMenu();
-//                        }
-//                    });
-//                }
-//            }
-//            @Override
-//            public void onDrawerSlide(float openRatio, int offsetPixels) {
-//                Log.i("MainActivity", "openRatio=" + openRatio + " ,offsetPixels=" + offsetPixels);
-//                if (openRatio > 0){
-//                    layout.setForeground(new ColorDrawable(ContextCompat.getColor(getApplicationContext(), R.color.white_greyish)));
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -282,19 +232,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 if (task.isSuccessful()){
                     for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                        resName = documentSnapshot.getId();
-                        String status = documentSnapshot.getString("status");
-                        String imageUri = documentSnapshot.getString("imageUri");
-                        String approved = documentSnapshot.getString("approved");
 
                         RestaurantModelClass restaurantModelClass = documentSnapshot.toObject(RestaurantModelClass.class);
-//                        restaurantModelClass.setResName(resName);
 
                         resDetails.add(restaurantModelClass);
-
-//                        else {
-//                            Snackbar.make(findViewById(android.R.id.content), "Data not found!", Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
-//                        }
                     }
                     rvRestaurant.setAdapter(new MainActivityAdapter(getApplicationContext(), resDetails));
                 }
@@ -391,6 +332,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawerLayout.closeDrawer(GravityCompat.START);
         }
         else {
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             super.onBackPressed();
         }
     }
@@ -411,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else if (item.getItemId() == android.R.id.home) {
 
-            drawerLayout.openDrawer(GravityCompat.START);
+            onBackPressed();
         }
         return true;
     }
@@ -419,18 +361,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem item) {
 
-        if (item.getItemId() == R.id.ivProfileImage){
-            Intent intent = new Intent(MainActivity.this, Profile.class);
-            startActivity(intent);
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        }
-        else if (item.getItemId() == R.id.trackOrder){
+        if (item.getItemId() == R.id.trackOrder){
             Intent intent = new Intent(MainActivity.this, TrackOrders.class);
             startActivity(intent);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
         else if (item.getItemId() == R.id.orderHistory){
-            Intent intent = new Intent(MainActivity.this, TrackOrders.class);
+            Intent intent = new Intent(MainActivity.this, OrderHistory.class);
             startActivity(intent);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }

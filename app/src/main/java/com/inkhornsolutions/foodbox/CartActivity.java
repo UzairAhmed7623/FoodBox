@@ -129,7 +129,7 @@ public class CartActivity extends AppCompatActivity {
 
                 Intent intent = new PlacePicker.IntentBuilder()
                         .setLatLong(latLng.latitude, latLng.longitude)  // Initial Latitude and Longitude the Map will load into
-                        .setMapZoom(14.0f)  // Map Zoom Level. Default: 14.0
+                        .setMapZoom(18.0f)  // Map Zoom Level. Default: 14.0
                         .setAddressRequired(true) // Set If return only Coordinates if cannot fetch Address for the coordinates. Default: True
                         .hideMarkerShadow(true) // Hides the shadow under the map marker. Default: False
                         .setMarkerDrawable(R.drawable.marker) // Change the default Marker Image
@@ -152,7 +152,6 @@ public class CartActivity extends AppCompatActivity {
         });
 
         showCart();
-
     }
 
     public double allTotalPrice = 0.00;
@@ -344,6 +343,8 @@ public class CartActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == Constants.PLACE_PICKER_REQUEST) {
             if (resultCode == Activity.RESULT_OK && data != null) {
                 AddressData addressData = data.getParcelableExtra(Constants.ADDRESS_INTENT);

@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:background="@color/myColorSecond"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,9 +17,9 @@
             android:orientation="horizontal">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/ivProfileImagee"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:id="@+id/ivProfileImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_centerInParent="true"
@@ -37,7 +37,8 @@
                     android:layout_height="40dp"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
-                    android:foreground="?attr/selectableItemBackground"
+                    android:background="@android:color/transparent"
+                    android:foreground="@drawable/ripple"
                     android:padding="10dp"
                     android:src="@drawable/arrow_forward" />
 
@@ -53,14 +54,14 @@
             android:gravity="center_vertical|end">
 
             <TextView
-                android:id="@+id/tvUserNamee"
+                android:id="@+id/tvUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="User name"
                 android:textSize="16sp"
                 android:fontFamily="@font/poppins_medium"
-                android:textColor="@android:color/white"/>
+                android:textColor="@color/myColorSecond"/>
 
         </LinearLayout>
 
@@ -69,6 +70,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/white"/>
+        android:background="@color/myColorSecond"/>
 
 </LinearLayout>

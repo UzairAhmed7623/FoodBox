@@ -105,4 +105,9 @@
         <item name="android:minWidth">250dp</item>
     </style>
 
+    <style name="NewFontStyle" parent="android:Widget.TextView">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
 </resources>
