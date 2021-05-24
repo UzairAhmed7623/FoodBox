@@ -21,19 +21,19 @@
             app:cardCornerRadius="10dp"
             app:cardElevation="10dp"
             app:cardUseCompatPadding="true"
-            app:strokeColor="@color/myColor"
+            app:strokeColor="@color/white_greyish"
             app:strokeWidth="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@color/myColor">
+                android:background="@color/white">
 
                 <ImageView
                     android:id="@+id/ivRestaurant"
                     android:layout_width="match_parent"
-                    android:layout_height="135dp"
+                    android:layout_height="200dp"
                     android:adjustViewBounds="true"
                     android:scaleType="fitXY"
                     android:src="@drawable/food_placeholder" />
@@ -43,13 +43,49 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
-                    android:layout_marginBottom="7dp"
-                    android:layout_gravity="center"
+                    android:layout_marginStart="17dp"
+                    android:layout_gravity="start"
+                    android:letterSpacing="0.05"
+                    android:textStyle="bold"
+                    android:textFontWeight="600"
                     android:text="Restaurant Name"
                     android:textAllCaps="true"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/grey_90"
                     android:textSize="14sp"
-                    android:fontFamily="sans-serif-black"/>
+                    android:includeFontPadding="false"
+                    android:fontFamily="@font/sf_pro_rounded_regular"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <per.wsj.library.AndRatingBar
+                        android:id="@+id/ratingStar"
+                        android:layout_width="110dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="17dp"
+                        android:layout_marginBottom="7dp"
+                        android:isIndicator="true"
+                        app:keepOriginColor="true"
+                        app:starColor="@color/myColor"
+                        app:bgColor="@color/myColorthird"
+                        app:scaleFactor="1.1"
+                        android:rating="2.5"/>
+
+                    <TextView
+                        android:id="@+id/tvNoOrders"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_toEndOf="@+id/ratingStar"
+                        android:layout_gravity="start"
+                        android:text="(50)"
+                        android:textAllCaps="true"
+                        android:textColor="@color/grey_90"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif-black"/>
+
+                </RelativeLayout>
 
             </LinearLayout>
 

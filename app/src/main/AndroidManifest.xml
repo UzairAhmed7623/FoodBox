@@ -5,8 +5,9 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
-    <!--    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />-->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" /> <!-- <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" /> -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -19,8 +20,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodBox">
+        <activity android:name=".SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-        <activity android:name="com.inkhornsolutions.foodbox.Login">
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,14 +39,21 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name="com.inkhornsolutions.foodbox.CartActivity" />
-        <activity android:name="com.inkhornsolutions.foodbox.SearchActivity" />
-        <activity android:name="com.inkhornsolutions.foodbox.TrackOrders" android:parentActivityName=".MainActivity" />
-        <activity android:name="com.inkhornsolutions.foodbox.OrderHistory" android:parentActivityName=".MainActivity"/>
-        <activity android:name="com.inkhornsolutions.foodbox.RestaurantItems" android:parentActivityName=".MainActivity" />
-        <activity android:name="com.inkhornsolutions.foodbox.MainActivity"/>
-        <activity android:name="com.inkhornsolutions.foodbox.Profile" android:parentActivityName=".MainActivity"/>
-
+        <activity android:name=".CartActivity" />
+        <activity android:name=".SearchActivity" />
+        <activity
+            android:name=".TrackOrders"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".OrderHistory"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".RestaurantItems"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".Profile"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

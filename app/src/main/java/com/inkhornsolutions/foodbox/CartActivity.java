@@ -129,9 +129,9 @@ public class CartActivity extends AppCompatActivity {
 
                 Intent intent = new PlacePicker.IntentBuilder()
                         .setLatLong(latLng.latitude, latLng.longitude)  // Initial Latitude and Longitude the Map will load into
-                        .setMapZoom(18.0f)  // Map Zoom Level. Default: 14.0
+                        .setMapZoom(17.0f)  // Map Zoom Level. Default: 14.0
                         .setAddressRequired(true) // Set If return only Coordinates if cannot fetch Address for the coordinates. Default: True
-                        .hideMarkerShadow(true) // Hides the shadow under the map marker. Default: False
+                        .hideMarkerShadow(false) // Hides the shadow under the map marker. Default: False
                         .setMarkerDrawable(R.drawable.marker) // Change the default Marker Image
                         .setMarkerImageImageColor(R.color.myColor)
                         .setFabColor(R.color.myColor)
@@ -143,7 +143,7 @@ public class CartActivity extends AppCompatActivity {
                         .setPlaceSearchBar(true, GOOGLE_API_KEY) //Activate GooglePlace Search Bar. Default is false/not activated. SearchBar is a chargeable feature by Google
                         .onlyCoordinates(true)  //Get only Coordinates from Place Picker
                         .hideLocationButton(false)   //Hide Location Button (Default: false)
-                        .disableMarkerAnimation(false)   //Disable Marker Animation (Default: false)
+                        .disableMarkerAnimation(true)   //Disable Marker Animation (Default: false)
                         .build(CartActivity.this);
 
                 startActivityForResult(intent, Constants.PLACE_PICKER_REQUEST);

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer-array name="progress_colors">
+        <item>@color/progress1</item>
+        <item>@color/progress2</item>
+        <item>@color/progress3</item>
+        <item>@color/progress4</item>
+    </integer-array>
+
+</resources>

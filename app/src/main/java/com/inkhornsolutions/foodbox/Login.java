@@ -8,10 +8,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,12 +35,13 @@ public class Login extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private String verificationId;
-    EditText editTextCountryCode, editTextPhone;
-    MaterialButton buttonContinue;
-    EditText editText;
-    AlertDialog alertDialog;
-    View view;
-    ProgressDialog progressDialog;
+    private EditText editTextCountryCode, editTextPhone;
+    private MaterialButton buttonContinue;
+    private EditText editText;
+    private AlertDialog alertDialog;
+    private View view;
+    private ProgressDialog progressDialog;
+    private ImageButton close;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,7 @@ public class Login extends AppCompatActivity {
         editTextCountryCode = findViewById(R.id.editTextCountryCode);
         editTextPhone = findViewById(R.id.editTextPhone);
         buttonContinue = findViewById(R.id.buttonContinue);
+        close = findViewById(R.id.close);
 
         buttonContinue.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +77,6 @@ public class Login extends AppCompatActivity {
                 progressDialog.show();
 
                 view = LayoutInflater.from(Login.this).inflate(R.layout.verify_phone, null);
-
 
                 editText = view.findViewById(R.id.editTextCode);
 
@@ -105,6 +109,12 @@ public class Login extends AppCompatActivity {
             }
         });
 
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void dialog(){
@@ -113,6 +123,7 @@ public class Login extends AppCompatActivity {
         alertDialogBuilder.setCancelable(false);
 
         alertDialog = alertDialogBuilder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.show();
     }
 
@@ -197,5 +208,4 @@ public class Login extends AppCompatActivity {
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
     }
-
 }

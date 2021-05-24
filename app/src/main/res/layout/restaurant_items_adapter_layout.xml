@@ -22,14 +22,14 @@
             app:cardCornerRadius="10dp"
             app:cardElevation="10dp"
             app:cardUseCompatPadding="true"
-            app:strokeColor="@color/myColor"
+            app:strokeColor="@color/white_greyish"
             app:strokeWidth="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@color/myColor">
+                android:background="@color/white">
 
                 <ImageView
                     android:id="@+id/ivItem"
@@ -58,10 +58,14 @@
                         android:layout_marginStart="10dp"
                         android:layout_gravity="start"
                         android:text="Restaurant item name"
+                        android:letterSpacing="0.05"
+                        android:textStyle="bold"
+                        android:textFontWeight="600"
                         android:textAllCaps="true"
-                        android:textColor="@android:color/white"
-                        android:textSize="12sp"
-                        android:fontFamily="@font/uber_move_bold" />
+                        android:textColor="@color/grey_90"
+                        android:textSize="14sp"
+                        android:includeFontPadding="false"
+                        android:fontFamily="@font/sf_pro_rounded_regular" />
 
                     <TextView
                         android:id="@+id/tvItemPrice"
@@ -70,10 +74,15 @@
                         android:layout_marginStart="10dp"
                         android:gravity="left"
                         android:text="Price"
+                        android:layout_gravity="start"
+                        android:letterSpacing="0.05"
+                        android:textStyle="bold"
+                        android:textFontWeight="600"
                         android:textAllCaps="true"
-                        android:textColor="@android:color/white"
-                        android:textSize="12sp"
-                        android:fontFamily="@font/uber_move_bold"/>
+                        android:textColor="@color/grey_90"
+                        android:textSize="14sp"
+                        android:includeFontPadding="false"
+                        android:fontFamily="@font/sf_pro_rounded_regular"/>
 
                     </LinearLayout>
 
@@ -111,11 +120,15 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="Available from: 9am to 2pm"
+                        android:layout_gravity="start"
+                        android:letterSpacing="0.05"
+                        android:textStyle="bold"
+                        android:textFontWeight="600"
                         android:textAllCaps="true"
-                        android:textColor="@android:color/white"
-                        android:textSize="12sp"
-                        android:layout_marginBottom="5dp"
-                        android:fontFamily="@font/uber_move_bold"/>
+                        android:textColor="@color/grey_90"
+                        android:textSize="14sp"
+                        android:includeFontPadding="false"
+                        android:fontFamily="@font/sf_pro_rounded_regular"/>
 
                 </LinearLayout>
 

@@ -11,6 +11,13 @@
     <color name="myColorSecond">#e60000</color>
     <color name="myColorthird">#ffcccb</color>
     <color name="statusBar">#ff3333</color>
+    <color name="stars">#FFA9A2</color>
+    <color name="log_back">#F2F2F2</color>
+
+    <color name="progress1">#e60000</color>
+    <color name="progress2">#FBCF00</color>
+    <color name="progress3">#009E1A</color>
+    <color name="progress4">#FF591F</color>
 
     <color name="profileBackground">#fff</color>
     <color name="profileAccentColor">#F7F7F7</color>
@@ -22,6 +29,7 @@
     <color name="grey_60">#666666</color>
     <color name="grey_80">#37474F</color>
     <color name="grey_90">#263238</color>
-    <color name="white_greyish">#45000000</color>
+    <color name="white_greyish">#37000000</color>
     <color name="button_selectorcolor">#9E9E9E</color>
+
 </resources>
