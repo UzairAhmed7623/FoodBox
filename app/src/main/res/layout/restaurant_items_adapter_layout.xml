@@ -63,8 +63,7 @@
                         android:textFontWeight="600"
                         android:textAllCaps="true"
                         android:textColor="@color/grey_90"
-                        android:textSize="14sp"
-                        android:includeFontPadding="false"
+                        android:textSize="12sp"
                         android:fontFamily="@font/sf_pro_rounded_regular" />
 
                     <TextView
@@ -80,7 +79,7 @@
                         android:textFontWeight="600"
                         android:textAllCaps="true"
                         android:textColor="@color/grey_90"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:includeFontPadding="false"
                         android:fontFamily="@font/sf_pro_rounded_regular"/>
 
@@ -126,8 +125,7 @@
                         android:textFontWeight="600"
                         android:textAllCaps="true"
                         android:textColor="@color/grey_90"
-                        android:textSize="14sp"
-                        android:includeFontPadding="false"
+                        android:textSize="12sp"
                         android:fontFamily="@font/sf_pro_rounded_regular"/>
 
                 </LinearLayout>

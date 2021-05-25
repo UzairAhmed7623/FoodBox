@@ -123,4 +123,6 @@ dependencies {
 
     implementation 'com.github.giswangsj:AndRatingBar:1.0.5'
 
+    implementation 'com.hbb20:ccp:2.5.0'
+
 }

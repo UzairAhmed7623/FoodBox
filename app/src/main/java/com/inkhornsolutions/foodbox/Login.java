@@ -9,12 +9,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -27,6 +33,7 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.hbb20.CountryCodePicker;
 
 import java.util.concurrent.TimeUnit;
 
@@ -35,8 +42,10 @@ public class Login extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private String verificationId;
-    private EditText editTextCountryCode, editTextPhone;
-    private MaterialButton buttonContinue;
+    private TextView phNumber;
+    private EditText editTextPhone;
+    private CountryCodePicker countryCode;
+    private Button buttonContinue;
     private EditText editText;
     private AlertDialog alertDialog;
     private View view;
@@ -51,7 +60,7 @@ public class Login extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-        editTextCountryCode = findViewById(R.id.editTextCountryCode);
+        countryCode = findViewById(R.id.countryCode);
         editTextPhone = findViewById(R.id.editTextPhone);
         buttonContinue = findViewById(R.id.buttonContinue);
         close = findViewById(R.id.close);
@@ -60,7 +69,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String code = editTextCountryCode.getText().toString().trim();
+                String code = countryCode.getSelectedCountryCode().trim();
                 String number = editTextPhone.getText().toString().trim();
 
                 if (number.isEmpty() || number.length() < 10) {
@@ -69,20 +78,26 @@ public class Login extends AppCompatActivity {
                     return;
                 }
 
-                String phoneNumber = code + number;
+                String phoneNumber = "+" + code + number;
 
                 progressDialog = new ProgressDialog(Login.this);
                 progressDialog.setMessage("Please wait...");
                 progressDialog.setCancelable(false);
-                progressDialog.show();
+//                progressDialog.show();
 
                 view = LayoutInflater.from(Login.this).inflate(R.layout.verify_phone, null);
+
+                phNumber = view.findViewById(R.id.phoneNumber);
 
                 editText = view.findViewById(R.id.editTextCode);
 
                 MaterialButton buttonSignIn = view.findViewById(R.id.buttonSignIn);
 
-                sendVerificationCode(phoneNumber);
+                phNumber.setText("Please enter the verification code sent to "+phoneNumber);
+                boldSignUptext(phNumber.getText().toString());
+
+                dialog();
+//                sendVerificationCode(phoneNumber);
 
                 // save phone number
                 SharedPreferences prefs = getApplicationContext().getSharedPreferences("USER_PREF", Context.MODE_PRIVATE);
@@ -141,7 +156,7 @@ public class Login extends AppCompatActivity {
                         if (task.isSuccessful()) {
 
 
-                            Intent intent = new Intent(Login.this, MainActivity.class);
+                            Intent intent = new Intent(Login.this, PhoneVerified.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
                             startActivity(intent);
@@ -166,6 +181,7 @@ public class Login extends AppCompatActivity {
         PhoneAuthProvider.verifyPhoneNumber(options);
 
     }
+
     private final PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
         @Override
@@ -201,11 +217,23 @@ public class Login extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        }
+//        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+//            Intent intent = new Intent(this, MainActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(intent);
+//            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+//        }
     }
+
+    public Spannable boldSignUptext(String text) {
+
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+        SpannableString spannable = new SpannableString(text);
+
+        StyleSpan styleSpan = new StyleSpan(Typeface.BOLD);
+        spannable.setSpan(styleSpan, 43, 55, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return spannable;
+    }
+
 }

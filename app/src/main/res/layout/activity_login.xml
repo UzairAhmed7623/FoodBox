@@ -4,20 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/log_back"
+    android:background="#FFFFFF"
     android:fitsSystemWindows="true"
     tools:context=".Login">
 
     <RelativeLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
-        android:layout_height="260dp">
+        android:layout_height="280dp">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardView"
             style="@style/CustomCardViewStyle"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="260dp"
             app:cardElevation="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,6 +26,20 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/welcome"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Hello and Welcome!"
+                    android:letterSpacing="0.05"
+                    android:textStyle="bold"
+                    android:textFontWeight="600"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:layout_marginTop="40dp"
+                    android:fontFamily="@font/sf_pro_rounded_regular" />
 
                 <ImageButton
                     android:id="@+id/close"
@@ -43,8 +57,9 @@
                     android:id="@+id/icon"
                     android:layout_width="130dp"
                     android:layout_height="100dp"
+                    android:layout_marginTop="10dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
+                    android:layout_below="@+id/welcome"
                     android:src="@drawable/chj_logo2" />
 
                 <TextView
@@ -55,11 +70,11 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="8dp"
                     android:lineHeight="21px"
-                    android:text="Verify Your Number"
+                    android:text="Please Verify Your Number"
                     android:textAllCaps="true"
                     android:textColor="@color/black"
                     android:textFontWeight="600"
-                    android:textSize="18dp" />
+                    android:textSize="16dp" />
 
             </RelativeLayout>
 
@@ -68,12 +83,11 @@
     </RelativeLayout>
 
     <ImageView
-        android:layout_width="200dp"
-        android:layout_height="5dp"
+        android:layout_width="240dp"
+        android:layout_height="3dp"
         android:layout_below="@id/layout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="-12.5dp"
-        android:elevation="5dp"
+        android:layout_marginTop="-22dp"
         android:background="@drawable/edit_details_background"
         android:backgroundTint="@color/myColorSecond" />
 
@@ -89,7 +103,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:padding="15dp"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="Please write your mobile number to receive a verification code!"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
@@ -102,72 +117,64 @@
             android:layout_below="@+id/textView"
             android:layout_marginBottom="15dp"
             android:orientation="horizontal"
-            android:padding="15dp">
+            android:padding="10dp"
+            android:layout_marginTop="10dp">
 
-            <com.google.android.material.textfield.TextInputLayout
+            <com.hbb20.CountryCodePicker
+                android:id="@+id/countryCode"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:boxBackgroundColor="@color/white"
-                app:boxCornerRadiusTopStart="0dp"
-                app:boxCornerRadiusTopEnd="0dp"
-                app:boxCornerRadiusBottomStart="0dp"
-                app:boxCornerRadiusBottomEnd="0dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
-
-            <EditText
-                android:id="@+id/editTextCountryCode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:enabled="false"
-                android:inputType="phone"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:text="+92"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
-                android:textColor="@color/grey_80" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="52dp"
+                app:ccp_countryAutoDetectionPref="LOCALE_NETWORK"
+                app:ccp_autoDetectCountry="true"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="9dp"
+                android:background="@drawable/edit_details_background"
+                android:backgroundTint="#0A000000"
+                android:layout_marginEnd="10dp"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:boxBackgroundColor="@color/white"
-                app:boxCornerRadiusTopStart="0dp"
-                app:boxCornerRadiusTopEnd="0dp"
-                app:boxCornerRadiusBottomStart="0dp"
-                app:boxCornerRadiusBottomEnd="0dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+                app:boxCornerRadiusTopStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:counterMaxLength="10"
+                app:counterEnabled="true"
+                app:boxBackgroundColor="#0A000000"
+                app:boxStrokeColor="@color/white"
+                app:boxStrokeWidth="-1dp"
+                app:endIconMode="clear_text"
+                app:hintEnabled="false"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <EditText
                     android:id="@+id/editTextPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Phone number"
+                    android:hint="3001234567"
                     android:inputType="phone"
                     android:maxLength="10"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:paddingStart="0dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
                     android:textColor="@color/grey_90"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/buttonContinue"
             style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_below="@+id/layout2"
-            android:layout_centerHorizontal="true"
-            app:cornerRadius="50dp"
-            android:layout_marginTop="30dp"
-            android:foreground="@drawable/ripple"
-            android:text="CONTINUE"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="10dp"
             android:backgroundTint="@color/myColorSecond"
-            android:textColor="@android:color/white" />
+            android:text="CONTINUE"
+            android:textColor="@android:color/white"
+            app:cornerRadius="10dp" />
 
     </RelativeLayout>
 
