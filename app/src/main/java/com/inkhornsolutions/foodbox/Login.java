@@ -23,6 +23,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chaos.view.PinView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
@@ -46,7 +47,7 @@ public class Login extends AppCompatActivity {
     private EditText editTextPhone;
     private CountryCodePicker countryCode;
     private Button buttonContinue;
-    private EditText editText;
+    private PinView editTextCode;
     private AlertDialog alertDialog;
     private View view;
     private ProgressDialog progressDialog;
@@ -83,21 +84,22 @@ public class Login extends AppCompatActivity {
                 progressDialog = new ProgressDialog(Login.this);
                 progressDialog.setMessage("Please wait...");
                 progressDialog.setCancelable(false);
-//                progressDialog.show();
+                progressDialog.show();
 
                 view = LayoutInflater.from(Login.this).inflate(R.layout.verify_phone, null);
 
                 phNumber = view.findViewById(R.id.phoneNumber);
 
-                editText = view.findViewById(R.id.editTextCode);
+                editTextCode = view.findViewById(R.id.editTextCode);
 
                 MaterialButton buttonSignIn = view.findViewById(R.id.buttonSignIn);
 
-                phNumber.setText("Please enter the verification code sent to "+phoneNumber);
-                boldSignUptext(phNumber.getText().toString());
+                SpannableString spannable = new SpannableString("Please enter the verification code sent to "+phoneNumber);
+                StyleSpan styleSpan = new StyleSpan(Typeface.BOLD);
+                spannable.setSpan(styleSpan, 43, spannable.length(), 0);
+                phNumber.setText(spannable);
 
-                dialog();
-//                sendVerificationCode(phoneNumber);
+                sendVerificationCode(phoneNumber);
 
                 // save phone number
                 SharedPreferences prefs = getApplicationContext().getSharedPreferences("USER_PREF", Context.MODE_PRIVATE);
@@ -109,12 +111,12 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                        String code = editText.getText().toString().trim();
+                        String code = editTextCode.getText().toString().trim();
 
                         if (code.isEmpty() || code.length() < 6) {
 
-                            editText.setError("Enter code...");
-                            editText.requestFocus();
+                            editTextCode.setError("Enter code...");
+                            editTextCode.requestFocus();
                             return;
                         }
                         progressDialog.dismiss();
@@ -201,7 +203,7 @@ public class Login extends AppCompatActivity {
 
             if (code != null) {
 
-                editText.setText(code);
+                editTextCode.setText(code);
                 verifyCode(code);
             }
         }
@@ -217,23 +219,12 @@ public class Login extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-//        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-//            Intent intent = new Intent(this, MainActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            startActivity(intent);
-//            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-//        }
-    }
-
-    public Spannable boldSignUptext(String text) {
-
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
-        SpannableString spannable = new SpannableString(text);
-
-        StyleSpan styleSpan = new StyleSpan(Typeface.BOLD);
-        spannable.setSpan(styleSpan, 43, 55, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        return spannable;
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        }
     }
 
 }

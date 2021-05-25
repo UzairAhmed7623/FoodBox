@@ -66,14 +66,6 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                 showQuantityDialog(modelClass, holder);
             }
         });
-
-        holder.ibSelectItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                showQuantityDialog(modelClass, holder);
-            }
-        });
     }
 
     private double price = 0;
@@ -218,14 +210,12 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvItem, tvItemPrice, tvItemSchedule;
-        private ImageButton ibSelectItem;
         private ImageView ivItem;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tvItem = itemView.findViewById(R.id.tvItem);
-            ibSelectItem = itemView.findViewById(R.id.ibSelectItem);
             tvItemPrice = itemView.findViewById(R.id.tvItemPrice);
             ivItem = itemView.findViewById(R.id.ivItem);
             tvItemSchedule = (TextView) itemView.findViewById(R.id.tvItemSchedule);

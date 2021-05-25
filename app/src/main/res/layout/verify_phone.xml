@@ -53,25 +53,26 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
-                android:layout_marginBottom="15dp"
-                android:orientation="horizontal">
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
+                android:orientation="vertical">
 
-                <EditText
+                <com.chaos.view.PinView
                     android:id="@+id/editTextCode"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/myColorSecond"
-                    android:gravity="center"
-                    android:hint="Code"
-                    android:inputType="phone"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
-                    android:textColor="@color/grey_90"
-                    android:textCursorDrawable="@color/myColorSecond">
-
-                </EditText>
+                    app:itemCount="6"
+                    app:itemRadius="10dp"
+                    app:itemHeight="45dp"
+                    app:itemWidth="45dp"
+                    android:layout_gravity="center"
+                    app:lineColor="@color/myColor"
+                    android:itemBackground="@color/stars"
+                    style="@style/PinWidget.PinView"
+                    android:inputType="number"
+                    android:cursorVisible="true"
+                    app:cursorColor="@color/statusBar"
+                    app:hideLineWhenFilled="true" />
 
             </LinearLayout>
 
