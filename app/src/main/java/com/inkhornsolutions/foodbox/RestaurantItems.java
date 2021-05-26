@@ -1,12 +1,5 @@
 package com.inkhornsolutions.foodbox;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -21,21 +14,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.darwindeveloper.horizontalscrollmenulibrary.custom_views.HorizontalScrollMenuView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.inkhornsolutions.foodbox.adapters.RestaurentItemsAdapter;
-import com.inkhornsolutions.foodbox.models.ItemsModelClass;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.inkhornsolutions.foodbox.adapters.RestaurentItemsAdapter;
+import com.inkhornsolutions.foodbox.models.ItemsModelClass;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -69,6 +66,7 @@ public class RestaurantItems extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private HorizontalScrollMenuView menuView;
     private RestaurentItemsAdapter adapter;
+    int size;
 
     public static RestaurantItems getInstance() {
         return instance;
@@ -97,8 +95,10 @@ public class RestaurantItems extends AppCompatActivity {
         last_name = getIntent().getStringExtra("last_name");
 
         rvItems = (RecyclerView) findViewById(R.id.rvItems);
-        rvItems.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new RestaurentItemsAdapter(this, productList);
+        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
+        staggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+        rvItems.setLayoutManager(staggeredGridLayoutManager);
+        adapter = new RestaurentItemsAdapter(RestaurantItems.this, productList);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.show();
@@ -165,12 +165,15 @@ public class RestaurantItems extends AppCompatActivity {
     }
 
     private void getData(){
-        firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items").get()
+        firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
+                .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         productList.clear();
                         adapter.notifyDataSetChanged();
+
+                        size = queryDocumentSnapshots.size();
 
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
                             if (documentSnapshot.exists()) {
@@ -184,12 +187,13 @@ public class RestaurantItems extends AppCompatActivity {
 //                                          modelClass.setImageUri(image);
                                 modelClass.setId(getDateTime());
 //                                          modelClass.setSchedule(schedule);
+                                modelClass.setListSize(size);
 
                                 productList.add(modelClass);
 
-                                rvItems.setAdapter(adapter);
                             }
                         }
+                        rvItems.setAdapter(adapter);
                         progressDialog.dismiss();
                     }
                 })

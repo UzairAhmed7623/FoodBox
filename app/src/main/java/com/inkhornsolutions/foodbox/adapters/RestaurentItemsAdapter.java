@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -23,13 +24,15 @@ import com.inkhornsolutions.foodbox.models.ItemsModelClass;
 import com.inkhornsolutions.foodbox.R;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
 
-public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItemsAdapter.ViewHolder>{
+public class RestaurentItemsAdapter extends RecyclerView.Adapter{
 
     final private Context context;
     final private List<ItemsModelClass> productList;
@@ -40,22 +43,43 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
         this.productList = productList;
     }
 
-    @NonNull
     @Override
-    public RestaurentItemsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public int getItemViewType(int position) {
+        if (position == 1){
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+
+    @NonNull
+    @NotNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.restaurant_items_adapter_layout, parent, false);
-        return new ViewHolder(view);
+        if (viewType == 0){
+            View view = inflater.inflate(R.layout.restaurant_items_adapter, parent, false);
+            return new ViewHolderLeft(view);
+        }
+        else {
+            View view = inflater.inflate(R.layout.restaurant_items_adapter_right, parent, false);
+            return new ViewHolderLeft(view);
+        }
+
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RestaurentItemsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull @NotNull RecyclerView.ViewHolder holder, int position) {
         final ItemsModelClass modelClass = productList.get(position);
 
-        holder.tvItem.setText(modelClass.getItemName());
-        holder.tvItemPrice.setText("PKR"+modelClass.getPrice());
-        Glide.with(context).load(modelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivItem);
-        holder.tvItemSchedule.setText("Available from: "+ modelClass.getFrom()+" to "+modelClass.getTo());
+            ViewHolderLeft viewHolderLeft = (ViewHolderLeft) holder;
+
+            viewHolderLeft.tvItem.setText(modelClass.getItemName());
+            viewHolderLeft.tvItemPrice.setText("PKR"+modelClass.getPrice());
+            Glide.with(context).load(modelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(viewHolderLeft.ivItem);
+            viewHolderLeft.tvItemSchedule.setText("Available from: "+ modelClass.getFrom()+" to "+modelClass.getTo());
+
 
         name = modelClass.getUserName();
 
@@ -63,16 +87,21 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
             @Override
             public void onClick(View v) {
 
-                showQuantityDialog(modelClass, holder);
+                showQuantityDialog(modelClass);
             }
         });
+    }
+
+    @Override
+    public int getItemCount() {
+        return productList.size();
     }
 
     private double price = 0;
     private double finalPrice = 0;
     private int itemCount = 0;
 
-    private void showQuantityDialog(ItemsModelClass modelClass, RestaurentItemsAdapter.ViewHolder holder) {
+    private void showQuantityDialog(ItemsModelClass modelClass) {
 
         View view = LayoutInflater.from(context).inflate(R.layout.quantity_dialog, null);
 
@@ -202,25 +231,18 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
         RestaurantItems.getInstance().updateCartCount();
     }
 
-    @Override
-    public int getItemCount() {
-        return productList.size();
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolderLeft extends RecyclerView.ViewHolder {
 
         private TextView tvItem, tvItemPrice, tvItemSchedule;
         private ImageView ivItem;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolderLeft(@NonNull View itemView) {
             super(itemView);
 
             tvItem = itemView.findViewById(R.id.tvItem);
             tvItemPrice = itemView.findViewById(R.id.tvItemPrice);
             ivItem = itemView.findViewById(R.id.ivItem);
             tvItemSchedule = (TextView) itemView.findViewById(R.id.tvItemSchedule);
-
-
         }
     }
 }
