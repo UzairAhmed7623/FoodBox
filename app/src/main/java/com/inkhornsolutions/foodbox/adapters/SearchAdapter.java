@@ -26,6 +26,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
     private Context context;
@@ -38,12 +40,28 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         this.items = items;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 1){
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+
     @NonNull
     @Override
     public SearchAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.search_adapter_layout,parent,false);
-        return new ViewHolder(view);
+        if (viewType == 0){
+            View view = inflater.inflate(R.layout.restaurant_items_adapter_left, parent, false);
+            return new SearchAdapter.ViewHolder(view);
+        }
+        else {
+            View view = inflater.inflate(R.layout.restaurant_items_adapter_right, parent, false);
+            return new SearchAdapter.ViewHolder(view);
+        }
     }
 
     @Override
@@ -54,9 +72,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         String price = item.getPrice();
         String imageUri = item.getImageUri();
 
-        holder.tvItemSearch.setText(itemname);
-        holder.tvItemPriceSearch.setText("PKR"+price);
-        Glide.with(context).load(imageUri).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivItemSearch);
+        holder.tvItem.setText(itemname);
+        holder.tvItemPrice.setText("PKR"+price);
+        Glide.with(context).load(imageUri).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivItem);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +97,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
                                                         if (itemname.equals(itemName)){
                                                             String res = documentSnapshot.getId();
-                                                            Log.d("asdfghjkl", res);
+                                                            Log.d("Restaurant", res);
 
                                                             Intent intent = new Intent(context, RestaurantItems.class);
                                                             intent.putExtra("restaurant", res);
@@ -108,8 +126,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView ivItemSearch;
-        private TextView tvItemSearch, tvItemPriceSearch;
+        private CircleImageView ivItem;
+        private TextView tvItem, tvItemPrice;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -117,9 +135,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             firebaseAuth = FirebaseAuth.getInstance();
             firebaseFirestore = FirebaseFirestore.getInstance();
 
-            ivItemSearch = (ImageView) itemView.findViewById(R.id.ivItemSearch);
-            tvItemSearch = (TextView) itemView.findViewById(R.id.tvItemSearch);
-            tvItemPriceSearch = (TextView) itemView.findViewById(R.id.tvItemPriceSearch);
+            ivItem = (CircleImageView) itemView.findViewById(R.id.ivItem);
+            tvItem = (TextView) itemView.findViewById(R.id.tvItem);
+            tvItemPrice = (TextView) itemView.findViewById(R.id.tvItemPrice);
         }
     }
 }

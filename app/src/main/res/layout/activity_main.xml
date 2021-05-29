@@ -10,26 +10,35 @@
     android:clipToPadding="false"
     app:edPosition="1"
     android:gravity="start"
-    app:edMenuBackground="@color/myColorSecond"
+    app:edMenuBackground="@color/newColor"
     tools:context=".MainActivity">
 
     <RelativeLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/newColor">
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="23dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="@color/places_text_black_alpha_26" />
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/myColor"
-            android:layout_alignParentTop="true" >
+            android:background="@color/newColor"
+            android:layout_below="@+id/view">
 
             <LinearLayout
                 android:id="@+id/addressLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="10dp"
                 style="@style/TextAppearance.AppCompat.Button"
                 android:orientation="vertical">
 
@@ -38,33 +47,91 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:textColor="@android:color/white"
+                    android:layout_marginTop="30dp"
+                    android:textColor="@android:color/black"
+                    android:includeFontPadding="false"
                     android:textSize="16dp"
                     android:text="Delivering to"
                     android:textAllCaps="true"
                     android:textStyle="bold"
-                    android:fontFamily="@font/uber_move_bold"/>
-
-                <org.angmarch.views.NiceSpinner
-                    android:id="@+id/spAddress"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/myColor"
-                    app:arrowTint="@color/white"
-                    app:textTint="@color/white"
-                    android:maxLines="1"
-                    app:backgroundSelector="@drawable/spinner_back" />
+                    android:fontFamily="@font/sf_pro_rounded_regular"/>
 
             </LinearLayout>
 
         </androidx.appcompat.widget.Toolbar>
 
+        <RelativeLayout
+            android:id="@+id/layout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar">
+
+            <ImageView
+                android:id="@+id/place"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:padding="10dp"
+                android:src="@drawable/location"
+                app:tint="@color/black"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/tvAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/place"
+                android:layout_centerVertical="true"
+                android:padding="10dp"
+                android:layout_gravity="start"
+                android:letterSpacing="0.05"
+                android:textStyle="bold"
+                android:textFontWeight="600"
+                android:text="Address"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:includeFontPadding="false"
+                android:fontFamily="@font/sf_pro_rounded_regular"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tvItemSearch"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:transitionName="search"
+            android:layout_below="@+id/layout1"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/search_back"
+            app:drawableStartCompat="@drawable/search_icon"
+            android:drawableTint="@color/black"
+            android:paddingStart="10dp"
+            android:hint="   Search for the foods"
+            android:textColorHint="@color/grey_60"
+            android:gravity="center_vertical"
+            android:textSize="17dp"
+            />
+
+<!--        <org.angmarch.views.NiceSpinner-->
+<!--            android:id="@+id/spAddress"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_below="@+id/toolbar"-->
+<!--            android:backgroundTint="@color/newColor"-->
+<!--            app:arrowTint="@color/black"-->
+<!--            app:textTint="@color/black"-->
+<!--            android:maxLines="1"-->
+<!--            app:backgroundSelector="@drawable/spinner_back" />-->
+
         <com.yalantis.pulltomakesoup.PullToRefreshView
             android:id="@+id/pull_to_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar">
+            android:layout_below="@+id/tvItemSearch">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvRestaurantName"

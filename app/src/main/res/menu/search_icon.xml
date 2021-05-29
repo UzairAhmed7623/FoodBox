@@ -2,8 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/search_icon"
-        android:icon="@drawable/search"
-        android:title="Search"
-        app:showAsAction="always"/>
+    <item android:id="@+id/image"
+        android:actionLayout="@layout/toobar_profile_image"
+        app:showAsAction="always"
+        android:title="profile" />
+
 </menu>

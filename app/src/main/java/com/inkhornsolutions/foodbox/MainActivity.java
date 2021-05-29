@@ -3,16 +3,20 @@ package com.inkhornsolutions.foodbox;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -35,6 +39,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import com.google.firebase.firestore.Query;
 import com.infideap.drawerbehavior.AdvanceDrawerLayout;
 import com.inkhornsolutions.foodbox.adapters.MainActivityAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -72,9 +77,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private AdvanceDrawerLayout drawerLayout;
     private TextView tvUserName;
     private CircleImageView ivProfileImage;
-    private NiceSpinner spAddress;
+    private TextView tvAddress;
     private PullToRefreshView mPullToRefreshView;
     private ProgressDialog progressDialog;
+    private String imageUri;
+    private TextView tvItemSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,19 +93,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawerLayout = (AdvanceDrawerLayout) findViewById(R.id.drawerLayout);
-        spAddress = (NiceSpinner) findViewById(R.id.spAddress);
+        tvAddress = (TextView) findViewById(R.id.tvAddress);
         mPullToRefreshView = (PullToRefreshView) findViewById(R.id.pull_to_refresh);
+        tvItemSearch = (TextView) findViewById(R.id.tvItemSearch);
 
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+        toggle.getDrawerArrowDrawable().setColor(ContextCompat.getColor(this, R.color.black));
 
         drawerLayout.setViewScale(Gravity.START, 0.8f);
         drawerLayout.setRadius(Gravity.START, 0);
@@ -177,6 +186,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        tvItemSearch .setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,
+                        findViewById(R.id.tvItemSearch),
+                        "search");
+                startActivity(intent, options.toBundle());
+
+            }
+        });
+
         deleteCartItems();
     }
 
@@ -199,17 +222,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 addressList.add(address);
                                 addressList.add(address1);
 
-                                spAddress.attachDataSource(addressList);
+                                tvAddress.setText(address);
 
-                                spAddress.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
-                                    @Override
-                                    public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
-
-                                        Intent intent = new Intent(MainActivity.this, Profile.class);
-                                        startActivity(intent);
-                                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                    }
-                                });
+//                                spAddress.attachDataSource(addressList);
+//
+//                                spAddress.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+//                                    @Override
+//                                    public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+//
+//                                        Intent intent = new Intent(MainActivity.this, Profile.class);
+//                                        startActivity(intent);
+//                                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+//                                    }
+//                                });
                             }
                             else {
                                 Snackbar.make(findViewById(android.R.id.content), "Address not found!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
@@ -226,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void loadData(){
-        firebaseFirestore.collection("Restaurants").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        firebaseFirestore.collection("Restaurants").orderBy("resName", Query.Direction.ASCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 resDetails.clear();
@@ -292,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         DocumentSnapshot documentSnapshot = task.getResult();
                         if (documentSnapshot.exists()){
                             if (documentSnapshot.getString("UsersImageProfile") != null){
-                                String imageUri = documentSnapshot.getString("UsersImageProfile");
+                                imageUri = documentSnapshot.getString("UsersImageProfile");
                                 Glide.with(MainActivity.this).load(imageUri).placeholder(ContextCompat.getDrawable(getApplicationContext(), R.drawable.user)).into(ivProfileImage);
                             }
                             else {
@@ -341,18 +366,54 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_icon, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.image);
+        menuItem.setActionView(R.layout.toobar_profile_image);
+        View view = menuItem.getActionView();
+        CircleImageView toolbar_profile_Image = view.findViewById(R.id.toolbar_profile_Image);
+
+        if (firebaseAuth != null) {
+            DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
+            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()){
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        if (documentSnapshot.exists()){
+                            if (documentSnapshot.getString("UsersImageProfile") != null){
+                                imageUri = documentSnapshot.getString("UsersImageProfile");
+                                Glide.with(MainActivity.this).load(imageUri).placeholder(ContextCompat.getDrawable(getApplicationContext(), R.drawable.account_circle_black)).into(toolbar_profile_Image);
+                            }
+                            else {
+                                Log.d("TAG", "Not found!");
+                            }
+                        }
+                        else {
+                            Log.d("TAG", "No data found!");
+                        }
+                    }
+                    else {
+                        Log.d("TAG", task.getException().getMessage());
+                    }
+                }
+            });
+        }
+        toolbar_profile_Image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Profile.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }
+        });
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.search_icon){
-            Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        }
-        else if (item.getItemId() == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
 
             onBackPressed();
         }

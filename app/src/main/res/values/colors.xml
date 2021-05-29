@@ -34,5 +34,6 @@
 
     <color name="newColor">#F2F2F2</color>
     <color name="newColorSecond">#F9F9F9</color>
+    <color name="newColorThird">#F5F5F5</color>
 
 </resources>

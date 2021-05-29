@@ -423,7 +423,16 @@ public class Profile extends AppCompatActivity {
 
                     Bundle completeAddress =data.getBundleExtra("fullAddress");
 
-                    String address = new StringBuilder().append(completeAddress.getString("addressline2").replace(", Punjab,","").replace("Pakistan","")).toString();
+                    String state = new StringBuilder().append(completeAddress.getString("state")).toString();
+                    String postalcode = new StringBuilder().append(completeAddress.getString("postalcode")).toString();;
+                    String country = new StringBuilder().append(completeAddress.getString("country")).toString();;
+
+                    String address = new StringBuilder().append(completeAddress.getString("addressline2")
+                            .replace(state+",", "")
+                            .replace(postalcode+",", "")
+                            .replace(country+",", ""))
+                            .toString();
+
                     tvAddress.setText(address);
 
                     Map<String, Object> addData = new HashMap<>();

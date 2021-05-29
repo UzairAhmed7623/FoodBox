@@ -5,15 +5,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F2F2F2"
+    android:background="@color/newColor"
     android:fitsSystemWindows="true"
     tools:context=".RestaurantItems">
 
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="15dp"
-        android:background="@color/profileAccentColor"
+        android:layout_height="23dp"
+        android:background="@color/places_text_black_alpha_26"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,7 +22,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="90dp"
-        android:background="#F2F2F2"
+        android:background="@color/newColor"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,6 +34,7 @@
         app:subtitleTextColor="@color/black"
         app:title="Delicious"
         app:titleMargin="20dp"
+        app:titleMarginTop="0dp"
         app:titleTextColor="@color/black" />
 
     <com.darwindeveloper.horizontalscrollmenulibrary.custom_views.HorizontalScrollMenuView
@@ -42,8 +43,7 @@
         android:layout_height="wrap_content"
         app:icon_height="24dp"
         app:icon_width="24dp"
-        app:item_backgroundColor="#F2F2F2"
-        app:item_colorSelected="@color/myColorSecond"
+        app:item_backgroundColor="@color/newColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
@@ -82,7 +82,7 @@
             android:layout_weight="1"
             android:layout_height="60dp"
             android:layout_gravity="bottom"
-            android:background="#F2F2F2"
+            android:background="@color/newColor"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
