@@ -30,13 +30,6 @@
                 android:orientation="vertical"
                 android:background="@color/white">
 
-                <ImageView
-                    android:id="@+id/ivRestaurant"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/food_placeholder" />
 
                 <TextView
                     android:id="@+id/tvRestaurant"
@@ -92,5 +85,15 @@
         </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
+
+    <ImageView
+
+        android:id="@+id/ivRestaurant"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="-80dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/food_placeholder" />
 
 </LinearLayout>

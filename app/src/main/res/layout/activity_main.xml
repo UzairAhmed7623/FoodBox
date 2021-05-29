@@ -54,7 +54,7 @@
                     app:arrowTint="@color/white"
                     app:textTint="@color/white"
                     android:maxLines="1"
-                    app:backgroundSelector="@drawable/sel" />
+                    app:backgroundSelector="@drawable/spinner_back" />
 
             </LinearLayout>
 

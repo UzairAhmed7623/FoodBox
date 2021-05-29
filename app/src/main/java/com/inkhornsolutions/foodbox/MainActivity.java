@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private AdvanceDrawerLayout drawerLayout;
     private TextView tvUserName;
     private CircleImageView ivProfileImage;
-    private ImageView ivProfileSettings;
     private NiceSpinner spAddress;
     private PullToRefreshView mPullToRefreshView;
     private ProgressDialog progressDialog;
@@ -93,6 +92,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         View header = navigationView.getHeaderView(0);
         ivProfileImage = (CircleImageView) header.findViewById(R.id.ivProfileImage);
-        ivProfileSettings = (ImageView) header.findViewById(R.id.ivProfileSettings);
+        ImageView ivProfileSettings = (ImageView) header.findViewById(R.id.ivProfileSettings);
         tvUserName = (TextView) header.findViewById(R.id.tvUserName);
 
         headerTextView();

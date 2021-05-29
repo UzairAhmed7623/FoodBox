@@ -2,17 +2,17 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
     <solid
-        android:color="@color/myColor"/>
+        android:color="@color/newColorSecond"/>
 
     <corners
         android:radius="50dp"/>
 
     <size
-        android:width="5dp"
-        android:height="5dp"/>
+        android:width="17dp"
+        android:height="17dp"/>
 
     <stroke
-        android:width="0.3dp"
-        android:color="@android:color/white"/>
+        android:width="1dp"
+        android:color="@color/newColorSecond"/>
 
 </shape>

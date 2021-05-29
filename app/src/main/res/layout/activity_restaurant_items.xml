@@ -5,98 +5,124 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F2F2F2"
+    android:fitsSystemWindows="true"
     tools:context=".RestaurantItems">
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:background="@color/profileAccentColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/myColor"
-        app:title="Available items"
-        app:titleTextColor="@android:color/white"
+        android:layout_height="90dp"
+        android:background="#F2F2F2"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:layout_constraintVertical_bias="0.0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/view"
+        app:layout_constraintVertical_bias="0.0"
+        app:subtitle="food for you"
+        app:subtitleTextAppearance="@style/TextAppearance.AppCompat.Title"
+        app:subtitleTextColor="@color/black"
+        app:title="Delicious"
+        app:titleMargin="20dp"
+        app:titleTextColor="@color/black" />
 
     <com.darwindeveloper.horizontalscrollmenulibrary.custom_views.HorizontalScrollMenuView
         android:id="@+id/rvTags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:icon_height="30dp"
-        app:icon_width="30dp"
+        app:icon_height="24dp"
+        app:icon_width="24dp"
+        app:item_backgroundColor="#F2F2F2"
+        app:item_colorSelected="@color/myColorSecond"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/myColor"
-        app:layout_constraintBottom_toBottomOf="@+id/rvTags"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout" />
-
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:weightSum="2"
-        android:padding="5dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottemSheet"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/restaurats_items_back"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rvTags">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvItems"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/bottemSheet"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/myColor"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"
             android:orientation="horizontal"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:gravity="center_horizontal">
+            app:layout_constraintBottom_toTopOf="@+id/bottemSheet"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rvTags">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Minimum order amount is "
-                android:layout_gravity="center_vertical"
-                android:textColor="@android:color/white"
-                android:textSize="16dp"
-                android:textStyle="bold"
-                android:fontFamily="@font/uber_move"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="PKR50."
-                android:layout_gravity="center_vertical"
-                android:textColor="@android:color/white"
-                android:textSize="16dp"
-                android:textStyle="bold"
-                android:fontFamily="@font/uber_move_bold"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvItems"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
         </LinearLayout>
 
-    </androidx.core.widget.NestedScrollView>
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/bottemSheet"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom"
+            android:background="#F2F2F2"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="@font/sf_pro_rounded_regular"
+                    android:text="Minimum order amount is "
+                    android:textColor="@color/myColorSecond"
+                    android:includeFontPadding="false"
+                    android:letterSpacing="0.05"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="@font/sf_pro_rounded_regular"
+                    android:text="PKR50."
+                    android:textColor="@color/myColorSecond"
+                    android:includeFontPadding="false"
+                    android:letterSpacing="0.05"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

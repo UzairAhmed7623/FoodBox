@@ -32,7 +32,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
 
-public class RestaurentItemsAdapter extends RecyclerView.Adapter{
+public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItemsAdapter.ViewHolder>{
 
     final private Context context;
     final private List<ItemsModelClass> productList;
@@ -56,29 +56,27 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter{
     @NonNull
     @NotNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+    public RestaurentItemsAdapter.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         if (viewType == 0){
-            View view = inflater.inflate(R.layout.restaurant_items_adapter, parent, false);
-            return new ViewHolderLeft(view);
+            View view = inflater.inflate(R.layout.restaurant_items_adapter_left, parent, false);
+            return new ViewHolder(view);
         }
         else {
             View view = inflater.inflate(R.layout.restaurant_items_adapter_right, parent, false);
-            return new ViewHolderLeft(view);
+            return new ViewHolder(view);
         }
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull @NotNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull @NotNull RestaurentItemsAdapter.ViewHolder holder, int position) {
         final ItemsModelClass modelClass = productList.get(position);
 
-            ViewHolderLeft viewHolderLeft = (ViewHolderLeft) holder;
-
-            viewHolderLeft.tvItem.setText(modelClass.getItemName());
-            viewHolderLeft.tvItemPrice.setText("PKR"+modelClass.getPrice());
-            Glide.with(context).load(modelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(viewHolderLeft.ivItem);
-            viewHolderLeft.tvItemSchedule.setText("Available from: "+ modelClass.getFrom()+" to "+modelClass.getTo());
+        holder.tvItem.setText(modelClass.getItemName());
+        holder.tvItemPrice.setText("PKR"+modelClass.getPrice());
+            Glide.with(context).load(modelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivItem);
+//            holder.tvItemSchedule.setText("Available from: "+ modelClass.getFrom()+" to "+modelClass.getTo());
 
 
         name = modelClass.getUserName();
@@ -231,18 +229,18 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter{
         RestaurantItems.getInstance().updateCartCount();
     }
 
-    class ViewHolderLeft extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvItem, tvItemPrice, tvItemSchedule;
-        private ImageView ivItem;
+        private CircleImageView ivItem;
 
-        public ViewHolderLeft(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tvItem = itemView.findViewById(R.id.tvItem);
             tvItemPrice = itemView.findViewById(R.id.tvItemPrice);
             ivItem = itemView.findViewById(R.id.ivItem);
-            tvItemSchedule = (TextView) itemView.findViewById(R.id.tvItemSchedule);
+//            tvItemSchedule = (TextView) itemView.findViewById(R.id.tvItemSchedule);
         }
     }
 }
