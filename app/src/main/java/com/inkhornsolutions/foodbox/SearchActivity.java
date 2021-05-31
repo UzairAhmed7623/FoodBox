@@ -3,20 +3,29 @@ package com.inkhornsolutions.foodbox;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.snackbar.Snackbar;
@@ -33,7 +42,7 @@ import java.util.ArrayList;
 
 public class SearchActivity extends AppCompatActivity {
 
-    private SearchView svSearch;
+    private EditText etSearch;
     private RecyclerView rvSearch;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
@@ -49,56 +58,40 @@ public class SearchActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         numberOfResults = (TextView) findViewById(R.id.numberOfResults);
-        svSearch = (SearchView) findViewById(R.id.svSearch);
+        etSearch = (EditText) findViewById(R.id.etSearch);
+
         rvSearch = (RecyclerView) findViewById(R.id.rvSearch);
-
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-
 //        ivSearchBackground = (ImageView) findViewById(R.id.ivSearchBackground);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         staggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         rvSearch.setLayoutManager(staggeredGridLayoutManager);
 
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
         searchData();
 
-        svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        etSearch.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
             @Override
-            public boolean onQueryTextChange(String newText) {
-                if (newText.equals("")){
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(Editable newText) {
+                if (newText.toString().isEmpty()){
                     filterdList.clear();
                     numberOfResults.setVisibility(View.GONE);
+                    numberOfResults.clearComposingText();
                 }
                 else {
                     numberOfResults.setVisibility(View.VISIBLE);
 
-                    filter(newText);
+                    filter(newText.toString());
                 }
-                return false;
             }
         });
 
-//        svSearch.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//            }
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//            }
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                if (etSearch.getText().toString().equals("")){
-//                    rvSearch.setVisibility(View.GONE);
-//                }
-//                else {
-//                    rvSearch.setVisibility(View.VISIBLE);
-//                    filter(s.toString());
-//                }
-//            }
-//        });
     }
 
     private void filter(String text) {
@@ -106,9 +99,12 @@ public class SearchActivity extends AppCompatActivity {
         for (ItemsModelClass items : items){
             if (items.getItemName().toLowerCase().contains(text.toLowerCase())){
                 filterdList.add(items);
-                numberOfResults.setText("Found "+ filterdList.size() +"  results");
+            }
+            else if (!items.getItemName().toLowerCase().equals(text.toLowerCase())){
+                numberOfResults.clearComposingText();
             }
         }
+        numberOfResults.setText("Found " + "(" + filterdList.size() + ")" + " results for " + "\n" + "(" + text + ")");
 
         rvSearch.setAdapter(new SearchAdapter(SearchActivity.this, filterdList));
     }

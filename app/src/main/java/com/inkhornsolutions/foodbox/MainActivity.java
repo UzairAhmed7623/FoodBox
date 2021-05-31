@@ -3,10 +3,8 @@ package com.inkhornsolutions.foodbox;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 
-import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,8 +13,6 @@ import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -26,7 +22,6 @@ import android.view.View;
 
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,12 +46,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.inkhornsolutions.foodbox.models.RestaurantModelClass;
-import com.mxn.soul.flowingdrawer_core.ElasticDrawer;
-import com.mxn.soul.flowingdrawer_core.FlowingDrawer;
 import com.yalantis.pulltomakesoup.PullToRefreshView;
 
-import org.angmarch.views.NiceSpinner;
-import org.angmarch.views.OnSpinnerItemSelectedListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -213,28 +204,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()){
                             String address = documentSnapshot.getString("address");
-                            String address1 = documentSnapshot.getString("address");
 
                             progressDialog.dismiss();
                             if (address != null){
 
-                                List<String> addressList = new ArrayList<>();
-                                addressList.add(address);
-                                addressList.add(address1);
-
                                 tvAddress.setText(address);
 
-//                                spAddress.attachDataSource(addressList);
-//
-//                                spAddress.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
-//                                    @Override
-//                                    public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
-//
-//                                        Intent intent = new Intent(MainActivity.this, Profile.class);
-//                                        startActivity(intent);
-//                                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-//                                    }
-//                                });
+                                tvAddress.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(MainActivity.this, Profile.class);
+                                        startActivity(intent);
+                                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                    }
+                                });
                             }
                             else {
                                 Snackbar.make(findViewById(android.R.id.content), "Address not found!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
@@ -365,7 +348,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search_icon, menu);
+        getMenuInflater().inflate(R.menu.profile_image, menu);
 
         MenuItem menuItem = menu.findItem(R.id.image);
         menuItem.setActionView(R.layout.toobar_profile_image);
