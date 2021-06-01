@@ -67,6 +67,7 @@ public class RestaurantItems extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private HorizontalScrollMenuView menuView;
     private RestaurentItemsAdapter adapter;
+    private ItemsModelClass itemsModelClass;
     int size;
 
     public static RestaurantItems getInstance() {
@@ -123,7 +124,8 @@ public class RestaurantItems extends AppCompatActivity {
             public void onHSMClick(com.darwindeveloper.horizontalscrollmenulibrary.extras.MenuItem menuItem, int position) {
                 if (position != 0){
                     firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
-                            .whereEqualTo("category", menuItem.getText()).get()
+                            .whereEqualTo("category", menuItem.getText())
+                            .get()
                             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                 @Override
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -139,10 +141,7 @@ public class RestaurantItems extends AppCompatActivity {
 
                                             modelClass.setUserName(first_name+last_name);
                                             modelClass.setItemName(name);
-//                                          modelClass.setPrice(price);
-//                                          modelClass.setImageUri(image);
                                             modelClass.setId(getDateTime());
-//                                          modelClass.setSchedule(schedule);
 
                                             productList.add(modelClass);
 
@@ -176,23 +175,17 @@ public class RestaurantItems extends AppCompatActivity {
                         productList.clear();
                         adapter.notifyDataSetChanged();
 
-                        size = queryDocumentSnapshots.size();
-
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
                             if (documentSnapshot.exists()) {
                                 String name = documentSnapshot.getId();
 
-                                ItemsModelClass modelClass = documentSnapshot.toObject(ItemsModelClass.class);
+                                itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
 
-                                modelClass.setUserName(first_name + last_name);
-                                modelClass.setItemName(name);
-//                                          modelClass.setPrice(price);
-//                                          modelClass.setImageUri(image);
-                                modelClass.setId(getDateTime());
-//                                          modelClass.setSchedule(schedule);
-                                modelClass.setListSize(size);
+                                itemsModelClass.setUserName(first_name + last_name);
+                                itemsModelClass.setItemName(name);
+                                itemsModelClass.setId(getDateTime());
 
-                                productList.add(modelClass);
+                                productList.add(itemsModelClass);
 
                             }
                         }
@@ -275,7 +268,7 @@ public class RestaurantItems extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                EasyDB easyDB = EasyDB.init(RestaurantItems.this, "DB")
+                EasyDB easyDB = EasyDB.init(RestaurantItems.this, "ItemsDatabase")
                         .setTableName("ITEMS_TABLE")
                         .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                         .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -284,6 +277,7 @@ public class RestaurantItems extends AppCompatActivity {
                         .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
                         .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
+                        .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
                         .doneTableColumn();
 
                 Cursor res = easyDB.getAllData();
@@ -304,7 +298,7 @@ public class RestaurantItems extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        EasyDB easyDB = EasyDB.init(RestaurantItems.this, "DB")
+        EasyDB easyDB = EasyDB.init(RestaurantItems.this, "ItemsDatabase")
                 .setTableName("ITEMS_TABLE")
                 .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                 .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -313,6 +307,7 @@ public class RestaurantItems extends AppCompatActivity {
                 .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
                 .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
+                .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
                 .doneTableColumn();
 
         Cursor data = easyDB.getAllData();
@@ -338,7 +333,7 @@ public class RestaurantItems extends AppCompatActivity {
     }
 
     private void deleteCartData() {
-        EasyDB easyDB = EasyDB.init(RestaurantItems.this, "DB")
+        EasyDB easyDB = EasyDB.init(RestaurantItems.this, "ItemsDatabase")
                 .setTableName("ITEMS_TABLE")
                 .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                 .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -347,6 +342,7 @@ public class RestaurantItems extends AppCompatActivity {
                 .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
                 .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
+                .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
                 .doneTableColumn();
 
         easyDB.deleteAllDataFromTable();

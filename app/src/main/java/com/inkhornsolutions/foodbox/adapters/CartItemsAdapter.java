@@ -11,8 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.inkhornsolutions.foodbox.CartActivity;
 import com.inkhornsolutions.foodbox.R;
 import com.inkhornsolutions.foodbox.RestaurantItems;
@@ -21,6 +23,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
 
@@ -50,16 +53,15 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
         CartItemsModelClass cartItemsModelClass = cartItems.get(position);
 
         String id = cartItemsModelClass.getId();
-        String pId = cartItemsModelClass.getpId();
         String itemName = cartItemsModelClass.getItemName();
         String price = cartItemsModelClass.getPrice();
         String finalPrice = cartItemsModelClass.getFinalPrice();
         String Items_Count = cartItemsModelClass.getItems_Count();
 
         holder.tvItemTitle.setText(""+itemName);
-        holder.tvItemPrice.setText(""+price);
-        holder.tvPriceEach.setText(""+finalPrice);
+        holder.tvItemPrice.setText(""+finalPrice);
         holder.tvItemCount.setText(""+Items_Count);
+        Glide.with(context).load(cartItemsModelClass.getItemImage()).placeholder(R.drawable.food_placeholder).into(holder.itemImage);
 
         holder.ibAddItemCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +76,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                     allTotalPrice = Double.parseDouble(((CartActivity)context).tvSubTotal.getText().toString().trim().replace("PKR ",""));
                 }
 
-                EasyDB easyDB = EasyDB.init(context, "DB")
+                EasyDB easyDB = EasyDB.init(context, "ItemsDatabase")
                         .setTableName("ITEMS_TABLE")
                         .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                         .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -83,6 +85,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                         .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
                         .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
+                        .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
                         .doneTableColumn();
 
                 Cursor cursor = easyDB.getAllData();
@@ -100,7 +103,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                             cartItemsModelClass.setFinalPrice(String.valueOf(finalPrice));
 
                             if (updated2){
-                                holder.tvPriceEach.setText(""+finalPrice);
+                                holder.tvItemPrice.setText(""+finalPrice);
 
 //                                Snackbar.make(v, "Added!", Snackbar.LENGTH_LONG).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
 
@@ -148,7 +151,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                     }
 
 
-                    EasyDB easyDB = EasyDB.init(context, "DB")
+                    EasyDB easyDB = EasyDB.init(context, "ItemsDatabase")
                             .setTableName("ITEMS_TABLE")
                             .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                             .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -157,6 +160,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                             .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
                             .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
+                            .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
                             .doneTableColumn();
 
                     Cursor cursor = easyDB.getAllData();
@@ -174,7 +178,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                                 cartItemsModelClass.setFinalPrice(String.valueOf(finalPrice));
 
                                 if (updated2){
-                                    holder.tvPriceEach.setText(""+finalPrice);
+                                    holder.tvItemPrice.setText(""+finalPrice);
 //                                    Snackbar.make(v, "Deleted!", Snackbar.LENGTH_LONG).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
 
                                     Price = cursor.getDouble(4);
@@ -207,7 +211,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                         allTotalPrice = Double.parseDouble(((CartActivity)context).tvSubTotal.getText().toString().trim().replace("PKR ",""));
                     }
 
-                    EasyDB easyDB = EasyDB.init(context, "DB")
+                    EasyDB easyDB = EasyDB.init(context, "ItemsDatabase")
                             .setTableName("ITEMS_TABLE")
                             .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                             .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -216,6 +220,8 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                             .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
                             .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
+                            .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
+
                             .doneTableColumn();
 
                     Cursor cursor = easyDB.getAllData();
@@ -233,7 +239,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                                 cartItemsModelClass.setFinalPrice(String.valueOf(finalPrice));
 
                                 if (updated2){
-                                    holder.tvPriceEach.setText(""+finalPrice);
+                                    holder.tvItemPrice.setText(""+finalPrice);
 //                                    Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show();
 
                                     Price = cursor.getDouble(4);
@@ -266,7 +272,6 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                 }
             }
         });
-
     }
 
     @Override
@@ -277,19 +282,18 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
     class HolderCartItem extends RecyclerView.ViewHolder{
 
         private TextView tvItemTitle, tvItemPrice, tvPriceEach, tvItemCount;
-        private ImageButton ibAddItemCart, ibRemoveItemCart;
+        private CardView ibAddItemCart, ibRemoveItemCart;
+        private CircleImageView itemImage;
 
         public HolderCartItem(@NonNull View itemView) {
             super(itemView);
 
             tvItemTitle = (TextView) itemView.findViewById(R.id.tvItemTitle);
             tvItemPrice = (TextView) itemView.findViewById(R.id.tvItemPrice);
-            tvPriceEach = (TextView) itemView.findViewById(R.id.tvPriceEach);
             tvItemCount = (TextView) itemView.findViewById(R.id.tvItemCount);
-            ibAddItemCart = (ImageButton) itemView.findViewById(R.id.ibAddItemCart);
-            ibRemoveItemCart = (ImageButton) itemView.findViewById(R.id.ibRemoveItemCart);
-
-
+            itemImage = (CircleImageView) itemView.findViewById(R.id.itemImage);
+            ibAddItemCart = (CardView) itemView.findViewById(R.id.ibAddItemCart);
+            ibRemoveItemCart = (CardView) itemView.findViewById(R.id.ibRemoveItemCart);
         }
     }
 }

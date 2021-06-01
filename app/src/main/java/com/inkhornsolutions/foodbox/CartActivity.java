@@ -14,7 +14,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.format.DateFormat;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,6 +28,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -52,6 +58,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.UUID;
 
 import p32929.androideasysql_library.Column;
@@ -62,14 +69,13 @@ public class CartActivity extends AppCompatActivity {
     private static final String GOOGLE_API_KEY = "AIzaSyBa4XZ09JsXD8KYZr5wdle--0TQFpfyGew";
     private static int AUTOCOMPLETE_REQUEST_CODE = 1;
 
-    private TextView tvShopName, Address, UserName;
     private RecyclerView rvCartItems;
     private Button btnCheckOut;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private String delivery = "45";
-    private String restaurant, add;
+    private String restaurant, add, itemImage;
 
     private ArrayList<CartItemsModelClass> cartItemsList;
     private CartItemsAdapter cartItemsAdapter;
@@ -78,6 +84,8 @@ public class CartActivity extends AppCompatActivity {
     private LatLng latLng;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private ImageView backArrow;
+    private Toolbar toolbar;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,67 +97,60 @@ public class CartActivity extends AppCompatActivity {
         }
 
         restaurant = getIntent().getStringExtra("restaurant");
+        String first_name = getIntent().getStringExtra("first_name");
+        String last_name = getIntent().getStringExtra("last_name");
 
         cartItemsList = new ArrayList<>();
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-        UserName = (TextView) findViewById(R.id.UserName);
-        Address = (TextView) findViewById(R.id.Address);
-        tvShopName = (TextView) findViewById(R.id.tvShopName);
         tvSubTotal = (TextView) findViewById(R.id.tvSubTotal);
         tvDeliveryFee = (TextView) findViewById(R.id.tvDeliveryFee);
         tvGrandTotal = (TextView) findViewById(R.id.tvGrandTotal);
         rvCartItems = (RecyclerView) findViewById(R.id.rvCartItems);
         btnCheckOut = (Button) findViewById(R.id.btnCheckOut);
-        backArrow = (ImageView) findViewById(R.id.backArrow);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.arrow_back);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
         rvCartItems.setLayoutManager(new LinearLayoutManager(CartActivity.this));
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(CartActivity.this);
 
-        String first_name = getIntent().getStringExtra("first_name");
-        String last_name = getIntent().getStringExtra("last_name");
+//        UserName.setText(first_name +" "+ last_name);
 
-        UserName.setText(first_name +" "+ last_name);
+//        getCurrentLocation();
 
-        getCurrentLocation();
-
-        backArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-
-        Address.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new PlacePicker.IntentBuilder()
-                        .setLatLong(latLng.latitude, latLng.longitude)  // Initial Latitude and Longitude the Map will load into
-                        .setMapZoom(17.0f)  // Map Zoom Level. Default: 14.0
-                        .setAddressRequired(true) // Set If return only Coordinates if cannot fetch Address for the coordinates. Default: True
-                        .hideMarkerShadow(false) // Hides the shadow under the map marker. Default: False
-                        .setMarkerDrawable(R.drawable.marker) // Change the default Marker Image
-                        .setMarkerImageImageColor(R.color.myColor)
-                        .setFabColor(R.color.myColor)
-                        .setPrimaryTextColor(R.color.black) // Change text color of Shortened Address
-                        .setSecondaryTextColor(R.color.black) // Change text color of full Address
-                        .setBottomViewColor(R.color.white) // Change Address View Background Color (Default: White)
-                        .setMapRawResourceStyle(R.raw.map_style)  //Set Map Style (https://mapstyle.withgoogle.com/)
-                        .setMapType(MapType.NORMAL)
-                        .setPlaceSearchBar(true, GOOGLE_API_KEY) //Activate GooglePlace Search Bar. Default is false/not activated. SearchBar is a chargeable feature by Google
-                        .onlyCoordinates(true)  //Get only Coordinates from Place Picker
-                        .hideLocationButton(false)   //Hide Location Button (Default: false)
-                        .disableMarkerAnimation(true)   //Disable Marker Animation (Default: false)
-                        .build(CartActivity.this);
-
-                startActivityForResult(intent, Constants.PLACE_PICKER_REQUEST);
-
-            }
-        });
+//        Address.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Intent intent = new PlacePicker.IntentBuilder()
+//                        .setLatLong(latLng.latitude, latLng.longitude)  // Initial Latitude and Longitude the Map will load into
+//                        .setMapZoom(17.0f)  // Map Zoom Level. Default: 14.0
+//                        .setAddressRequired(true) // Set If return only Coordinates if cannot fetch Address for the coordinates. Default: True
+//                        .hideMarkerShadow(false) // Hides the shadow under the map marker. Default: False
+//                        .setMarkerDrawable(R.drawable.marker) // Change the default Marker Image
+//                        .setMarkerImageImageColor(R.color.myColor)
+//                        .setFabColor(R.color.myColor)
+//                        .setPrimaryTextColor(R.color.black) // Change text color of Shortened Address
+//                        .setSecondaryTextColor(R.color.black) // Change text color of full Address
+//                        .setBottomViewColor(R.color.white) // Change Address View Background Color (Default: White)
+//                        .setMapRawResourceStyle(R.raw.map_style)  //Set Map Style (https://mapstyle.withgoogle.com/)
+//                        .setMapType(MapType.NORMAL)
+//                        .setPlaceSearchBar(true, GOOGLE_API_KEY) //Activate GooglePlace Search Bar. Default is false/not activated. SearchBar is a chargeable feature by Google
+//                        .onlyCoordinates(true)  //Get only Coordinates from Place Picker
+//                        .hideLocationButton(false)   //Hide Location Button (Default: false)
+//                        .disableMarkerAnimation(true)   //Disable Marker Animation (Default: false)
+//                        .build(CartActivity.this);
+//
+//                startActivityForResult(intent, Constants.PLACE_PICKER_REQUEST);
+//
+//            }
+//        });
 
         showCart();
     }
@@ -159,9 +160,9 @@ public class CartActivity extends AppCompatActivity {
 
     private void showCart() {
 
-        tvShopName.setText(restaurant);
+//        tvShopName.setText(restaurant);
 
-        EasyDB easyDB = EasyDB.init(CartActivity.this, "DB")
+        EasyDB easyDB = EasyDB.init(CartActivity.this, "ItemsDatabase")
                 .setTableName("ITEMS_TABLE")
                 .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                 .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -170,6 +171,7 @@ public class CartActivity extends AppCompatActivity {
                 .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
                 .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
+                .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
                 .doneTableColumn();
 
         Cursor res = easyDB.getAllData();
@@ -180,6 +182,7 @@ public class CartActivity extends AppCompatActivity {
             String price = res.getString(4);
             String items_count = res.getString(5);
             String final_price = res.getString(6);
+            String imageUri = res.getString(7);
 
             allTotalPrice = allTotalPrice + Double.parseDouble(final_price);
 
@@ -189,7 +192,8 @@ public class CartActivity extends AppCompatActivity {
                     ""+title,
                     ""+final_price,
                     ""+price,
-                    ""+items_count
+                    ""+items_count,
+                    ""+imageUri
             );
 
             cartItemsList.add(cartItemsModelClass);
@@ -223,7 +227,7 @@ public class CartActivity extends AppCompatActivity {
                                     progressDialog.setMessage("Order is placing...");
                                     progressDialog.show();
 
-                                    String address = Address.getText().toString();
+//                                    String address = Address.getText().toString();
 
                                     HashMap<String, Object> order1 = new HashMap<>();
                                     order1.put("restaurant name", restaurant);
@@ -231,7 +235,7 @@ public class CartActivity extends AppCompatActivity {
                                     order1.put("Time", getDateTime());
                                     order1.put("status", "Pending");
                                     order1.put("ID", shortUUID());
-                                    order1.put("address", address);
+//                                    order1.put("address", address);
                                     order1.put("latlng", latLng);
 
                                     firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
@@ -301,33 +305,33 @@ public class CartActivity extends AppCompatActivity {
         return date;
     }
 
-    private void getCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if (location != null){
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-
-                    latLng = new LatLng(latitude, longitude);
-
-                    try {
-                        add = showAddress(latLng);
-                        Address.setText("" + add);
-                    }
-                    catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                else {
-//                    Toast.makeText(RestaurantItems.this, "Null", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
+//    private void getCurrentLocation() {
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            return;
+//        }
+//        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+//            @Override
+//            public void onSuccess(Location location) {
+//                if (location != null){
+//                    double latitude = location.getLatitude();
+//                    double longitude = location.getLongitude();
+//
+//                    latLng = new LatLng(latitude, longitude);
+//
+//                    try {
+//                        add = showAddress(latLng);
+//                        Address.setText("" + add);
+//                    }
+//                    catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                else {
+////                    Toast.makeText(RestaurantItems.this, "Null", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//    }
 
     private String showAddress(LatLng latLng) throws IOException {
         Geocoder geocoder;
@@ -341,31 +345,45 @@ public class CartActivity extends AppCompatActivity {
         return  address;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == Constants.PLACE_PICKER_REQUEST) {
-            if (resultCode == Activity.RESULT_OK && data != null) {
-                AddressData addressData = data.getParcelableExtra(Constants.ADDRESS_INTENT);
-                try {
-                    latLng = new LatLng(addressData.getLatitude(), addressData.getLongitude() );
-                    add = showAddress(latLng);
-
-                    Address.setText(add);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == Constants.PLACE_PICKER_REQUEST) {
+//            if (resultCode == Activity.RESULT_OK && data != null) {
+//                AddressData addressData = data.getParcelableExtra(Constants.ADDRESS_INTENT);
+//                try {
+//                    latLng = new LatLng(addressData.getLatitude(), addressData.getLongitude() );
+//                    add = showAddress(latLng);
+//
+//                    Address.setText(add);
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        } else {
+//            super.onActivityResult(requestCode, resultCode, data);
+//        }
+//    }
 
     public static String shortUUID() {
         UUID uuid = UUID.randomUUID();
         long l = ByteBuffer.wrap(uuid.toString().getBytes()).getLong();
         return Long.toString(l, Character.MAX_RADIX);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.cart_toobar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.edit_cart){
+            onBackPressed();
+        }
+        return true;
     }
 }

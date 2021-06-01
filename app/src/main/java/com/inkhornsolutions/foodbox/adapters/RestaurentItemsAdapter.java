@@ -75,7 +75,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
         holder.tvItem.setText(modelClass.getItemName());
         holder.tvItemPrice.setText("PKR"+modelClass.getPrice());
-            Glide.with(context).load(modelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivItem);
+        Glide.with(context).load(modelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivItem);
 //            holder.tvItemSchedule.setText("Available from: "+ modelClass.getFrom()+" to "+modelClass.getTo());
 
 
@@ -168,11 +168,12 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
             @Override
             public void onClick(View v) {
                 String title = tvItemTitle.getText().toString().trim();
+                String imageUri = modelClass.getImageUri();
                 String price = tvItemPrice.getText().toString().trim().replace("PKR ","");
                 String finalPrice = tvItemPriceFinal.getText().toString().trim().replace("PKR ","");
                 String itemCount = tvCount.getText().toString().trim();
 
-                addToCart(productId, title, price, finalPrice, itemCount);
+                addToCart(productId, title, imageUri, price, finalPrice, itemCount);
 
                 Log.d("btnAddtoCart2", title + price + finalPrice + itemCount);
 
@@ -187,10 +188,10 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
     }
 
     private int itemId = 0;
-    private void addToCart(String productId, String title, String price, String finalPrice, String itemCount) {
+    private void addToCart(String productId, String title, String imageUri, String price, String finalPrice, String itemCount) {
         itemId++;
 
-        EasyDB easyDB = EasyDB.init(context, "DB")
+        EasyDB easyDB = EasyDB.init(context, "ItemsDatabase")
                 .setTableName("ITEMS_TABLE")
                 .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                 .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -199,9 +200,10 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                 .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
                 .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
+                .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
                 .doneTableColumn();
 
-        Log.d("btnAddtoCart3", productId + title + price + finalPrice + itemCount);
+        Log.d("btnAddtoCart3", productId + imageUri +title + price + finalPrice + itemCount);
 
         boolean b = easyDB
                 .addData("Item_Id", itemId)
@@ -211,6 +213,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                 .addData("Items_Count", itemCount)
                 .addData("Final_Price", finalPrice)
 //                .addData("Description", description)
+                .addData("Item_Image_Uri", imageUri)
                 .doneDataAdding();
 
         if (b){

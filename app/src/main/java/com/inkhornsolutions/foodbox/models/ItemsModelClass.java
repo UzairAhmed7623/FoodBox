@@ -4,13 +4,8 @@ import java.io.Serializable;
 
 public class ItemsModelClass implements Serializable {
     private String UserName, id, itemName, price, imageUri, itemDescription, timestamp, availability, from, to;
-    private int listSize;
 
     public ItemsModelClass() {
-    }
-
-    public ItemsModelClass(int listSize) {
-        this.listSize = listSize;
     }
 
     public ItemsModelClass(String userName, String id, String itemName, String price, String imageUri, String itemDescription, String timestamp, String availability, String from, String to) {
@@ -24,14 +19,6 @@ public class ItemsModelClass implements Serializable {
         this.availability = availability;
         this.from = from;
         this.to = to;
-    }
-
-    public int getListSize() {
-        return listSize;
-    }
-
-    public void setListSize(int listSize) {
-        this.listSize = listSize;
     }
 
     public String getUserName() {
