@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/newColor"
+    android:orientation="vertical"
+    tools:context=".ShowItemDetails">
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="23dp"
+        android:background="@color/places_text_black_alpha_26"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/backArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/arrow_back"
+        android:background="@android:color/transparent"
+        android:foreground="@drawable/ripple"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="20dp"/>
+
+    <RelativeLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="275dp"
+        android:layout_below="@+id/view"
+        android:layout_gravity="bottom"
+        android:gravity="bottom">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/itemImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:elevation="20dp"
+            android:padding="30dp"
+            android:src="@drawable/food_placeholder" />
+
+    </RelativeLayout>
+
+    <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+        android:id="@+id/enbNumofOrders"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-25dp"
+        android:layout_marginBottom="-25dp"
+        app:backGroundColor="@color/myColorSecond"
+        app:backgroundDrawable="@drawable/profile_back_button"
+        app:initialNumber="0"
+        app:textSize="7dp"
+        android:gravity="center_vertical"/>
+
+    <RelativeLayout
+        android:id="@+id/layout2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/enbNumofOrders"
+        android:layout_gravity="bottom"
+        android:background="@drawable/restaurats_items_back"
+        android:backgroundTint="@color/white">
+
+        <LinearLayout
+            android:id="@+id/layout3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp"
+            android:orientation="vertical"
+            android:weightSum="4">
+
+            <LinearLayout
+                android:id="@+id/layout4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvItem"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/sf_pro_rounded_regular"
+                    android:includeFontPadding="false"
+                    android:letterSpacing="0.05"
+                    android:maxLines="2"
+                    android:text="Product\nname"
+                    android:textColor="@color/black"
+                    android:textFontWeight="400"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="20dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/sf_pro_rounded_regular"
+                    android:gravity="end"
+                    android:includeFontPadding="false"
+                    android:letterSpacing="0.05"
+                    android:text="PKR0.00"
+                    android:textColor="@color/black"
+                    android:textFontWeight="600"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvDescriptionHeading"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/sf_pro_rounded_regular"
+                    android:includeFontPadding="false"
+                    android:letterSpacing="0.05"
+                    android:maxLines="2"
+                    android:text="Description"
+                    android:textColor="@color/black"
+                    android:textFontWeight="600"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="125dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="125dp">
+
+                    <TextView
+                        android:id="@+id/tvDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="20dp"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/sf_pro_rounded_regular"
+                        android:includeFontPadding="false"
+                        android:letterSpacing="0.03"
+                        android:text="Description is the pattern of narrative development that aims to make vivid a place, object, character, or group. Description is one of four rhetorical modes, along with exposition, argumentation, and narration. In practice it would be difficult to write literature that drew on just one of the four basic modes."
+                        android:textColor="@color/grey_60"
+                        android:textFontWeight="200"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+
+            </ScrollView>
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnCheckOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_alignParentBottom="true"
+            android:layout_weight="1"
+            android:background="@drawable/profile_back_button"
+            android:foreground="@drawable/ripple"
+            android:text="Confirm Order"
+            android:textColor="@android:color/white" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

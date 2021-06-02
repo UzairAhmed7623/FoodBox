@@ -5,7 +5,9 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" /> <!-- <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" /> -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" /> <!-- <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" /> -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -17,53 +19,57 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        tools:replace="android:theme"
         android:theme="@style/Theme.FoodBox">
-        <activity android:name=".PhoneVerified"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".SplashScreen"
-            android:screenOrientation="portrait">
-
+        <activity android:name=".ShowItemDetails">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".PhoneVerified"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SplashScreen"
+            android:screenOrientation="portrait">
 
         </activity>
-
-        <activity android:name=".Login"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Login"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".CartActivity"
+        <activity
+            android:name=".CartActivity"
             android:parentActivityName=".RestaurantItems"
             android:screenOrientation="portrait" />
-
-        <activity android:name=".SearchActivity" android:screenOrientation="portrait" />
-
         <activity
-            android:name=".TrackOrders" android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity" />
-
+            android:name=".SearchActivity"
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".OrderHistory" android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity" />
-
+            android:name=".TrackOrders"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".RestaurantItems" android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity" />
-
-        <activity android:name=".MainActivity" android:screenOrientation="portrait" />
-
+            android:name=".OrderHistory"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".Profile" android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity" />
-
+            android:name=".RestaurantItems"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Profile"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

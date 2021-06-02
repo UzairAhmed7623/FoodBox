@@ -15,6 +15,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.inkhornsolutions.foodbox.CartActivity;
 import com.inkhornsolutions.foodbox.R;
 import com.inkhornsolutions.foodbox.RestaurantItems;
@@ -59,7 +60,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
         String Items_Count = cartItemsModelClass.getItems_Count();
 
         holder.tvItemTitle.setText(""+itemName);
-        holder.tvItemPrice.setText(""+finalPrice);
+        holder.tvItemPrice.setText("PKR"+finalPrice);
         holder.tvItemCount.setText(""+Items_Count);
         Glide.with(context).load(cartItemsModelClass.getItemImage()).placeholder(R.drawable.food_placeholder).into(holder.itemImage);
 
@@ -103,7 +104,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                             cartItemsModelClass.setFinalPrice(String.valueOf(finalPrice));
 
                             if (updated2){
-                                holder.tvItemPrice.setText(""+finalPrice);
+                                holder.tvItemPrice.setText("PKR"+finalPrice);
 
 //                                Snackbar.make(v, "Added!", Snackbar.LENGTH_LONG).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
 
@@ -178,7 +179,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                                 cartItemsModelClass.setFinalPrice(String.valueOf(finalPrice));
 
                                 if (updated2){
-                                    holder.tvItemPrice.setText(""+finalPrice);
+                                    holder.tvItemPrice.setText("PKR"+finalPrice);
 //                                    Snackbar.make(v, "Deleted!", Snackbar.LENGTH_LONG).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
 
                                     Price = cursor.getDouble(4);
@@ -239,7 +240,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                                 cartItemsModelClass.setFinalPrice(String.valueOf(finalPrice));
 
                                 if (updated2){
-                                    holder.tvItemPrice.setText(""+finalPrice);
+                                    holder.tvItemPrice.setText("PKR"+finalPrice);
 //                                    Toast.makeText(context, "ok", Toast.LENGTH_SHORT).show();
 
                                     Price = cursor.getDouble(4);
@@ -267,8 +268,8 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                     notifyItemChanged(position);
                     notifyDataSetChanged();
 
+                    CartActivity.getInstance().updateNumberofItems();
                     RestaurantItems.getInstance().updateCartCount();
-
                 }
             }
         });
@@ -282,7 +283,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
     class HolderCartItem extends RecyclerView.ViewHolder{
 
         private TextView tvItemTitle, tvItemPrice, tvPriceEach, tvItemCount;
-        private CardView ibAddItemCart, ibRemoveItemCart;
+        private FloatingActionButton ibAddItemCart, ibRemoveItemCart;
         private CircleImageView itemImage;
 
         public HolderCartItem(@NonNull View itemView) {
@@ -292,8 +293,8 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
             tvItemPrice = (TextView) itemView.findViewById(R.id.tvItemPrice);
             tvItemCount = (TextView) itemView.findViewById(R.id.tvItemCount);
             itemImage = (CircleImageView) itemView.findViewById(R.id.itemImage);
-            ibAddItemCart = (CardView) itemView.findViewById(R.id.ibAddItemCart);
-            ibRemoveItemCart = (CardView) itemView.findViewById(R.id.ibRemoveItemCart);
+            ibAddItemCart = (FloatingActionButton) itemView.findViewById(R.id.ibAddItemCart);
+            ibRemoveItemCart = (FloatingActionButton) itemView.findViewById(R.id.ibRemoveItemCart);
         }
     }
 }

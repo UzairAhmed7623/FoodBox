@@ -15,7 +15,7 @@
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
 
         <item name="pinViewStyle">@style/PinWidget.PinView</item>
-        
+
     </style>
 
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">

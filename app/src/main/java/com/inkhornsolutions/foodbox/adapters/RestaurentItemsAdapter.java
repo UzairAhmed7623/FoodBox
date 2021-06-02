@@ -2,6 +2,7 @@ package com.inkhornsolutions.foodbox.adapters;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.util.Log;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.inkhornsolutions.foodbox.RestaurantItems;
+import com.inkhornsolutions.foodbox.ShowItemDetails;
 import com.inkhornsolutions.foodbox.models.ItemsModelClass;
 import com.inkhornsolutions.foodbox.R;
 import com.google.android.material.snackbar.Snackbar;
@@ -85,7 +87,10 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
             @Override
             public void onClick(View v) {
 
-                showQuantityDialog(modelClass);
+                Intent intent = new Intent(context, ShowItemDetails.class);
+                context.startActivity(intent);
+
+//                showQuantityDialog(modelClass);
             }
         });
     }

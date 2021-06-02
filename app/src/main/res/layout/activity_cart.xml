@@ -68,11 +68,11 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <TextView
-                android:id="@+id/UserNamePlaceHolder"
+                android:id="@+id/tvNumberofItems"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
-                android:text="3 Items"
+                android:text="0 Items"
                 android:fontFamily="@font/sf_pro_rounded_regular"
                 android:textColor="@color/grey_80"
                 android:textSize="18dp" />
@@ -101,17 +101,6 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/line"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        app:layout_constraintVertical_bias="0.999"
-        app:layout_constraintBottom_toBottomOf="@+id/layout2"
-        app:layout_constraintTop_toBottomOf="@+id/layout" />
-
     <LinearLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
@@ -128,9 +117,19 @@
                 android:padding="10dp">
 
                 <TextView
+                    android:id="@+id/line"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+                    android:textAlignment="center"
+                    android:maxLines="1"
+                    android:textColor="@color/black"/>
+
+                <TextView
                     android:id="@+id/tvSubTotalLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/line"
                     android:layout_alignParentStart="true"
                     android:padding="5dp"
                     android:text="Sub Total"
@@ -145,6 +144,7 @@
                     android:id="@+id/tvSubTotal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/line"
                     android:layout_alignParentEnd="true"
                     android:padding="5dp"
                     android:text="0.0"
@@ -238,19 +238,18 @@
         android:id="@+id/layoutCheckOut"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/myColor"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnCheckOut"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/ripple"
-            android:foreground="?attr/selectableItemBackground"
-            android:padding="5dp"
+            android:foreground="@drawable/ripple"
+            android:background="@drawable/profile_back_button"
+            android:layout_margin="15dp"
             android:text="Confirm Order"
             android:textColor="@android:color/white" />
 

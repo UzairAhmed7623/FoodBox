@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/newColorSecond"
@@ -11,17 +12,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         card_view:cardCornerRadius="15dp"
-        card_view:cardElevation="10dp"
+        card_view:cardElevation="5dp"
         card_view:cardUseCompatPadding="true">
 
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/itemImage"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
+                android:elevation="15dp"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="10dp"
                 android:src="@drawable/food_placeholder" />
@@ -32,20 +34,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/layout1"
                 android:layout_toEndOf="@+id/itemImage">
 
                 <TextView
                     android:id="@+id/tvItemTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="10dp"
                     android:fontFamily="@font/sf_pro_rounded_regular"
                     android:includeFontPadding="false"
                     android:text="Item Name"
+                    android:letterSpacing="0.05"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/grey_90"
-                    android:textFontWeight="600"
+                    android:textFontWeight="500"
                     android:textSize="16dp" />
 
                 <TextView
@@ -54,13 +60,14 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tvItemTitle"
                     android:layout_centerVertical="true"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginBottom="10dp"
                     android:fontFamily="@font/sf_pro_rounded_regular"
                     android:includeFontPadding="false"
                     android:text="Quantity"
+                    android:letterSpacing="0.05"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/grey_60"
-                    android:textFontWeight="600"
+                    android:textFontWeight="300"
                     android:textSize="14dp" />
 
                 <TextView
@@ -68,9 +75,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tvItemQuantity"
-                    android:layout_marginBottom="15dp"
-                    android:layout_weight="0.7"
+                    android:layout_marginBottom="10dp"
                     android:text="PKR0.00"
+                    android:letterSpacing="0.05"
+                    android:textFontWeight="1000"
+                    android:fontFamily="@font/sf_pro_rounded_regular"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/black"
                     android:textSize="16dp"
@@ -79,31 +88,26 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/layout1"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/layout">
+                android:layout_centerVertical="true">
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/ibAddItemCart"
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
-                    android:layout_marginTop="10dp"
-                    card_view:cardCornerRadius="17dp"
-                    card_view:cardElevation="5dp">
+                    android:layout_marginTop="5dp"
+                    app:backgroundTint="@android:color/white"
+                    android:src="@drawable/add_item"
+                    card_view:fabCustomSize="30dp"
+                    card_view:elevation="10dp"
+                    card_view:rippleColor="@color/white_greyish">
 
-                    <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:foreground="@drawable/ripple"
-                        android:layout_gravity="center"
-                        android:background="@android:color/transparent"
-                        android:src="@drawable/add_item" />
-
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
                 <TextView
                     android:id="@+id/tvItemCount"
@@ -120,26 +124,21 @@
                     android:textFontWeight="600"
                     android:textSize="20sp" />
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/ibRemoveItemCart"
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
                     android:layout_below="@+id/tvItemCount"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
-                    card_view:cardCornerRadius="17dp"
-                    card_view:cardElevation="5dp">
+                    app:backgroundTint="@android:color/white"
+                    card_view:fabCustomSize="30dp"
+                    card_view:elevation="10dp"
+                    android:src="@drawable/remove_item"
+                    card_view:rippleColor="@color/white_greyish">
 
-                    <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:foreground="@drawable/ripple"
-                        android:layout_gravity="center"
-                        android:background="@android:color/transparent"
-                        android:src="@drawable/remove_item" />
-
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
             </RelativeLayout>
 

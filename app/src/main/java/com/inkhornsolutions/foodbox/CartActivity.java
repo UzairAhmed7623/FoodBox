@@ -85,12 +85,18 @@ public class CartActivity extends AppCompatActivity {
     private FusedLocationProviderClient fusedLocationProviderClient;
     private ImageView backArrow;
     private Toolbar toolbar;
+    static CartActivity instance;
 
+    public static CartActivity getInstance() {
+        return instance;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
+
+        instance = this;
 
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), GOOGLE_API_KEY, Locale.getDefault());
@@ -108,6 +114,7 @@ public class CartActivity extends AppCompatActivity {
         tvSubTotal = (TextView) findViewById(R.id.tvSubTotal);
         tvDeliveryFee = (TextView) findViewById(R.id.tvDeliveryFee);
         tvGrandTotal = (TextView) findViewById(R.id.tvGrandTotal);
+        tvNumberofItems = (TextView) findViewById(R.id.tvNumberofItems);
         rvCartItems = (RecyclerView) findViewById(R.id.rvCartItems);
         btnCheckOut = (Button) findViewById(R.id.btnCheckOut);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -156,7 +163,7 @@ public class CartActivity extends AppCompatActivity {
     }
 
     public double allTotalPrice = 0.00;
-    public TextView tvSubTotal, tvDeliveryFee, tvGrandTotal;
+    public TextView tvSubTotal, tvDeliveryFee, tvGrandTotal, tvNumberofItems;
 
     private void showCart() {
 
@@ -202,6 +209,8 @@ public class CartActivity extends AppCompatActivity {
         cartItemsAdapter = new CartItemsAdapter(CartActivity.this, cartItemsList);
 
         rvCartItems.setAdapter(cartItemsAdapter);
+
+        updateNumberofItems();
 
         tvDeliveryFee.setText(delivery);
         tvSubTotal.setText("PKR " + String.format("%.2f", allTotalPrice));
@@ -291,6 +300,30 @@ public class CartActivity extends AppCompatActivity {
 
                 }
             });
+    }
+
+    public void updateNumberofItems() {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                EasyDB easyDB = EasyDB.init(CartActivity.this, "ItemsDatabase")
+                        .setTableName("ITEMS_TABLE")
+                        .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
+                        .addColumn(new Column("pId", new String[]{"text", "not null"}))
+                        .addColumn(new Column("Title", new String[]{"text", "not null"}))
+                        .addColumn(new Column("Price", new String[]{"text", "not null"}))
+                        .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
+                        .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
+//                .addColumn(new Column("Description", new String[]{"text", "not null"}))
+                        .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
+                        .doneTableColumn();
+
+                Cursor res = easyDB.getAllData();
+                int c = res.getCount();
+                tvNumberofItems.setText(""+c+" Items");
+            }
+        });
     }
 
     private String getDateTime() {
