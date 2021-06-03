@@ -321,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void deleteCartItems() {
-        EasyDB easyDB = EasyDB.init(MainActivity.this, "DB")
+        EasyDB easyDB = EasyDB.init(MainActivity.this, "ItemsDatabase")
                 .setTableName("ITEMS_TABLE")
                 .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                 .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -330,6 +330,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
                 .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
+                .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
                 .doneTableColumn();
 
         easyDB.deleteAllDataFromTable();

@@ -58,7 +58,7 @@ public class RestaurantItems extends AppCompatActivity {
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-    private String first_name,last_name, restaurant;
+    public String first_name,last_name, restaurant;
     private int badgeCount;
     private NotificationBadge notificationBadge;
     private boolean status = false;
@@ -137,13 +137,13 @@ public class RestaurantItems extends AppCompatActivity {
                                         if (documentSnapshot.exists()){
                                             String name = documentSnapshot.getId();
 
-                                            ItemsModelClass modelClass = documentSnapshot.toObject(ItemsModelClass.class);
+                                            ItemsModelClass itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
 
-                                            modelClass.setUserName(first_name+last_name);
-                                            modelClass.setItemName(name);
-                                            modelClass.setId(getDateTime());
+                                            itemsModelClass.setUserName(first_name+last_name);
+                                            itemsModelClass.setItemName(name);
+                                            itemsModelClass.setId(getDateTime());
 
-                                            productList.add(modelClass);
+                                            productList.add(itemsModelClass);
 
                                             rvItems.setAdapter(adapter);
                                         }

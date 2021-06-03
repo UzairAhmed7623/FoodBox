@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.inkhornsolutions.foodbox.CartActivity;
 import com.inkhornsolutions.foodbox.RestaurantItems;
 import com.inkhornsolutions.foodbox.ShowItemDetails;
 import com.inkhornsolutions.foodbox.models.ItemsModelClass;
@@ -73,21 +74,25 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull RestaurentItemsAdapter.ViewHolder holder, int position) {
-        final ItemsModelClass modelClass = productList.get(position);
+        final ItemsModelClass itemsModelClass = productList.get(position);
 
-        holder.tvItem.setText(modelClass.getItemName());
-        holder.tvItemPrice.setText("PKR"+modelClass.getPrice());
-        Glide.with(context).load(modelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivItem);
+        holder.tvItem.setText(itemsModelClass.getItemName());
+        holder.tvItemPrice.setText("PKR"+itemsModelClass.getPrice());
+        Glide.with(context).load(itemsModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivItem);
 //            holder.tvItemSchedule.setText("Available from: "+ modelClass.getFrom()+" to "+modelClass.getTo());
 
+        String resName = ((RestaurantItems)context).restaurant;
 
-        name = modelClass.getUserName();
+
+        name = itemsModelClass.getUserName();
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent intent = new Intent(context, ShowItemDetails.class);
+                intent.putExtra("resName",resName);
+                intent.putExtra("itemName",itemsModelClass.getItemName());
                 context.startActivity(intent);
 
 //                showQuantityDialog(modelClass);

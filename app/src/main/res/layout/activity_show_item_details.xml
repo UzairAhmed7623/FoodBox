@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/newColor"
+    android:background="@color/newColorThird"
     android:orientation="vertical"
     tools:context=".ShowItemDetails">
 
@@ -17,26 +17,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/backArrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/arrow_back"
-        android:background="@android:color/transparent"
-        android:foreground="@drawable/ripple"
         android:layout_marginTop="30dp"
-        android:layout_marginStart="20dp"/>
+        android:layout_marginStart="10dp"
+        app:fabCustomSize="24dp"
+        app:backgroundTint="@color/newColorThird"
+        app:elevation="0dp" />
 
     <RelativeLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
-        android:layout_height="275dp"
+        android:layout_height="250dp"
         android:layout_below="@+id/view"
         android:layout_gravity="bottom"
         android:gravity="bottom">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/itemImage"
+            android:id="@+id/civItemImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="25dp"
@@ -56,7 +57,7 @@
         android:layout_marginBottom="-25dp"
         app:backGroundColor="@color/myColorSecond"
         app:backgroundDrawable="@drawable/profile_back_button"
-        app:initialNumber="0"
+        app:initialNumber="1"
         app:textSize="7dp"
         android:gravity="center_vertical"/>
 
@@ -112,7 +113,7 @@
                     android:gravity="end"
                     android:includeFontPadding="false"
                     android:letterSpacing="0.05"
-                    android:text="PKR0.00"
+                    android:text="PKR0.0"
                     android:textColor="@color/black"
                     android:textFontWeight="600"
                     android:textSize="22sp"
@@ -151,7 +152,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="125dp">
+                    android:layout_height="100dp">
 
                     <TextView
                         android:id="@+id/tvDescription"
@@ -177,7 +178,7 @@
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnCheckOut"
+            android:id="@+id/btnAddtoCart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
@@ -187,7 +188,7 @@
             android:layout_weight="1"
             android:background="@drawable/profile_back_button"
             android:foreground="@drawable/ripple"
-            android:text="Confirm Order"
+            android:text="Add to Cart"
             android:textColor="@android:color/white" />
 
     </RelativeLayout>

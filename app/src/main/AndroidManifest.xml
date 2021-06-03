@@ -19,23 +19,27 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        tools:replace="android:theme"
-        android:theme="@style/Theme.FoodBox">
-        <activity android:name=".ShowItemDetails">
+        android:theme="@style/Theme.FoodBox"
+        tools:replace="android:theme">
+        <activity android:name=".ShowItemDetails"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".PhoneVerified"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".SplashScreen"
+            android:screenOrientation="portrait">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".PhoneVerified"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".SplashScreen"
-            android:screenOrientation="portrait">
 
         </activity>
+
         <activity
             android:name=".Login"
             android:screenOrientation="portrait" />
@@ -70,6 +74,7 @@
             android:name=".Profile"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>
