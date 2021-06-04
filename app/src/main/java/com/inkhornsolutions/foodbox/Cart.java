@@ -1,22 +1,16 @@
 package com.inkhornsolutions.foodbox;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.format.DateFormat;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -29,7 +23,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,17 +32,12 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
-import com.sucho.placepicker.AddressData;
-import com.sucho.placepicker.Constants;
-import com.sucho.placepicker.MapType;
-import com.sucho.placepicker.PlacePicker;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -64,7 +52,7 @@ import java.util.UUID;
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
 
-public class CartActivity extends AppCompatActivity {
+public class Cart extends AppCompatActivity {
 
     private static final String GOOGLE_API_KEY = "AIzaSyBa4XZ09JsXD8KYZr5wdle--0TQFpfyGew";
     private static int AUTOCOMPLETE_REQUEST_CODE = 1;
@@ -85,9 +73,9 @@ public class CartActivity extends AppCompatActivity {
     private FusedLocationProviderClient fusedLocationProviderClient;
     private ImageView backArrow;
     private Toolbar toolbar;
-    static CartActivity instance;
+    static Cart instance;
 
-    public static CartActivity getInstance() {
+    public static Cart getInstance() {
         return instance;
     }
 
@@ -123,9 +111,9 @@ public class CartActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.arrow_back);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
-        rvCartItems.setLayoutManager(new LinearLayoutManager(CartActivity.this));
+        rvCartItems.setLayoutManager(new LinearLayoutManager(Cart.this));
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(CartActivity.this);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(Cart.this);
 
 //        UserName.setText(first_name +" "+ last_name);
 
@@ -152,7 +140,7 @@ public class CartActivity extends AppCompatActivity {
 //                        .onlyCoordinates(true)  //Get only Coordinates from Place Picker
 //                        .hideLocationButton(false)   //Hide Location Button (Default: false)
 //                        .disableMarkerAnimation(true)   //Disable Marker Animation (Default: false)
-//                        .build(CartActivity.this);
+//                        .build(Cart.this);
 //
 //                startActivityForResult(intent, Constants.PLACE_PICKER_REQUEST);
 //
@@ -169,7 +157,7 @@ public class CartActivity extends AppCompatActivity {
 
 //        tvShopName.setText(restaurant);
 
-        EasyDB easyDB = EasyDB.init(CartActivity.this, "ItemsDatabase")
+        EasyDB easyDB = EasyDB.init(Cart.this, "ItemsDatabase")
                 .setTableName("ITEMS_TABLE")
                 .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                 .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -206,7 +194,7 @@ public class CartActivity extends AppCompatActivity {
             cartItemsList.add(cartItemsModelClass);
         }
 
-        cartItemsAdapter = new CartItemsAdapter(CartActivity.this, cartItemsList);
+        cartItemsAdapter = new CartItemsAdapter(Cart.this, cartItemsList);
 
         rvCartItems.setAdapter(cartItemsAdapter);
 
@@ -226,12 +214,12 @@ public class CartActivity extends AppCompatActivity {
                 }
                 else {
 
-                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(CartActivity.this);
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(Cart.this);
                     alertDialog.setTitle("Confirm Address").setMessage(add)
                             .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    ProgressDialog progressDialog = new ProgressDialog(CartActivity.this);
+                                    ProgressDialog progressDialog = new ProgressDialog(Cart.this);
                                     progressDialog.setTitle("Please Wait");
                                     progressDialog.setMessage("Order is placing...");
                                     progressDialog.show();
@@ -282,7 +270,7 @@ public class CartActivity extends AppCompatActivity {
                                             handler.postDelayed(new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    Intent intent = new Intent(CartActivity.this, MainActivity.class);
+                                                    Intent intent = new Intent(Cart.this, MainActivity.class);
                                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                     startActivity(intent);
                                                 }
@@ -307,7 +295,7 @@ public class CartActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                EasyDB easyDB = EasyDB.init(CartActivity.this, "ItemsDatabase")
+                EasyDB easyDB = EasyDB.init(Cart.this, "ItemsDatabase")
                         .setTableName("ITEMS_TABLE")
                         .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                         .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -415,6 +403,8 @@ public class CartActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.edit_cart){
+            onBackPressed();
+        } else if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
         return true;

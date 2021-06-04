@@ -25,36 +25,35 @@
         android:layout_marginTop="30dp"
         android:layout_marginStart="10dp"
         app:fabCustomSize="24dp"
-        app:backgroundTint="@color/newColorThird"
+        app:backgroundTint="@android:color/transparent"
         app:elevation="0dp" />
 
     <RelativeLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/view"
         android:layout_gravity="bottom"
         android:gravity="bottom">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:id="@+id/civItemImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
             android:elevation="20dp"
-            android:padding="30dp"
+            android:scaleType="fitXY"
             android:src="@drawable/food_placeholder" />
 
     </RelativeLayout>
 
     <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
         android:id="@+id/enbNumofOrders"
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/layout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="-25dp"
-        android:layout_marginBottom="-25dp"
+        android:layout_marginTop="-40dp"
+        android:layout_marginBottom="10dp"
         app:backGroundColor="@color/myColorSecond"
         app:backgroundDrawable="@drawable/profile_back_button"
         app:initialNumber="1"
@@ -67,6 +66,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/enbNumofOrders"
         android:layout_gravity="bottom"
+        android:layout_marginTop="-35dp"
         android:background="@drawable/restaurats_items_back"
         android:backgroundTint="@color/white">
 
@@ -98,7 +98,8 @@
                     android:text="Product\nname"
                     android:textColor="@color/black"
                     android:textFontWeight="400"
-                    android:textSize="22sp"
+                    android:textSize="18sp"
+                    android:textAllCaps="true"
                     android:textStyle="bold" />
 
                 <TextView
@@ -122,6 +123,50 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvQuantityHeading"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/sf_pro_rounded_regular"
+                    android:includeFontPadding="false"
+                    android:letterSpacing="0.05"
+                    android:text="Quantity"
+                    android:textColor="@color/black"
+                    android:textFontWeight="400"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvQuantity"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:gravity="end"
+                    android:maxLines="2"
+                    android:fontFamily="@font/sf_pro_rounded_regular"
+                    android:includeFontPadding="false"
+                    android:letterSpacing="0.05"
+                    android:text="1 serving"
+                    android:textColor="@color/grey_80"
+                    android:textFontWeight="400"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -130,7 +175,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="20dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
@@ -140,8 +185,8 @@
                     android:maxLines="2"
                     android:text="Description"
                     android:textColor="@color/black"
-                    android:textFontWeight="600"
-                    android:textSize="20sp"
+                    android:textFontWeight="400"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -166,7 +211,7 @@
                         android:includeFontPadding="false"
                         android:letterSpacing="0.03"
                         android:text="Description is the pattern of narrative development that aims to make vivid a place, object, character, or group. Description is one of four rhetorical modes, along with exposition, argumentation, and narration. In practice it would be difficult to write literature that drew on just one of the four basic modes."
-                        android:textColor="@color/grey_60"
+                        android:textColor="@color/grey_80"
                         android:textFontWeight="200"
                         android:textSize="16sp" />
 

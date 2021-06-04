@@ -224,7 +224,7 @@ public class RestaurantItems extends AppCompatActivity {
                                 Snackbar.make(findViewById(android.R.id.content), "You have not added any product till now!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                             }
                             else {
-                                Intent intent = new Intent(RestaurantItems.this, CartActivity.class);
+                                Intent intent = new Intent(RestaurantItems.this, Cart.class);
                                 intent.putExtra("restaurant", restaurant);
                                 intent.putExtra("first_name", first_name);
                                 intent.putExtra("last_name", last_name);

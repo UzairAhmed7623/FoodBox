@@ -21,25 +21,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodBox"
         tools:replace="android:theme">
-        <activity android:name=".ShowItemDetails"
-            android:screenOrientation="portrait"/>
-
+        <activity android:name=".Checkout"></activity>
+        <activity
+            android:name=".ShowItemDetails"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".PhoneVerified"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".SplashScreen"
             android:screenOrientation="portrait">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
         <activity
             android:name=".Login"
             android:screenOrientation="portrait" />
@@ -49,11 +46,11 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".CartActivity"
+            android:name=".Cart"
             android:parentActivityName=".RestaurantItems"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SearchActivity"
+            android:name=".Activity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".TrackOrders"
@@ -74,7 +71,6 @@
             android:name=".Profile"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
-
     </application>
 
 </manifest>

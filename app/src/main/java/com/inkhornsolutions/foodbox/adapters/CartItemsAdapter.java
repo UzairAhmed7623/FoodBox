@@ -6,17 +6,15 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.inkhornsolutions.foodbox.CartActivity;
+import com.inkhornsolutions.foodbox.Cart;
 import com.inkhornsolutions.foodbox.R;
 import com.inkhornsolutions.foodbox.RestaurantItems;
 import com.inkhornsolutions.foodbox.models.CartItemsModelClass;
@@ -74,7 +72,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
 //                itemsCount = itemsCount + itemsCount;
 
                 if (allTotalPrice == 0.00){
-                    allTotalPrice = Double.parseDouble(((CartActivity)context).tvSubTotal.getText().toString().trim().replace("PKR ",""));
+                    allTotalPrice = Double.parseDouble(((Cart)context).tvSubTotal.getText().toString().trim().replace("PKR ",""));
                 }
 
                 EasyDB easyDB = EasyDB.init(context, "ItemsDatabase")
@@ -112,9 +110,9 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
 
                                 allTotalPrice = allTotalPrice + Price;
 
-                                ((CartActivity)context).tvSubTotal.setText("PKR " + String.format("%.2f", allTotalPrice));
-                                String dFee = ((CartActivity)context).tvDeliveryFee.getText().toString().trim().replace("PKR ", "");
-                                ((CartActivity)context).tvGrandTotal.setText("PKR " + (allTotalPrice + Double.parseDouble(dFee.replace("PKR ", ""))));
+                                ((Cart)context).tvSubTotal.setText("PKR " + String.format("%.2f", allTotalPrice));
+                                String dFee = ((Cart)context).tvDeliveryFee.getText().toString().trim().replace("PKR ", "");
+                                ((Cart)context).tvGrandTotal.setText("PKR " + (allTotalPrice + Double.parseDouble(dFee.replace("PKR ", ""))));
                             }
                             else {
                                 Toast.makeText(context, "error", Toast.LENGTH_SHORT).show();
@@ -148,7 +146,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
 //                itemsCount = itemsCount + itemsCount;
 
                     if (allTotalPrice == 0.00){
-                        allTotalPrice = Double.parseDouble(((CartActivity)context).tvSubTotal.getText().toString().trim().replace("PKR ",""));
+                        allTotalPrice = Double.parseDouble(((Cart)context).tvSubTotal.getText().toString().trim().replace("PKR ",""));
                     }
 
 
@@ -186,9 +184,9 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
 
                                     allTotalPrice = allTotalPrice - Price;
 
-                                    ((CartActivity)context).tvSubTotal.setText("PKR " + String.format("%.2f", allTotalPrice));
-                                    String dFee = ((CartActivity)context).tvDeliveryFee.getText().toString().trim().replace("PKR ", "");
-                                    ((CartActivity)context).tvGrandTotal.setText("PKR " + (allTotalPrice + Double.parseDouble(dFee.replace("PKR ", ""))));
+                                    ((Cart)context).tvSubTotal.setText("PKR " + String.format("%.2f", allTotalPrice));
+                                    String dFee = ((Cart)context).tvDeliveryFee.getText().toString().trim().replace("PKR ", "");
+                                    ((Cart)context).tvGrandTotal.setText("PKR " + (allTotalPrice + Double.parseDouble(dFee.replace("PKR ", ""))));
                                 }
                                 else {
                                     Toast.makeText(context, "error", Toast.LENGTH_SHORT).show();
@@ -209,7 +207,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                 else {
 
                     if (allTotalPrice == 0.00){
-                        allTotalPrice = Double.parseDouble(((CartActivity)context).tvSubTotal.getText().toString().trim().replace("PKR ",""));
+                        allTotalPrice = Double.parseDouble(((Cart)context).tvSubTotal.getText().toString().trim().replace("PKR ",""));
                     }
 
                     EasyDB easyDB = EasyDB.init(context, "ItemsDatabase")
@@ -247,9 +245,9 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
 
                                     allTotalPrice = allTotalPrice - Price;
 
-                                    ((CartActivity)context).tvSubTotal.setText("PKR " + String.format("%.2f", allTotalPrice));
-                                    String dFee = ((CartActivity)context).tvDeliveryFee.getText().toString().trim().replace("PKR ", "");
-                                    ((CartActivity)context).tvGrandTotal.setText("PKR " + (allTotalPrice + Double.parseDouble(dFee.replace("PKR ", ""))));
+                                    ((Cart)context).tvSubTotal.setText("PKR " + String.format("%.2f", allTotalPrice));
+                                    String dFee = ((Cart)context).tvDeliveryFee.getText().toString().trim().replace("PKR ", "");
+                                    ((Cart)context).tvGrandTotal.setText("PKR " + (allTotalPrice + Double.parseDouble(dFee.replace("PKR ", ""))));
                                 }
                                 else {
                                     Toast.makeText(context, "error", Toast.LENGTH_SHORT).show();
@@ -268,7 +266,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                     notifyItemChanged(position);
                     notifyDataSetChanged();
 
-                    CartActivity.getInstance().updateNumberofItems();
+                    Cart.getInstance().updateNumberofItems();
                     RestaurantItems.getInstance().updateCartCount();
                 }
             }

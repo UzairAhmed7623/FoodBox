@@ -2,30 +2,18 @@ package com.inkhornsolutions.foodbox;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.SearchRecentSuggestions;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.snackbar.Snackbar;
@@ -40,7 +28,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class SearchActivity extends AppCompatActivity {
+public class Activity extends AppCompatActivity {
 
     private EditText etSearch;
     private RecyclerView rvSearch;
@@ -106,7 +94,7 @@ public class SearchActivity extends AppCompatActivity {
         }
         numberOfResults.setText("Found " + "(" + filterdList.size() + ")" + " results for " + "\n" + "(" + text + ")");
 
-        rvSearch.setAdapter(new SearchAdapter(SearchActivity.this, filterdList));
+        rvSearch.setAdapter(new SearchAdapter(Activity.this, filterdList));
     }
 
     private void searchData() {

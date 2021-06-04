@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,8 +43,8 @@ public class ShowItemDetails extends AppCompatActivity {
 
     private ElegantNumberButton enbNumofOrders;
     private FloatingActionButton backArrow;
-    private CircleImageView civItemImage;
-    private TextView tvItem, tvPrice, tvDescription;
+    private ImageView civItemImage;
+    private TextView tvItem, tvPrice, tvDescription, tvQuantity;
     private Button btnAddtoCart;
     private String resName, itemName, itemImage, itemPrice;
     private DocumentReference documentReference;
@@ -59,9 +60,10 @@ public class ShowItemDetails extends AppCompatActivity {
 
         enbNumofOrders = (ElegantNumberButton) findViewById(R.id.enbNumofOrders);
         backArrow = (FloatingActionButton) findViewById(R.id.backArrow);
-        civItemImage = (CircleImageView) findViewById(R.id.civItemImage);
+        civItemImage = (ImageView) findViewById(R.id.civItemImage);
         tvItem = (TextView) findViewById(R.id.tvItem);
         tvPrice = (TextView) findViewById(R.id.tvPrice);
+        tvQuantity = (TextView) findViewById(R.id.tvQuantity);
         tvDescription = (TextView) findViewById(R.id.tvDescription);
         btnAddtoCart = (Button) findViewById(R.id.btnAddtoCart);
         enbNumofOrders = (ElegantNumberButton) findViewById(R.id.enbNumofOrders);
@@ -74,6 +76,7 @@ public class ShowItemDetails extends AppCompatActivity {
         resName = getIntent().getStringExtra("resName");
         itemName = getIntent().getStringExtra("itemName");
 
+        backArrow.bringToFront();
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +94,7 @@ public class ShowItemDetails extends AppCompatActivity {
                             String itemName = documentSnapshot.getId();
                             itemImage = documentSnapshot.getString("imageUri");
                             itemPrice = documentSnapshot.getString("price");
+                            String quantity = documentSnapshot.getString("quantity");
                             String itemDescription = documentSnapshot.getString("description");
 
                             tvItem.setText(itemName);
@@ -98,7 +102,7 @@ public class ShowItemDetails extends AppCompatActivity {
                             price = Double.parseDouble(itemPrice.replace("PKR",""));
                             tvPrice.setText("PKR" + price);
                             tvDescription.setText(itemDescription);
-
+                            tvQuantity.setText(quantity);
 
                         }
                     }
