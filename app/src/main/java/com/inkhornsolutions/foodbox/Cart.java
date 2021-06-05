@@ -54,7 +54,6 @@ import p32929.androideasysql_library.EasyDB;
 
 public class Cart extends AppCompatActivity {
 
-    private static final String GOOGLE_API_KEY = "AIzaSyBa4XZ09JsXD8KYZr5wdle--0TQFpfyGew";
     private static int AUTOCOMPLETE_REQUEST_CODE = 1;
 
     private RecyclerView rvCartItems;
@@ -63,17 +62,17 @@ public class Cart extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private String delivery = "45";
-    private String restaurant, add, itemImage;
+    private String restaurant, itemImage;
 
     private ArrayList<CartItemsModelClass> cartItemsList;
     private CartItemsAdapter cartItemsAdapter;
     private CartItemsModelClass cartItemsModelClass;
 
-    private LatLng latLng;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private ImageView backArrow;
     private Toolbar toolbar;
     static Cart instance;
+    String first_name, last_name;
 
     public static Cart getInstance() {
         return instance;
@@ -86,13 +85,9 @@ public class Cart extends AppCompatActivity {
 
         instance = this;
 
-        if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), GOOGLE_API_KEY, Locale.getDefault());
-        }
-
         restaurant = getIntent().getStringExtra("restaurant");
-        String first_name = getIntent().getStringExtra("first_name");
-        String last_name = getIntent().getStringExtra("last_name");
+        first_name = getIntent().getStringExtra("first_name");
+        last_name = getIntent().getStringExtra("last_name");
 
         cartItemsList = new ArrayList<>();
 
@@ -114,38 +109,6 @@ public class Cart extends AppCompatActivity {
         rvCartItems.setLayoutManager(new LinearLayoutManager(Cart.this));
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(Cart.this);
-
-//        UserName.setText(first_name +" "+ last_name);
-
-//        getCurrentLocation();
-
-//        Address.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                Intent intent = new PlacePicker.IntentBuilder()
-//                        .setLatLong(latLng.latitude, latLng.longitude)  // Initial Latitude and Longitude the Map will load into
-//                        .setMapZoom(17.0f)  // Map Zoom Level. Default: 14.0
-//                        .setAddressRequired(true) // Set If return only Coordinates if cannot fetch Address for the coordinates. Default: True
-//                        .hideMarkerShadow(false) // Hides the shadow under the map marker. Default: False
-//                        .setMarkerDrawable(R.drawable.marker) // Change the default Marker Image
-//                        .setMarkerImageImageColor(R.color.myColor)
-//                        .setFabColor(R.color.myColor)
-//                        .setPrimaryTextColor(R.color.black) // Change text color of Shortened Address
-//                        .setSecondaryTextColor(R.color.black) // Change text color of full Address
-//                        .setBottomViewColor(R.color.white) // Change Address View Background Color (Default: White)
-//                        .setMapRawResourceStyle(R.raw.map_style)  //Set Map Style (https://mapstyle.withgoogle.com/)
-//                        .setMapType(MapType.NORMAL)
-//                        .setPlaceSearchBar(true, GOOGLE_API_KEY) //Activate GooglePlace Search Bar. Default is false/not activated. SearchBar is a chargeable feature by Google
-//                        .onlyCoordinates(true)  //Get only Coordinates from Place Picker
-//                        .hideLocationButton(false)   //Hide Location Button (Default: false)
-//                        .disableMarkerAnimation(true)   //Disable Marker Animation (Default: false)
-//                        .build(Cart.this);
-//
-//                startActivityForResult(intent, Constants.PLACE_PICKER_REQUEST);
-//
-//            }
-//        });
 
         showCart();
     }
@@ -209,6 +172,9 @@ public class Cart extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(Cart.this, Checkout.class);
+                intent.putExtra("first_name", first_name);
+                intent.putExtra("last_name", last_name);
+                intent.putExtra("total", tvGrandTotal.getText().toString().replace("PKR",""));
                 startActivity(intent);
 
 
@@ -330,68 +296,6 @@ public class Cart extends AppCompatActivity {
 
         return date;
     }
-
-//    private void getCurrentLocation() {
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            return;
-//        }
-//        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-//            @Override
-//            public void onSuccess(Location location) {
-//                if (location != null){
-//                    double latitude = location.getLatitude();
-//                    double longitude = location.getLongitude();
-//
-//                    latLng = new LatLng(latitude, longitude);
-//
-//                    try {
-//                        add = showAddress(latLng);
-//                        Address.setText("" + add);
-//                    }
-//                    catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                else {
-////                    Toast.makeText(RestaurantItems.this, "Null", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-//    }
-
-    private String showAddress(LatLng latLng) throws IOException {
-        Geocoder geocoder;
-        List<android.location.Address> addresses;
-        geocoder = new Geocoder(this, Locale.getDefault());
-
-        addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-
-        String address = addresses.get(0).getAddressLine(0);
-
-        return  address;
-    }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == Constants.PLACE_PICKER_REQUEST) {
-//            if (resultCode == Activity.RESULT_OK && data != null) {
-//                AddressData addressData = data.getParcelableExtra(Constants.ADDRESS_INTENT);
-//                try {
-//                    latLng = new LatLng(addressData.getLatitude(), addressData.getLongitude() );
-//                    add = showAddress(latLng);
-//
-//                    Address.setText(add);
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        } else {
-//            super.onActivityResult(requestCode, resultCode, data);
-//        }
-//    }
 
     public static String shortUUID() {
         UUID uuid = UUID.randomUUID();

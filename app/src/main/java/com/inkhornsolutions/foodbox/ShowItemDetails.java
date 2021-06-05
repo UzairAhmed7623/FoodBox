@@ -46,7 +46,7 @@ public class ShowItemDetails extends AppCompatActivity {
     private ImageView civItemImage;
     private TextView tvItem, tvPrice, tvDescription, tvQuantity;
     private Button btnAddtoCart;
-    private String resName, itemName, itemImage, itemPrice;
+    private String resName, itemName, itemImage, itemPrice, userName;
     private DocumentReference documentReference;
     private FirebaseFirestore firebaseFirestore;
     private double price = 0;
@@ -131,18 +131,6 @@ public class ShowItemDetails extends AppCompatActivity {
                 tvPrice.setText("PKR" + finalPrice);
             }
         });
-
-//        enbNumofOrders.setOnClickListener(new ElegantNumberButton.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                itemCount = Integer.parseInt(enbNumofOrders.getNumber());
-//
-//                int itemsPrice = Integer.parseInt(itemPrice);
-//
-//                finalPrice = itemsPrice * itemCount;
-//                tvPrice.setText("PKR" + finalPrice);
-//            }
-//        });
 
         btnAddtoCart.setOnClickListener(new View.OnClickListener() {
             @Override

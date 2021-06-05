@@ -139,7 +139,7 @@ public class RestaurantItems extends AppCompatActivity {
 
                                             ItemsModelClass itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
 
-                                            itemsModelClass.setUserName(first_name+last_name);
+                                            itemsModelClass.setUserName(first_name+" "+last_name);
                                             itemsModelClass.setItemName(name);
                                             itemsModelClass.setId(getDateTime());
 
@@ -181,7 +181,7 @@ public class RestaurantItems extends AppCompatActivity {
 
                                 itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
 
-                                itemsModelClass.setUserName(first_name + last_name);
+                                itemsModelClass.setUserName(first_name +" "+ last_name);
                                 itemsModelClass.setItemName(name);
                                 itemsModelClass.setId(getDateTime());
 

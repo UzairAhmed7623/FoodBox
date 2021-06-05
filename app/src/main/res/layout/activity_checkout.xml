@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:src="@drawable/arrow_back"
-            app:backgroundTint="@android:color/transparent"
+            app:backgroundTint="#F5F5F8"
             app:elevation="0dp"
             app:fabCustomSize="24dp" />
 
@@ -263,6 +263,7 @@
             android:textFontWeight="600"
             android:maxLines="1"
             android:text="0.0"
+            android:textStyle="bold"
             android:textColor="@color/black"
             android:textSize="22sp" />
 
