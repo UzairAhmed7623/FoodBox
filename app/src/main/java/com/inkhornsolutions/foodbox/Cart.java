@@ -118,8 +118,6 @@ public class Cart extends AppCompatActivity {
 
     private void showCart() {
 
-//        tvShopName.setText(restaurant);
-
         EasyDB easyDB = EasyDB.init(Cart.this, "ItemsDatabase")
                 .setTableName("ITEMS_TABLE")
                 .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
@@ -175,87 +173,8 @@ public class Cart extends AppCompatActivity {
                 intent.putExtra("first_name", first_name);
                 intent.putExtra("last_name", last_name);
                 intent.putExtra("total", tvGrandTotal.getText().toString().replace("PKR",""));
+                intent.putExtra("restaurant", restaurant);
                 startActivity(intent);
-
-
-//                String total = tvGrandTotal.getText().toString().trim().replace("PKR", "");
-//
-//                if (cartItemsList.size() == 0){
-//                    Snackbar.make(findViewById(android.R.id.content), "No Item Found", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
-//                }
-//                else {
-//
-//                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(Cart.this);
-//                    alertDialog.setTitle("Confirm Address").setMessage(add)
-//                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    ProgressDialog progressDialog = new ProgressDialog(Cart.this);
-//                                    progressDialog.setTitle("Please Wait");
-//                                    progressDialog.setMessage("Order is placing...");
-//                                    progressDialog.show();
-//
-////                                    String address = Address.getText().toString();
-//
-//                                    HashMap<String, Object> order1 = new HashMap<>();
-//                                    order1.put("restaurant name", restaurant);
-//                                    order1.put("total", total);
-//                                    order1.put("Time", getDateTime());
-//                                    order1.put("status", "Pending");
-//                                    order1.put("ID", shortUUID());
-////                                    order1.put("address", address);
-//                                    order1.put("latlng", latLng);
-//
-//                                    firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
-//                                            .collection("Cart").document(restaurant+" "+getDateTime())
-//                                            .set(order1, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                        @Override
-//                                        public void onComplete(@NonNull Task<Void> task) {
-//                                            for (int i = 0; i<cartItemsList.size(); i++) {
-//                                                HashMap<String, Object> order2 = new HashMap<>();
-//                                                order2.put("id", cartItemsList.get(i).getId());
-//                                                order2.put("pId", cartItemsList.get(i).getpId());
-//                                                order2.put("title", cartItemsList.get(i).getItemName());
-//                                                order2.put("price", cartItemsList.get(i).getPrice());
-//                                                order2.put("items_count", cartItemsList.get(i).getItems_Count());
-//                                                order2.put("final_price", cartItemsList.get(i).getFinalPrice());
-//
-//                                                firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
-//                                                        .collection("Cart").document(restaurant+" "+getDateTime())
-//                                                        .collection("Orders").document(cartItemsList.get(i).getId())
-//                                                        .set(order2, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                                    @Override
-//                                                    public void onComplete(@NonNull Task<Void> task) {
-//
-//                                                    }
-//                                                });
-//                                            }
-//                                            progressDialog.dismiss();
-//                                            easyDB.deleteAllDataFromTable();
-////                                          updateCartCount();
-//                                            allTotalPrice = 0.00;
-//
-//                                            Snackbar.make(findViewById(android.R.id.content), "Order Placed!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
-//
-//                                            Handler handler = new Handler(Looper.myLooper());
-//                                            handler.postDelayed(new Runnable() {
-//                                                @Override
-//                                                public void run() {
-//                                                    Intent intent = new Intent(Cart.this, MainActivity.class);
-//                                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                                                    startActivity(intent);
-//                                                }
-//                                            }, 1000);
-//                                        }
-//                                    });
-//                                }
-//                            }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                  dialog.dismiss();
-//                                }
-//                            }).show();
-//                    }
 
                 }
             });
@@ -283,24 +202,6 @@ public class Cart extends AppCompatActivity {
                 tvNumberofItems.setText(""+c+" Items");
             }
         });
-    }
-
-    private String getDateTime() {
-        Calendar calendar = Calendar.getInstance(Locale.getDefault());
-        long time = System.currentTimeMillis();
-        calendar.setTimeInMillis(time);
-
-        //dd=day, MM=month, yyyy=year, hh=hour, mm=minute, ss=second.
-
-        String date = DateFormat.format("dd-MM-yyyy hh-mm",calendar).toString();
-
-        return date;
-    }
-
-    public static String shortUUID() {
-        UUID uuid = UUID.randomUUID();
-        long l = ByteBuffer.wrap(uuid.toString().getBytes()).getLong();
-        return Long.toString(l, Character.MAX_RADIX);
     }
 
     @Override

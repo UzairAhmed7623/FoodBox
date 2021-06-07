@@ -42,6 +42,7 @@
             android:layout_height="280dp"
             android:elevation="20dp"
             android:scaleType="fitXY"
+            android:transitionName="itemImage"
             android:src="@drawable/food_placeholder" />
 
     </RelativeLayout>

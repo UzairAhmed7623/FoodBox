@@ -1,9 +1,12 @@
 package com.inkhornsolutions.foodbox;
 
+import android.app.ActivityOptions;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -189,6 +192,13 @@ public class ShowItemDetails extends AppCompatActivity {
         }
 
         RestaurantItems.getInstance().updateCartCount();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                onBackPressed();
+            }
+        }, 1000);
     }
 
     private String getDateTime() {

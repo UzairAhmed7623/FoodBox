@@ -50,7 +50,7 @@
             android:parentActivityName=".RestaurantItems"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activity"
+            android:name=".Search"
             android:screenOrientation="portrait" />
         <activity
             android:name=".TrackOrders"

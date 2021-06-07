@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tvItemSearch .setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Activity.class);
+                Intent intent = new Intent(MainActivity.this, Search.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,

@@ -1,5 +1,7 @@
 package com.inkhornsolutions.foodbox.adapters;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -80,7 +82,11 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                 Intent intent = new Intent(context, ShowItemDetails.class);
                 intent.putExtra("resName",resName);
                 intent.putExtra("itemName",itemsModelClass.getItemName());
-                context.startActivity(intent);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity)context,
+                        (View)((RestaurantItems) context).findViewById(R.id.ivItem), "itemImage");
+                context.startActivity(intent, options.toBundle());
 
 //                showQuantityDialog(modelClass);
             }

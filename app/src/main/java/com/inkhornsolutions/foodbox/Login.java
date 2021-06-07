@@ -177,7 +177,7 @@ public class Login extends AppCompatActivity {
                 PhoneAuthOptions.newBuilder(firebaseAuth)
                         .setPhoneNumber(number)       // Phone number to verify
                         .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                        .setActivity(Login.this) // Activity (for callback binding)
+                        .setActivity(Login.this) // Search (for callback binding)
                         .setCallbacks(mCallbacks) // OnVerificationStateChangedCallbacks
                         .build();
         PhoneAuthProvider.verifyPhoneNumber(options);

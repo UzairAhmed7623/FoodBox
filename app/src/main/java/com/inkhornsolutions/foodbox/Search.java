@@ -28,7 +28,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class Activity extends AppCompatActivity {
+public class Search extends AppCompatActivity {
 
     private EditText etSearch;
     private RecyclerView rvSearch;
@@ -94,7 +94,7 @@ public class Activity extends AppCompatActivity {
         }
         numberOfResults.setText("Found " + "(" + filterdList.size() + ")" + " results for " + "\n" + "(" + text + ")");
 
-        rvSearch.setAdapter(new SearchAdapter(Activity.this, filterdList));
+        rvSearch.setAdapter(new SearchAdapter(Search.this, filterdList));
     }
 
     private void searchData() {
