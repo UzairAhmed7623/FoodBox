@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -114,7 +115,7 @@ public class Checkout extends AppCompatActivity {
         rbDoorDelivery = (RadioButton) findViewById(R.id.rbDoorDelivery);
         btnCheckOut = (Button) findViewById(R.id.btnCheckOut);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,7 +229,7 @@ public class Checkout extends AppCompatActivity {
                                     String address = tvAddress.getText().toString();
 
                                     HashMap<String, Object> order1 = new HashMap<>();
-                                    order1.put("restaurant name", restaurant);
+                                    order1.put("restaurantName", restaurant);
                                     order1.put("total", total);
                                     order1.put("Time", getDateTime());
                                     order1.put("status", "Pending");

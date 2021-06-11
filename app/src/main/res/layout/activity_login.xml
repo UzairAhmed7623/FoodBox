@@ -155,7 +155,6 @@
                     android:layout_height="wrap_content"
                     android:hint="3001234567"
                     android:inputType="phone"
-                    android:maxLength="10"
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textColor="@color/grey_90"/>

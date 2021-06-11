@@ -73,7 +73,7 @@ public class ShowItemDetails extends AppCompatActivity {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         enbNumofOrders.bringToFront();
 
         resName = getIntent().getStringExtra("resName");

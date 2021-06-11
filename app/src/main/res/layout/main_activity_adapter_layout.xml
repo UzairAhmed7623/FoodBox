@@ -62,8 +62,7 @@
                         app:keepOriginColor="true"
                         app:starColor="@color/myColor"
                         app:bgColor="@color/myColorthird"
-                        app:scaleFactor="1.1"
-                        android:rating="2.5"/>
+                        app:scaleFactor="1.1" />
 
                     <TextView
                         android:id="@+id/tvNoOrders"
@@ -72,7 +71,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_toEndOf="@+id/ratingStar"
                         android:layout_gravity="start"
-                        android:text="(50)"
+                        android:text="(0)"
                         android:textAllCaps="true"
                         android:textColor="@color/grey_90"
                         android:textSize="14sp"
