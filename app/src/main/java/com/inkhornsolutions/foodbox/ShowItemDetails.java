@@ -111,6 +111,7 @@ public class ShowItemDetails extends AppCompatActivity {
                             tvDescription.setText(itemDescription);
                             tvQuantity.setText("(" + quantity + ")");
 
+                            tvFinalPrice.setText(String.valueOf(itemPrice));
                         }
                     }
                 })
@@ -123,7 +124,6 @@ public class ShowItemDetails extends AppCompatActivity {
 
         itemCount = Integer.parseInt(tvDisplay.getText().toString().trim());
         finalPrice = Double.parseDouble(tvPrice.getText().toString().replace("PKR", ""));
-        tvFinalPrice.setText(String.valueOf(finalPrice));
 
         btnIncrement.setOnClickListener(new View.OnClickListener() {
             @Override
