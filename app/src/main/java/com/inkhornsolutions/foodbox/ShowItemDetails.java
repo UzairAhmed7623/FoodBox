@@ -26,12 +26,14 @@ import com.bumptech.glide.Glide;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.inkhornsolutions.foodbox.models.ItemsModelClass;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -44,11 +46,12 @@ import p32929.androideasysql_library.EasyDB;
 
 public class ShowItemDetails extends AppCompatActivity {
 
-    private ElegantNumberButton enbNumofOrders;
-    private FloatingActionButton backArrow;
-    private ImageView civItemImage;
-    private TextView tvItem, tvPrice, tvDescription, tvQuantity;
-    private Button btnAddtoCart;
+    private MaterialButton btnIncrement, btnDecrement;
+    private int count = 1;
+    private ImageButton backArrow;
+    private RoundedImageView civItemImage;
+    private TextView tvItem, tvPrice, tvDescription, tvQuantity, tvDisplay, tvFinalPrice;
+    private MaterialButton btnAddtoCart;
     private String resName, itemName, itemImage, itemPrice, userName;
     private DocumentReference documentReference;
     private FirebaseFirestore firebaseFirestore;
@@ -61,20 +64,21 @@ public class ShowItemDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_item_details);
 
-        enbNumofOrders = (ElegantNumberButton) findViewById(R.id.enbNumofOrders);
-        backArrow = (FloatingActionButton) findViewById(R.id.backArrow);
-        civItemImage = (ImageView) findViewById(R.id.civItemImage);
+        backArrow = (ImageButton) findViewById(R.id.backArrow);
+        civItemImage = (RoundedImageView) findViewById(R.id.civItemImage);
         tvItem = (TextView) findViewById(R.id.tvItem);
         tvPrice = (TextView) findViewById(R.id.tvPrice);
         tvQuantity = (TextView) findViewById(R.id.tvQuantity);
         tvDescription = (TextView) findViewById(R.id.tvDescription);
-        btnAddtoCart = (Button) findViewById(R.id.btnAddtoCart);
-        enbNumofOrders = (ElegantNumberButton) findViewById(R.id.enbNumofOrders);
+        btnAddtoCart = (MaterialButton) findViewById(R.id.btnAddtoCart);
+        btnIncrement = (MaterialButton) findViewById(R.id.btnIncrement);
+        btnDecrement = (MaterialButton) findViewById(R.id.btnDecrement);
+        tvDisplay = (TextView) findViewById(R.id.tvDisplay);
+        tvFinalPrice = (TextView) findViewById(R.id.tvFinalPrice);
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        enbNumofOrders.bringToFront();
 
         resName = getIntent().getStringExtra("resName");
         itemName = getIntent().getStringExtra("itemName");
@@ -105,7 +109,7 @@ public class ShowItemDetails extends AppCompatActivity {
                             price = Double.parseDouble(itemPrice.replace("PKR",""));
                             tvPrice.setText("PKR" + price);
                             tvDescription.setText(itemDescription);
-                            tvQuantity.setText(quantity);
+                            tvQuantity.setText("(" + quantity + ")");
 
                         }
                     }
@@ -117,21 +121,35 @@ public class ShowItemDetails extends AppCompatActivity {
                     }
                 });
 
-        itemCount = Integer.parseInt(enbNumofOrders.getNumber());
+        itemCount = Integer.parseInt(tvDisplay.getText().toString().trim());
         finalPrice = Double.parseDouble(tvPrice.getText().toString().replace("PKR", ""));
+        tvFinalPrice.setText(String.valueOf(finalPrice));
 
-        enbNumofOrders.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
+        btnIncrement.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
-                Log.d("TAG", String.format("oldValue: %d   newValue: %d", oldValue, newValue));
+            public void onClick(View v) {
+                count++;
+                tvDisplay.setText(String.valueOf(count));
+                itemCount = Integer.parseInt(tvDisplay.getText().toString().trim());
 
-                itemCount = newValue;
+                finalPrice = Integer.parseInt(itemPrice) * itemCount;
 
-                int itemsPrice = Integer.parseInt(itemPrice);
+                tvFinalPrice.setText(""+finalPrice);
+            }
+        });
 
-                finalPrice = itemsPrice * newValue;
+        btnDecrement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (count > 1){
+                    count--;
+                    tvDisplay.setText(String.valueOf(count));
+                    itemCount = Integer.parseInt(tvDisplay.getText().toString().trim());
 
-                tvPrice.setText("PKR" + finalPrice);
+                    finalPrice = Integer.parseInt(itemPrice) * itemCount;
+
+                    tvFinalPrice.setText(""+finalPrice);
+                }
             }
         });
 
@@ -140,7 +158,7 @@ public class ShowItemDetails extends AppCompatActivity {
             public void onClick(View v) {
                 String title = tvItem.getText().toString().trim();
                 String Price = String.valueOf(price);
-                finalPrice = Double.parseDouble(tvPrice.getText().toString().replace("PKR", ""));
+                finalPrice = Double.parseDouble(tvFinalPrice.getText().toString().trim());
 
                 addToCart(getDateTime(), title, itemImage, Price, String.valueOf(finalPrice), String.valueOf(itemCount));
 

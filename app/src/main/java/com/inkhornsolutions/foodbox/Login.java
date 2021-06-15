@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -25,8 +26,11 @@ import android.widget.Toast;
 
 import com.chaos.view.PinView;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,8 +38,14 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.hbb20.CountryCodePicker;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class Login extends AppCompatActivity {
@@ -157,11 +167,27 @@ public class Login extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
 
+                            Map<String, Object> ph = new HashMap<>();
+                            ph.put("phoneNumber", Objects.requireNonNull(firebaseAuth.getCurrentUser()).getPhoneNumber());
+
+                            firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
+                                    .set(ph, SetOptions.merge())
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Log.d("Phone", "Phone number has been saved!");
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull @NotNull Exception e) {
+                                    Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).show();
+                                }
+                            });
 
                             Intent intent = new Intent(Login.this, PhoneVerified.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
                             startActivity(intent);
+                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
                         } else {
                             Toast.makeText(Login.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();

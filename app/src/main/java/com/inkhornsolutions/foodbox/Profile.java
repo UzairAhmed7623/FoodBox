@@ -14,10 +14,8 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +57,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -111,51 +110,53 @@ public class Profile extends AppCompatActivity {
         progressDialog.setContentView(R.layout.progress_bar);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
+        firebaseFirestore.collection("Users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                if (documentSnapshot.exists()){
-                    if (documentSnapshot.getString("firstName") != null && documentSnapshot.getString("lastName") != null){
-                        String fName = documentSnapshot.getString("firstName");
-                        String lName = documentSnapshot.getString("lastName");
-                        tvFirstName.setText(fName);
-                        tvLastName.setText(lName);
-                        tvName.setText(fName+" "+lName);
-                    }
-                    if (documentSnapshot.getString("emailAddress") != null){
-                        String email = documentSnapshot.getString("emailAddress");
-                        tvEmailAddress.setText(email);
-                        tvEmail.setText(email);
-                    }
-                    if (documentSnapshot.getString("phoneNumber") != null){
-                        String mobile = documentSnapshot.getString("phoneNumber");
-                        tvMobile.setText(mobile);
-                    }
-                    if (documentSnapshot.getString("address") != null){
-                        String address = documentSnapshot.getString("address");
-                        tvAddress.setText(address);
-                    }
-                    if (documentSnapshot.getString("DOB") != null){
-                        String dob = documentSnapshot.getString("DOB");
-                        tvDateOfBirth.setText(dob);
-                    }
-                    if (documentSnapshot.getString("UsersImageProfile") != null){
-                        String dob = documentSnapshot.getString("UsersImageProfile");
-                        Glide.with(Profile.this).load(dob).placeholder(ContextCompat.getDrawable(getApplicationContext(), R.drawable.user)).into(ivProfile);
-                    }
+                        if (documentSnapshot.exists()) {
+                            if (documentSnapshot.getString("firstName") != null &&
+                                    documentSnapshot.getString("lastName") != null) {
+                                String fName = documentSnapshot.getString("firstName");
+                                String lName = documentSnapshot.getString("lastName");
+                                tvFirstName.setText(fName);
+                                tvLastName.setText(lName);
+                                tvName.setText(fName + " " + lName);
+                            }
+                            if (documentSnapshot.getString("emailAddress") != null) {
+                                String email = documentSnapshot.getString("emailAddress");
+                                tvEmailAddress.setText(email);
+                                tvEmail.setText(email);
+                            }
+                            if (documentSnapshot.getString("phoneNumber") != null) {
+                                String mobile = documentSnapshot.getString("phoneNumber");
+                                tvMobile.setText(mobile);
+                            }
+                            if (documentSnapshot.getString("address") != null) {
+                                String address = documentSnapshot.getString("address");
+                                tvAddress.setText(address);
+                            }
+                            if (documentSnapshot.getString("DOB") != null) {
+                                String dob = documentSnapshot.getString("DOB");
+                                tvDateOfBirth.setText(dob);
+                            }
+                            if (documentSnapshot.getString("UsersImageProfile") != null) {
+                                String dob = documentSnapshot.getString("UsersImageProfile");
+                                Glide.with(Profile.this).load(dob).placeholder(ContextCompat.getDrawable(getApplicationContext(), R.drawable.user)).into(ivProfile);
+                            }
 
-                }
-                progressDialog.dismiss();
-            }
-        })
+                        }
+                        progressDialog.dismiss();
+                    }
+                })
                 .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
-                progressDialog.dismiss();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                        progressDialog.dismiss();
+                    }
+                });
 
         View view = LayoutInflater.from(this).inflate(R.layout.edit_details, null);
         EditText editText = (EditText) view.findViewById(R.id.editText);

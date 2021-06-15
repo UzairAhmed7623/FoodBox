@@ -11,8 +11,8 @@ android {
         applicationId "com.inkhornsolutions.foodbox"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 11
-        versionName "2.0"
+        versionCode 12
+        versionName "2.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -129,4 +129,7 @@ dependencies {
 
     implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'
 
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+
+    
 }

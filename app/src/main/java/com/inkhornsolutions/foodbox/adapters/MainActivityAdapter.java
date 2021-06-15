@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,6 +51,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private List<RatingClass> ratingsList = new ArrayList<>();
     private List<String> resList = new ArrayList<>();
+    View view;
 
     int size;
     String rating;
@@ -64,7 +66,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     @Override
     public MainActivityAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater =LayoutInflater.from(parent.getContext());
-        View view =inflater.inflate(R.layout.main_activity_adapter_layout, parent, false);
+        view =inflater.inflate(R.layout.main_activity_adapter_layout, parent, false);
         return new ViewHolder(view);
     }
 
@@ -106,20 +108,23 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                                         String first_name = documentSnapshot.getString("firstName");
                                         String last_name = documentSnapshot.getString("lastName");
 
-                                        Intent intent = new Intent(context, RestaurantItems.class);
-                                        intent.putExtra("restaurant", resName);
-                                        intent.putExtra("first_name", first_name);
-                                        intent.putExtra("last_name", last_name);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        context.startActivity(intent);
-
+                                        if (first_name == null && last_name == null) {
+                                            Toast.makeText(context, "Please complete your profile first.", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Intent intent = new Intent(context, RestaurantItems.class);
+                                            intent.putExtra("restaurant", resName);
+                                            intent.putExtra("first_name", first_name);
+                                            intent.putExtra("last_name", last_name);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            context.startActivity(intent);
+                                        }
                                     }
                                 }
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Snackbar.make(v.findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(context.getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                                Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -154,7 +159,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Snackbar.make(((MainActivity) context).findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(context.getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -213,7 +218,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Snackbar.make(((MainActivity) context).findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(context.getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                                            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     });
                             }
@@ -223,7 +228,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Snackbar.make(((MainActivity) context).findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(context.getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

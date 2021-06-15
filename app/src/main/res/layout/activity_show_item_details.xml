@@ -4,70 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/newColorThird"
     android:orientation="vertical"
     tools:context=".ShowItemDetails">
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="23dp"
-        android:background="@color/places_text_black_alpha_26"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/backArrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/arrow_back"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="10dp"
-        app:fabCustomSize="24dp"
-        app:backgroundTint="@android:color/transparent"
-        app:elevation="0dp" />
 
     <RelativeLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/view"
         android:layout_gravity="bottom"
         android:gravity="bottom">
 
-        <ImageView
+        <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/civItemImage"
             android:layout_width="match_parent"
-            android:layout_height="280dp"
-            android:elevation="20dp"
+            android:layout_height="300dp"
             android:scaleType="fitXY"
+            android:src="@drawable/food_placeholder"
             android:transitionName="itemImage"
-            android:src="@drawable/food_placeholder" />
+            app:riv_corner_radius_bottom_left="30dp"
+            app:riv_corner_radius_bottom_right="30dp" />
 
     </RelativeLayout>
-
-    <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
-        android:id="@+id/enbNumofOrders"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/layout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="-40dp"
-        android:layout_marginBottom="10dp"
-        app:backGroundColor="@color/myColorSecond"
-        app:backgroundDrawable="@drawable/profile_back_button"
-        app:initialNumber="1"
-        app:textSize="7dp"
-        android:gravity="center_vertical"/>
 
     <RelativeLayout
         android:id="@+id/layout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/enbNumofOrders"
+        android:layout_below="@+id/layout"
         android:layout_gravity="bottom"
-        android:layout_marginTop="-35dp"
         android:background="@drawable/restaurats_items_back"
         android:backgroundTint="@color/white">
 
@@ -75,9 +39,26 @@
             android:id="@+id/layout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="45dp"
+            android:layout_marginTop="15dp"
             android:orientation="vertical"
             android:weightSum="4">
+
+            <TextView
+                android:id="@+id/tvItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/montserra_regular_bold"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:letterSpacing="0.05"
+                android:maxLines="1"
+                android:text="Product name"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textFontWeight="400"
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/layout4"
@@ -86,40 +67,68 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tvItem"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:fontFamily="@font/sf_pro_rounded_regular"
-                    android:includeFontPadding="false"
-                    android:letterSpacing="0.05"
-                    android:maxLines="2"
-                    android:text="Product\nname"
-                    android:textColor="@color/black"
-                    android:textFontWeight="400"
-                    android:textSize="18sp"
-                    android:textAllCaps="true"
-                    android:textStyle="bold" />
-
-                <TextView
                     android:id="@+id/tvPrice"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="10dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:fontFamily="@font/sf_pro_rounded_regular"
-                    android:gravity="end"
+                    android:fontFamily="@font/montserra_regular"
+                    android:gravity="start"
                     android:includeFontPadding="false"
                     android:letterSpacing="0.05"
                     android:text="PKR0.0"
                     android:textColor="@color/black"
                     android:textFontWeight="600"
-                    android:textSize="22sp"
+                    android:textSize="28sp"
                     android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="10dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDecrement"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:backgroundTint="@color/newColor"
+                        android:foreground="@drawable/ripple"
+                        android:padding="0dp"
+                        android:text="-"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        app:cornerRadius="10dp" />
+
+                    <TextView
+                        android:id="@+id/tvDisplay"
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:focusable="false"
+                        android:fontFamily="@font/montserra_regular"
+                        android:gravity="center"
+                        android:text="1"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnIncrement"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:backgroundTint="#fb9843"
+                        android:foreground="@drawable/ripple"
+                        android:padding="0dp"
+                        android:text="+"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        app:cornerRadius="10dp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -127,40 +136,41 @@
                 android:id="@+id/layout5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginTop="10dp"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <TextView
                     android:id="@+id/tvQuantityHeading"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1.23"
                     android:ellipsize="end"
-                    android:fontFamily="@font/sf_pro_rounded_regular"
+                    android:fontFamily="@font/montserra_regular_bold"
                     android:includeFontPadding="false"
                     android:letterSpacing="0.05"
                     android:text="Quantity"
                     android:textColor="@color/black"
                     android:textFontWeight="400"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvQuantity"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="0.78"
                     android:ellipsize="end"
+                    android:fontFamily="@font/montserra_regular"
                     android:gravity="end"
-                    android:maxLines="2"
-                    android:fontFamily="@font/sf_pro_rounded_regular"
                     android:includeFontPadding="false"
                     android:letterSpacing="0.05"
+                    android:maxLines="2"
                     android:text="1 serving"
-                    android:textColor="@color/grey_80"
+                    android:textColor="@color/black"
                     android:textFontWeight="400"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -175,19 +185,19 @@
                     android:id="@+id/tvDescriptionHeading"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:fontFamily="@font/sf_pro_rounded_regular"
+                    android:fontFamily="@font/montserra_regular_bold"
                     android:includeFontPadding="false"
                     android:letterSpacing="0.05"
                     android:maxLines="2"
                     android:text="Description"
                     android:textColor="@color/black"
                     android:textFontWeight="400"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -204,15 +214,15 @@
                         android:id="@+id/tvDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="10dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginEnd="20dp"
+                        android:layout_marginEnd="10dp"
                         android:ellipsize="end"
-                        android:fontFamily="@font/sf_pro_rounded_regular"
+                        android:fontFamily="@font/montserra_regular"
                         android:includeFontPadding="false"
                         android:letterSpacing="0.03"
                         android:text="Description is the pattern of narrative development that aims to make vivid a place, object, character, or group. Description is one of four rhetorical modes, along with exposition, argumentation, and narration. In practice it would be difficult to write literature that drew on just one of the four basic modes."
-                        android:textColor="@color/grey_80"
+                        android:textColor="@color/black"
                         android:textFontWeight="200"
                         android:textSize="16sp" />
 
@@ -223,20 +233,69 @@
 
         </LinearLayout>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnAddtoCart"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginBottom="15dp"
             android:layout_alignParentBottom="true"
-            android:layout_weight="1"
-            android:background="@drawable/profile_back_button"
-            android:foreground="@drawable/ripple"
-            android:text="Add to Cart"
-            android:textColor="@android:color/white" />
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1.4"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserra_regular"
+                    android:text="Total Price"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tvFinalPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserra_regular_bold"
+                    android:text="0.0"
+                    android:textColor="@color/black"
+                    android:textSize="24sp" />
+
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddtoCart"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="15dp"
+                android:layout_weight="0.6"
+                android:backgroundTint="#fb9843"
+                android:foreground="@drawable/ripple"
+                android:text="Add to Cart"
+                android:textColor="@android:color/black"
+                app:cornerRadius="10dp" />
+
+        </LinearLayout>
 
     </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/backArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/arrow_back"
+        android:scaleType="fitXY"
+        android:padding="8dp"
+        android:tint="@color/white"
+        android:background="@drawable/back_button_back" />
 
 </RelativeLayout>
