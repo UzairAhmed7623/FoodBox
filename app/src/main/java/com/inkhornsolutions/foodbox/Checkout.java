@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
@@ -30,6 +31,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -41,13 +43,19 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.inkhornsolutions.foodbox.UserUtils.UserUtils;
 import com.inkhornsolutions.foodbox.models.CartItemsModelClass;
 import com.sucho.placepicker.AddressData;
 import com.sucho.placepicker.Constants;
 import com.sucho.placepicker.MapType;
 import com.sucho.placepicker.PlacePicker;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -76,6 +84,7 @@ public class Checkout extends AppCompatActivity {
     private ArrayList<CartItemsModelClass> cartItemsList;
     private CartItemsModelClass cartItemsModelClass;
     public double allTotalPrice = 0.00;
+    private ConstraintLayout rootLayout;
 
     ActivityResultLauncher<Intent> launcher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -114,6 +123,7 @@ public class Checkout extends AppCompatActivity {
         tvTotalPrice = (TextView) findViewById(R.id.tvTotalPrice);
         rbDoorDelivery = (RadioButton) findViewById(R.id.rbDoorDelivery);
         btnCheckOut = (Button) findViewById(R.id.btnCheckOut);
+        rootLayout = (ConstraintLayout) findViewById(R.id.rootLayout);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -268,6 +278,19 @@ public class Checkout extends AppCompatActivity {
 
                                             Snackbar.make(findViewById(android.R.id.content), "Order Placed!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
 
+                                            firebaseFirestore.collection("Restaurants").document(restaurant).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                                                    if (task.isSuccessful()){
+                                                        DocumentSnapshot documentSnapshot = task.getResult();
+                                                        if (documentSnapshot.exists()){
+                                                            String id = documentSnapshot.getString("id");
+                                                            UserUtils.sendNewOrderNotificationToKitchen(rootLayout,Checkout.this, id);
+                                                        }
+                                                    }
+                                                }
+                                            });
+
                                             Handler handler = new Handler(Looper.myLooper());
                                             handler.postDelayed(new Runnable() {
                                                 @Override
@@ -276,7 +299,7 @@ public class Checkout extends AppCompatActivity {
                                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                     startActivity(intent);
                                                 }
-                                            }, 1000);
+                                            }, 3000);
                                         }
                                     });
                                 }

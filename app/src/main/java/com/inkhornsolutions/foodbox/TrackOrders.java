@@ -49,7 +49,7 @@ public class TrackOrders extends AppCompatActivity {
 
         Common.showNotification(this, new Random().nextInt(),
                 "Alert",
-                "Dear customer, your order has been accepted by the restaurant. Your order will be deliver to you within given time. Thanks ",
+                "Dear customer, your order has been accepted by the restaurant. Your order will be deliver to you within given time. Thanks.",
                 getIntent());
     }
 

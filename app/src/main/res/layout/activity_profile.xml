@@ -117,7 +117,9 @@
                 android:fontFamily="@font/uber_move_bold"
                 android:layout_marginBottom="10dp"/>
 
-            <RelativeLayout style="@style/profileDetailsLayout">
+            <RelativeLayout
+                android:id="@+id/layoutUserName"
+                style="@style/profileDetailsLayout">
                 <ImageView
                     android:id="@+id/nameImageView"
                     android:src="@drawable/account_circle"
@@ -142,7 +144,8 @@
 
             <View style="@style/proifleDetailsView" />
 
-            <RelativeLayout style="@style/profileDetailsLayout">
+            <RelativeLayout
+                style="@style/profileDetailsLayout">
                 <ImageView
                     android:id="@+id/mobileImageView"
                     android:src="@drawable/phone"
@@ -166,7 +169,9 @@
 
             <View style="@style/proifleDetailsView" />
 
-            <RelativeLayout style="@style/profileDetailsLayout">
+            <RelativeLayout
+                android:id="@+id/layoutUserEmail"
+                style="@style/profileDetailsLayout">
                 <ImageView
                     android:id="@+id/emailImageView"
                     android:src="@drawable/email"
@@ -190,7 +195,9 @@
 
             <View style="@style/proifleDetailsView" />
 
-            <RelativeLayout style="@style/profileDetailsLayout">
+            <RelativeLayout
+                android:id="@+id/layoutUserAddress"
+                style="@style/profileDetailsLayout">
                 <ImageView
                     android:id="@+id/addressImageView"
                     android:src="@drawable/location"
@@ -216,7 +223,9 @@
 
             <View style="@style/proifleDetailsView" />
 
-            <RelativeLayout style="@style/profileDetailsLayout">
+            <RelativeLayout
+                android:id="@+id/layoutUserDOB"
+                style="@style/profileDetailsLayout">
                 <ImageView
                     android:id="@+id/dobImageView"
                     android:src="@drawable/dob"

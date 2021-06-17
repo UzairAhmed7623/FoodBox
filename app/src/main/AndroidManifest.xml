@@ -45,6 +45,14 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <service
+            android:name=".Service.MyFirebaseService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".Cart"
             android:parentActivityName=".RestaurantItems"
@@ -62,7 +70,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".RestaurantItems"
-            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
@@ -71,6 +78,7 @@
             android:name=".Profile"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

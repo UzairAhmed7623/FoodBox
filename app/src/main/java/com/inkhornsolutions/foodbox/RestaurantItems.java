@@ -90,7 +90,8 @@ public class RestaurantItems extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.arrow_back);
+//        getSupportActionBar().setHomeAsUpIndicator(R.drawable.arrow_back);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -116,12 +117,49 @@ public class RestaurantItems extends AppCompatActivity {
         menuView.addItem("Main Course", R.drawable.main_course);
         menuView.addItem("Drinks", R.drawable.soft_drink);
         menuView.addItem("Frozen", R.drawable.frozen);
-        menuView.addItem("Sides", R.drawable.salad);
-        menuView.addItem("Desserts", R.drawable.desserts);
+        menuView.addItem("Sides", R.drawable.sides);
+//        menuView.addItem("Desserts", R.drawable.desserts);
+
 
         menuView.setOnHSMenuClickListener(new HorizontalScrollMenuView.OnHSMenuClickListener() {
             @Override
             public void onHSMClick(com.darwindeveloper.horizontalscrollmenulibrary.extras.MenuItem menuItem, int position) {
+                if (position == 0){
+                    menuView.editItem(position,"All",R.drawable.all_color, false,0);
+                    menuView.editItem(1,"Main Course",R.drawable.main_course, false,0);
+                    menuView.editItem(2,"Drinks",R.drawable.soft_drink, false,0);
+                    menuView.editItem(3,"Frozen",R.drawable.frozen, false,0);
+                    menuView.editItem(4,"Sides",R.drawable.sides, false,0);
+                }
+                else if (position == 1){
+                    menuView.editItem(position,"Main Course",R.drawable.main_course_color, false,0);
+                    menuView.editItem(0,"All",R.drawable.all, false,0);
+                    menuView.editItem(2,"Drinks",R.drawable.soft_drink, false,0);
+                    menuView.editItem(3,"Frozen",R.drawable.frozen, false,0);
+                    menuView.editItem(4,"Sides",R.drawable.sides, false,0);
+                }
+                else if (position == 2){
+                    menuView.editItem(position,"Drinks",R.drawable.soft_drink_color, false,0);
+                    menuView.editItem(0,"All",R.drawable.all, false,0);
+                    menuView.editItem(1,"Main Course",R.drawable.main_course, false,0);
+                    menuView.editItem(3,"Frozen",R.drawable.frozen, false,0);
+                    menuView.editItem(4,"Sides",R.drawable.sides, false,0);
+                }
+                else if (position == 3){
+                    menuView.editItem(position,"Frozen",R.drawable.frozen_color, false,0);
+                    menuView.editItem(0,"All",R.drawable.all, false,0);
+                    menuView.editItem(1,"Main Course",R.drawable.main_course, false,0);
+                    menuView.editItem(2,"Drinks",R.drawable.soft_drink, false,0);
+                    menuView.editItem(4,"Sides",R.drawable.sides, false,0);
+                }
+                else if (position == 4){
+                    menuView.editItem(position,"Sides",R.drawable.sides_color, false,0);
+                    menuView.editItem(0,"All",R.drawable.all, false,0);
+                    menuView.editItem(1,"Main Course",R.drawable.main_course, false,0);
+                    menuView.editItem(2,"Drinks",R.drawable.soft_drink, false,0);
+                    menuView.editItem(3,"Frozen",R.drawable.frozen, false,0);
+                }
+
                 if (position != 0){
                     firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
                             .whereEqualTo("category", menuItem.getText())
@@ -294,6 +332,17 @@ public class RestaurantItems extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            onBackPressed();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

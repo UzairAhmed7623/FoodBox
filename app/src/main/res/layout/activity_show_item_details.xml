@@ -21,8 +21,8 @@
             android:scaleType="fitXY"
             android:src="@drawable/food_placeholder"
             android:transitionName="itemImage"
-            app:riv_corner_radius_bottom_left="30dp"
-            app:riv_corner_radius_bottom_right="30dp" />
+            app:riv_corner_radius_bottom_left="40dp"
+            app:riv_corner_radius_bottom_right="40dp" />
 
     </RelativeLayout>
 
@@ -32,7 +32,6 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/layout"
         android:layout_gravity="bottom"
-        android:background="@drawable/restaurats_items_back"
         android:backgroundTint="@color/white">
 
         <LinearLayout
@@ -280,6 +279,7 @@
                 android:foreground="@drawable/ripple"
                 android:text="Add to Cart"
                 android:textColor="@android:color/black"
+                android:textSize="16sp"
                 app:cornerRadius="10dp" />
 
         </LinearLayout>

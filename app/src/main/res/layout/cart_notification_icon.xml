@@ -7,8 +7,10 @@
 
     <ImageView
         android:id="@+id/cartIcon2"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_marginTop="10dp"
+        android:foreground="?attr/selectableItemBackground"
         android:src="@drawable/cart" />
 
     <com.nex3z.notificationbadge.NotificationBadge

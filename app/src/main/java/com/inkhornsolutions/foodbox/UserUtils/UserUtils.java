@@ -44,7 +44,7 @@ public class UserUtils {
 		}
     }
 
-	public static void sendAcceptRequestToRider(View view, Context context, String key, String tripNumberId) {
+	public static void sendNewOrderNotificationToKitchen(View view, Context context, String key) {
 		CompositeDisposable compositeDisposable = new CompositeDisposable();
 		IFCMService ifcmService = RetrofitFCMClient.getInstance().create(IFCMService.class);
 
@@ -57,11 +57,8 @@ public class UserUtils {
 					Token tokenModel = snapshot.getValue(Token.class);
 
 					Map<String, String> notificationdata = new HashMap<>();
-					notificationdata.put("title", "Accept");
-					notificationdata.put("body", "This message represent action driver accept");
-					notificationdata.put("DriverKey", FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-					notificationdata.put("TripKey", tripNumberId);
+					notificationdata.put("title", "NewOrder");
+					notificationdata.put("body", "Congrats! You have new order. Tap to see order details.");
 
 					FCMSendData fcmSendData = new FCMSendData(tokenModel.getToken(), notificationdata);
 					compositeDisposable.add(ifcmService.sendNotification(fcmSendData)
@@ -70,7 +67,10 @@ public class UserUtils {
 							.subscribe(fcmResponse -> {
 								if (fcmResponse.getSuccess() == 0){
 									compositeDisposable.clear();
-									Snackbar.make(view, "Accept Failed", Snackbar.LENGTH_LONG).show();
+									Snackbar.make(view, "Order message send failed!", Snackbar.LENGTH_LONG).show();
+								}
+								else {
+									Snackbar.make(view, "Order placed!", Snackbar.LENGTH_LONG).show();
 								}
 
 							}, throwable -> {
@@ -91,5 +91,6 @@ public class UserUtils {
 			}
 		});
 	}
+
 
 }

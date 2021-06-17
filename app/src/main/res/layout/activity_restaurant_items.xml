@@ -5,45 +5,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/newColor"
+    android:background="@drawable/background"
     android:fitsSystemWindows="true"
     tools:context=".RestaurantItems">
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="23dp"
-        android:background="@color/places_text_black_alpha_26"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:background="@color/newColor"
+        android:layout_height="wrap_content"
+        android:background="@color/myColor"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:subtitle="food for you"
-        app:subtitleTextAppearance="@style/TextAppearance.AppCompat.Title"
-        app:subtitleTextColor="@color/black"
-        app:title="Delicious"
-        app:titleMargin="20dp"
-        app:titleMarginTop="0dp"
-        app:titleTextColor="@color/black" />
+        app:title="Delicious food for you"
+        app:titleMargin="10dp"
+        app:titleTextColor="@color/white" />
 
     <com.darwindeveloper.horizontalscrollmenulibrary.custom_views.HorizontalScrollMenuView
         android:id="@+id/rvTags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:icon_height="24dp"
-        app:icon_width="24dp"
-        app:item_backgroundColor="@color/newColor"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        app:icon_height="54dp"
+        app:icon_width="54dp"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
@@ -72,7 +61,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvItems"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:background="@drawable/background"/>
 
         </LinearLayout>
 

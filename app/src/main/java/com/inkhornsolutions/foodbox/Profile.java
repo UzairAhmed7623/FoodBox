@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,6 +77,7 @@ public class Profile extends AppCompatActivity {
     private CoordinatorLayout rootLayout;
     private DatePickerDialog datePickerDialog;
     private ProgressDialog progressDialog;
+    private RelativeLayout layoutUserName,layoutUserEmail,layoutUserAddress,layoutUserDOB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +101,10 @@ public class Profile extends AppCompatActivity {
         ivProfile = (CircleImageView) findViewById(R.id.ivProfile);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
+        layoutUserName = (RelativeLayout) findViewById(R.id.layoutUserName);
+        layoutUserEmail = (RelativeLayout) findViewById(R.id.layoutUserEmail);
+        layoutUserAddress = (RelativeLayout) findViewById(R.id.layoutUserAddress);
+        layoutUserDOB = (RelativeLayout) findViewById(R.id.layoutUserDOB);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
@@ -171,7 +177,7 @@ public class Profile extends AppCompatActivity {
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
 
-        tvName.setOnClickListener(new View.OnClickListener() {
+        layoutUserName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -234,7 +240,7 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-        tvEmail.setOnClickListener(new View.OnClickListener() {
+        layoutUserEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -333,7 +339,7 @@ public class Profile extends AppCompatActivity {
 //            }
 //        });
 
-        tvAddress.setOnClickListener(new View.OnClickListener() {
+        layoutUserAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -344,7 +350,7 @@ public class Profile extends AppCompatActivity {
         }
     });
 
-        tvDateOfBirth.setOnClickListener(new View.OnClickListener() {
+        layoutUserDOB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

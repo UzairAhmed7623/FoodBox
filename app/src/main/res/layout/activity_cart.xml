@@ -7,28 +7,18 @@
     android:background="@color/newColorSecond"
     tools:context=".Cart">
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="23dp"
-        android:background="@color/places_text_black_alpha_26"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title=" "
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:title=" " />
 
     <RelativeLayout
         android:id="@id/layout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
@@ -201,10 +191,38 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tvPromoCodeLable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvDeliveryPKR"
+                    android:padding="5dp"
+                    android:text="Promo Code"
+                    android:fontFamily="@font/sf_pro_rounded_regular"
+                    android:textFontWeight="600"
+                    android:letterSpacing="0.10"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/grey_60"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvPromoCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvDeliveryPKR"
+                    android:layout_alignParentEnd="true"
+                    android:padding="5dp"
+                    android:text="Enter promo code"
+                    android:fontFamily="@font/sf_pro_rounded_regular"
+                    android:textFontWeight="400"
+                    android:letterSpacing="0.05"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/myColor" />
+
+                <TextView
                     android:id="@+id/tvGrandTotalLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/tvDeliveryFeeLabel"
+                    android:layout_below="@+id/tvPromoCode"
                     android:padding="5dp"
                     android:text="Grand Total"
                     android:fontFamily="@font/sf_pro_rounded_regular"
@@ -218,7 +236,7 @@
                     android:id="@+id/tvGrandTotal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/tvDeliveryFee"
+                    android:layout_below="@+id/tvPromoCode"
                     android:layout_alignParentEnd="true"
                     android:padding="5dp"
                     android:text="0.0"
