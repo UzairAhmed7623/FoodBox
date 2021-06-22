@@ -14,15 +14,13 @@
         android:layout_gravity="bottom"
         android:gravity="bottom">
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <ImageView
             android:id="@+id/civItemImage"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:scaleType="fitXY"
             android:src="@drawable/food_placeholder"
-            android:transitionName="itemImage"
-            app:riv_corner_radius_bottom_left="40dp"
-            app:riv_corner_radius_bottom_right="40dp" />
+            android:background="@drawable/restaurats_items_back" />
 
     </RelativeLayout>
 
@@ -243,7 +241,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
-                android:layout_weight="1.4"
+                android:layout_weight="1.3"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:padding="5dp">
@@ -252,6 +250,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserra_regular"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
                     android:text="Total Price"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
@@ -260,6 +260,8 @@
                     android:id="@+id/tvFinalPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
                     android:fontFamily="@font/montserra_regular_bold"
                     android:text="0.0"
                     android:textColor="@color/black"
@@ -274,7 +276,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="15dp"
-                android:layout_weight="0.6"
+                android:layout_weight="0.7"
                 android:backgroundTint="#fb9843"
                 android:foreground="@drawable/ripple"
                 android:text="Add to Cart"

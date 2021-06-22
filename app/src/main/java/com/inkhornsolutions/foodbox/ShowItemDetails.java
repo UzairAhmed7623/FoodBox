@@ -49,7 +49,7 @@ public class ShowItemDetails extends AppCompatActivity {
     private MaterialButton btnIncrement, btnDecrement;
     private int count = 1;
     private ImageButton backArrow;
-    private RoundedImageView civItemImage;
+    private ImageView civItemImage;
     private TextView tvItem, tvPrice, tvDescription, tvQuantity, tvDisplay, tvFinalPrice;
     private MaterialButton btnAddtoCart;
     private String resName, itemName, itemImage, itemPrice, userName;
@@ -65,7 +65,7 @@ public class ShowItemDetails extends AppCompatActivity {
         setContentView(R.layout.activity_show_item_details);
 
         backArrow = (ImageButton) findViewById(R.id.backArrow);
-        civItemImage = (RoundedImageView) findViewById(R.id.civItemImage);
+        civItemImage = (ImageView) findViewById(R.id.civItemImage);
         tvItem = (TextView) findViewById(R.id.tvItem);
         tvPrice = (TextView) findViewById(R.id.tvPrice);
         tvQuantity = (TextView) findViewById(R.id.tvQuantity);

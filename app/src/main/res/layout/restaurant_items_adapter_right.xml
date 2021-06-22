@@ -8,7 +8,7 @@
     android:layout_marginTop="80dp"
     android:foreground="@drawable/ripple"
     android:orientation="vertical"
-    android:background="@drawable/background_recyclerview"
+    android:background="@android:color/transparent"
     app:layout_constraintWidth_percent="0.5">
 
     <LinearLayout
@@ -85,7 +85,6 @@
                 android:background="#00000000"
                 android:elevation="10dp"
                 android:src="@drawable/food_placeholder"
-                android:transitionName="itemImage"
                 app:civ_border_color="@android:color/transparent"
                 app:civ_border_width="2dp"
                 app:civ_circle_background_color="#00000000" />

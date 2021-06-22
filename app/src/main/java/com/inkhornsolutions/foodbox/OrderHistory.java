@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
@@ -52,6 +53,8 @@ public class OrderHistory extends AppCompatActivity {
         setSupportActionBar(toolbarHistory);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         mPullToRefreshView = (PullToRefreshView) findViewById(R.id.pull_to_refresh);
 
         rvHistory = (RecyclerView) findViewById(R.id.rvHistory);
@@ -82,7 +85,7 @@ public class OrderHistory extends AppCompatActivity {
 
     private void loadData(){
         firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
-                .collection("Cart").whereEqualTo("status", "Completed")
+                .collection("Cart").whereEqualTo("status", "Dispatched")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -92,7 +95,7 @@ public class OrderHistory extends AppCompatActivity {
 
                         String resId = documentSnapshot.getId();
                         String time = documentSnapshot.getString("Time");
-                        String resName = documentSnapshot.getString("restaurant name");
+                        String resName = documentSnapshot.getString("restaurantName");
                         String status = documentSnapshot.getString("status");
                         String total = documentSnapshot.getString("total");
 

@@ -82,11 +82,8 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                 Intent intent = new Intent(context, ShowItemDetails.class);
                 intent.putExtra("resName",resName);
                 intent.putExtra("itemName",itemsModelClass.getItemName());
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity)context,
-                        (View)((RestaurantItems) context).findViewById(R.id.ivItem), "itemImage");
-                context.startActivity(intent, options.toBundle());
+                context.startActivity(intent);
+                ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
 //                showQuantityDialog(modelClass);
             }

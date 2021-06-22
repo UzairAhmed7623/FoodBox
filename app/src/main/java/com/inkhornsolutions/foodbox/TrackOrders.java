@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -49,7 +50,7 @@ public class TrackOrders extends AppCompatActivity {
 
         Common.showNotification(this, new Random().nextInt(),
                 "Alert",
-                "Dear customer, your order has been accepted by the restaurant. Your order will be deliver to you within given time. Thanks.",
+                "Dear customer, time is over now. Please hurryUp",
                 getIntent());
     }
 
@@ -66,6 +67,8 @@ public class TrackOrders extends AppCompatActivity {
 
         setSupportActionBar(toolbarTrack);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         rvTrack = (RecyclerView) findViewById(R.id.rvTrack);
         rvTrack.setLayoutManager(new LinearLayoutManager(this));
@@ -108,7 +111,7 @@ public class TrackOrders extends AppCompatActivity {
 
                                 String resId = documentSnapshot.getId();
                                 String time = documentSnapshot.getString("Time");
-                                String resName = documentSnapshot.getString("restaurant name");
+                                String resName = documentSnapshot.getString("restaurantName");
                                 String status = documentSnapshot.getString("status");
                                 String total = documentSnapshot.getString("total");
 

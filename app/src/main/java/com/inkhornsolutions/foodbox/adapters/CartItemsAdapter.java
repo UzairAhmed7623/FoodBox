@@ -110,9 +110,9 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
 
                                 allTotalPrice = allTotalPrice + Price;
 
-                                ((Cart)context).tvSubTotal.setText("PKR " + String.format("%.2f", allTotalPrice));
-                                String dFee = ((Cart)context).tvDeliveryFee.getText().toString().trim().replace("PKR ", "");
-                                ((Cart)context).tvGrandTotal.setText("PKR " + (allTotalPrice + Double.parseDouble(dFee.replace("PKR ", ""))));
+                                ((Cart)context).tvSubTotal.setText("PKR" + String.format("%.2f", allTotalPrice));
+                                String dFee = ((Cart)context).tvDeliveryFee.getText().toString().trim().replace("PKR", "");
+                                ((Cart)context).tvGrandTotal.setText("PKR" + (allTotalPrice + Double.parseDouble(dFee.replace("PKR", ""))));
                             }
                             else {
                                 Toast.makeText(context, "error", Toast.LENGTH_SHORT).show();
@@ -184,9 +184,9 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
 
                                     allTotalPrice = allTotalPrice - Price;
 
-                                    ((Cart)context).tvSubTotal.setText("PKR " + String.format("%.2f", allTotalPrice));
-                                    String dFee = ((Cart)context).tvDeliveryFee.getText().toString().trim().replace("PKR ", "");
-                                    ((Cart)context).tvGrandTotal.setText("PKR " + (allTotalPrice + Double.parseDouble(dFee.replace("PKR ", ""))));
+                                    ((Cart)context).tvSubTotal.setText("PKR" + String.format("%.2f", allTotalPrice));
+                                    String dFee = ((Cart)context).tvDeliveryFee.getText().toString().trim().replace("PKR", "");
+                                    ((Cart)context).tvGrandTotal.setText("PKR" + (allTotalPrice + Double.parseDouble(dFee.replace("PKR", ""))));
                                 }
                                 else {
                                     Toast.makeText(context, "error", Toast.LENGTH_SHORT).show();
@@ -207,7 +207,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                 else {
 
                     if (allTotalPrice == 0.00){
-                        allTotalPrice = Double.parseDouble(((Cart)context).tvSubTotal.getText().toString().trim().replace("PKR ",""));
+                        allTotalPrice = Double.parseDouble(((Cart)context).tvSubTotal.getText().toString().trim().replace("PKR",""));
                     }
 
                     EasyDB easyDB = EasyDB.init(context, "ItemsDatabase")
@@ -246,8 +246,8 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                                     allTotalPrice = allTotalPrice - Price;
 
                                     ((Cart)context).tvSubTotal.setText("PKR " + String.format("%.2f", allTotalPrice));
-                                    String dFee = ((Cart)context).tvDeliveryFee.getText().toString().trim().replace("PKR ", "");
-                                    ((Cart)context).tvGrandTotal.setText("PKR " + (allTotalPrice + Double.parseDouble(dFee.replace("PKR ", ""))));
+                                    String dFee = ((Cart)context).tvDeliveryFee.getText().toString().trim().replace("PKR", "");
+                                    ((Cart)context).tvGrandTotal.setText("PKR " + (allTotalPrice + Double.parseDouble(dFee.replace("PKR", ""))));
                                 }
                                 else {
                                     Toast.makeText(context, "error", Toast.LENGTH_SHORT).show();

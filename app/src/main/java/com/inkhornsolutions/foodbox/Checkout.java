@@ -48,6 +48,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.inkhornsolutions.foodbox.UserUtils.UserUtils;
 import com.inkhornsolutions.foodbox.models.CartItemsModelClass;
 import com.sucho.placepicker.AddressData;
@@ -151,6 +152,20 @@ public class Checkout extends AppCompatActivity {
         tvTotalPrice.setText(total);
 
         getCurrentLocation();
+
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<String> task) {
+                if (!task.isSuccessful()) {
+                    Toast.makeText(Checkout.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                // Get new FCM registration token
+                String token = task.getResult();
+
+                UserUtils.updateToken(Checkout.this, token);
+            }
+        });
 
         tvChangeAddress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -271,7 +286,6 @@ public class Checkout extends AppCompatActivity {
                                                     }
                                                 });
                                             }
-                                            progressDialog.dismiss();
                                             easyDB.deleteAllDataFromTable();
 //                                          updateCartCount();
 //                                          allTotalPrice = 0.00;
@@ -284,12 +298,15 @@ public class Checkout extends AppCompatActivity {
                                                     if (task.isSuccessful()){
                                                         DocumentSnapshot documentSnapshot = task.getResult();
                                                         if (documentSnapshot.exists()){
-                                                            String id = documentSnapshot.getString("id");
-                                                            UserUtils.sendNewOrderNotificationToKitchen(rootLayout,Checkout.this, id);
+                                                            String Id = documentSnapshot.getString("id");
+                                                            Log.d("message3", Id);
+                                                            UserUtils.sendNewOrderNotificationToKitchen(rootLayout,Checkout.this, Id);
                                                         }
                                                     }
                                                 }
                                             });
+
+                                            progressDialog.dismiss();
 
                                             Handler handler = new Handler(Looper.myLooper());
                                             handler.postDelayed(new Runnable() {
@@ -299,7 +316,7 @@ public class Checkout extends AppCompatActivity {
                                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                     startActivity(intent);
                                                 }
-                                            }, 3000);
+                                            }, 2000);
                                         }
                                     });
                                 }

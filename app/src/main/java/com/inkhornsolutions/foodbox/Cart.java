@@ -162,8 +162,8 @@ public class Cart extends AppCompatActivity {
         updateNumberofItems();
 
         tvDeliveryFee.setText(delivery);
-        tvSubTotal.setText("PKR " + String.format("%.2f", allTotalPrice));
-        tvGrandTotal.setText("PKR " + (allTotalPrice + Double.parseDouble(delivery.replace("PKR ", ""))));
+        tvSubTotal.setText("PKR" + String.format("%.2f", allTotalPrice));
+        tvGrandTotal.setText("PKR" + (allTotalPrice + Double.parseDouble(delivery.replace("PKR", ""))));
 
         btnCheckOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,7 +172,7 @@ public class Cart extends AppCompatActivity {
                 Intent intent = new Intent(Cart.this, Checkout.class);
                 intent.putExtra("first_name", first_name);
                 intent.putExtra("last_name", last_name);
-                intent.putExtra("total", tvGrandTotal.getText().toString().replace("PKR",""));
+                intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR",""));
                 intent.putExtra("restaurant", restaurant);
                 startActivity(intent);
 

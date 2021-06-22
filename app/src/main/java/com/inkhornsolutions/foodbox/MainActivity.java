@@ -39,15 +39,19 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.infideap.drawerbehavior.AdvanceDrawerLayout;
+import com.inkhornsolutions.foodbox.Common.Common;
 import com.inkhornsolutions.foodbox.adapters.MainActivityAdapter;
 import com.inkhornsolutions.foodbox.models.RestaurantModelClass;
 import com.yalantis.pulltomakesoup.PullToRefreshView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import p32929.androideasysql_library.Column;

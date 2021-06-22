@@ -129,15 +129,22 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                         });
                     }
                 });
-            } else {
+            }
+            else {
                 holder.layout.setEnabled(false);
                 ColorMatrix matrix = new ColorMatrix();
                 matrix.setSaturation(0);
                 holder.ivRestaurant.setColorFilter(new ColorMatrixColorFilter(matrix));
+//                Toast.makeText(context, "Restaurant is offline for now, Please try later.", Toast.LENGTH_LONG).show();
             }
         }
         else {
             Log.d("approval", "restaurant not approved yet");
+            holder.layout.setEnabled(false);
+            ColorMatrix matrix = new ColorMatrix();
+            matrix.setSaturation(0);
+            holder.ivRestaurant.setColorFilter(new ColorMatrixColorFilter(matrix));
+//            Toast.makeText(context, "Restaurant not approved yet", Toast.LENGTH_LONG).show();
         }
 
         String resName = restaurantModelClass.getResName().trim();

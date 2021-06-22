@@ -32,7 +32,6 @@
         android:layout_marginBottom="30dp"
         app:icon_height="54dp"
         app:icon_width="54dp"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
@@ -42,7 +41,6 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         android:weightSum="2"
-        android:background="@drawable/restaurats_items_back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rvTags">
 
@@ -53,16 +51,16 @@
             android:layout_weight="1"
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal"
+            android:background="@android:color/transparent"
             app:layout_constraintBottom_toTopOf="@+id/bottemSheet"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rvTags">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvItems"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/background"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvItems"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
         </LinearLayout>
 
@@ -72,7 +70,7 @@
             android:layout_weight="1"
             android:layout_height="60dp"
             android:layout_gravity="bottom"
-            android:background="@color/newColor"
+            android:background="@color/myColor"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -89,9 +87,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:fontFamily="@font/sf_pro_rounded_regular"
+                    android:fontFamily="@font/montserra_regular_bold"
                     android:text="Minimum order amount is "
-                    android:textColor="@color/myColorSecond"
+                    android:textColor="@color/black"
                     android:includeFontPadding="false"
                     android:letterSpacing="0.05"
                     android:textSize="16dp"
@@ -101,9 +99,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:fontFamily="@font/sf_pro_rounded_regular"
+                    android:fontFamily="@font/montserra_regular_bold"
                     android:text="PKR50."
-                    android:textColor="@color/myColorSecond"
+                    android:textColor="@color/black"
                     android:includeFontPadding="false"
                     android:letterSpacing="0.05"
                     android:textSize="16dp"
