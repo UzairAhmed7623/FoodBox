@@ -80,7 +80,7 @@ public class Checkout extends AppCompatActivity {
     private TextView tvChangeAddress, tvUserName, tvAddress, tvPhone, tvTotalPrice;
     private RadioButton rbDoorDelivery;
     private Button btnCheckOut;
-    private String phone, userName, total, add, restaurant;
+    private String phone, userName, total, add, restaurant, deliveryFee, subTotal;
     private LatLng latLng;
     private ArrayList<CartItemsModelClass> cartItemsList;
     private CartItemsModelClass cartItemsModelClass;
@@ -144,6 +144,8 @@ public class Checkout extends AppCompatActivity {
         userName = getIntent().getStringExtra("first_name") + " " + getIntent().getStringExtra("last_name");;
         total = getIntent().getStringExtra("total");
         restaurant = getIntent().getStringExtra("restaurant");
+        deliveryFee = getIntent().getStringExtra("deliveryFee");
+        subTotal = getIntent().getStringExtra("subTotal");
 
         cartItemsList = new ArrayList<>();
 
@@ -255,12 +257,14 @@ public class Checkout extends AppCompatActivity {
 
                                     HashMap<String, Object> order1 = new HashMap<>();
                                     order1.put("restaurantName", restaurant);
-                                    order1.put("total", total);
                                     order1.put("Time", getDateTime());
                                     order1.put("status", "Pending");
                                     order1.put("ID", shortUUID());
                                     order1.put("address", address);
                                     order1.put("latlng", latLng);
+                                    order1.put("deliveryFee", deliveryFee);
+                                    order1.put("subTotal", subTotal);
+                                    order1.put("total", total);
 
                                     firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
                                             .collection("Cart").document(restaurant+" "+getDateTime())

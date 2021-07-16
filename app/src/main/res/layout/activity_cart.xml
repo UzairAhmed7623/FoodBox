@@ -160,22 +160,6 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tvDeliveryPKR"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tvSubTotal"
-                    android:layout_toStartOf="@+id/tvDeliveryFee"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="PKR"
-                    android:fontFamily="@font/sf_pro_rounded_regular"
-                    android:textFontWeight="600"
-                    android:letterSpacing="0.10"
-                    android:includeFontPadding="false"
-                    android:textColor="@color/grey_60"
-                    android:textStyle="bold" />
-
-                <TextView
                     android:id="@+id/tvDeliveryFee"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -194,7 +178,7 @@
                     android:id="@+id/tvPromoCodeLable"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/tvDeliveryPKR"
+                    android:layout_below="@+id/tvDeliveryFeeLabel"
                     android:padding="5dp"
                     android:text="Promo Code"
                     android:fontFamily="@font/sf_pro_rounded_regular"
@@ -208,7 +192,7 @@
                     android:id="@+id/tvPromoCode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/tvDeliveryPKR"
+                    android:layout_below="@+id/tvDeliveryFee"
                     android:layout_alignParentEnd="true"
                     android:padding="5dp"
                     android:text="Enter promo code"

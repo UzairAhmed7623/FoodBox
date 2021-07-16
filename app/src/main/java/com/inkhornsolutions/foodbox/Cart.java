@@ -1,15 +1,19 @@
 package com.inkhornsolutions.foodbox;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,9 +27,18 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.akexorcist.googledirection.DirectionCallback;
+import com.akexorcist.googledirection.GoogleDirection;
+import com.akexorcist.googledirection.model.Direction;
+import com.akexorcist.googledirection.model.Info;
+import com.akexorcist.googledirection.model.Leg;
+import com.akexorcist.googledirection.model.Route;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.inkhornsolutions.foodbox.adapters.CartItemsAdapter;
 import com.inkhornsolutions.foodbox.models.CartItemsModelClass;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -55,6 +68,7 @@ import p32929.androideasysql_library.EasyDB;
 public class Cart extends AppCompatActivity {
 
     private static int AUTOCOMPLETE_REQUEST_CODE = 1;
+    private static final String DIRECTION_API_KEY = "AIzaSyDl7YXtTZQNBkthV3PjFS0fQOKvL8SIR7k";
 
     private RecyclerView rvCartItems;
     private Button btnCheckOut;
@@ -72,7 +86,8 @@ public class Cart extends AppCompatActivity {
     private ImageView backArrow;
     private Toolbar toolbar;
     static Cart instance;
-    String first_name, last_name;
+    private String first_name, last_name;
+    private double totalDeliveryFee;
 
     public static Cart getInstance() {
         return instance;
@@ -131,7 +146,7 @@ public class Cart extends AppCompatActivity {
                 .doneTableColumn();
 
         Cursor res = easyDB.getAllData();
-        while (res.moveToNext()){
+        while (res.moveToNext()) {
             String id = res.getString(1);
             String pId = res.getString(2);
             String title = res.getString(3);
@@ -143,13 +158,13 @@ public class Cart extends AppCompatActivity {
             allTotalPrice = allTotalPrice + Double.parseDouble(final_price);
 
             cartItemsModelClass = new CartItemsModelClass(
-                    ""+id,
-                    ""+pId,
-                    ""+title,
-                    ""+final_price,
-                    ""+price,
-                    ""+items_count,
-                    ""+imageUri
+                    "" + id,
+                    "" + pId,
+                    "" + title,
+                    "" + final_price,
+                    "" + price,
+                    "" + items_count,
+                    "" + imageUri
             );
 
             cartItemsList.add(cartItemsModelClass);
@@ -161,23 +176,79 @@ public class Cart extends AppCompatActivity {
 
         updateNumberofItems();
 
-        tvDeliveryFee.setText(delivery);
         tvSubTotal.setText("PKR" + String.format("%.2f", allTotalPrice));
-        tvGrandTotal.setText("PKR" + (allTotalPrice + Double.parseDouble(delivery.replace("PKR", ""))));
 
-        btnCheckOut.setOnClickListener(new View.OnClickListener() {
+        deliveryFee();
+
+    }
+
+    private void deliveryFee() {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
-            public void onClick(View v) {
+            public void onSuccess(Location location) {
+                LatLng origin = new LatLng(location.getLatitude(), location.getLongitude());
 
-                Intent intent = new Intent(Cart.this, Checkout.class);
-                intent.putExtra("first_name", first_name);
-                intent.putExtra("last_name", last_name);
-                intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR",""));
-                intent.putExtra("restaurant", restaurant);
-                startActivity(intent);
+                firebaseFirestore.collection("Restaurants").document(restaurant)
+                        .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            double latitude = documentSnapshot.getDouble("location.latitude");
+                            double longitude = documentSnapshot.getDouble("location.longitude");
 
-                }
-            });
+                            LatLng destination = new LatLng(latitude, longitude);
+
+                            GoogleDirection.withServerKey(DIRECTION_API_KEY)
+                                    .from(origin)
+                                    .to(destination)
+                                    .execute(new DirectionCallback() {
+                                        @Override
+                                        public void onDirectionSuccess(@Nullable Direction direction) {
+                                            Route route = direction.getRouteList().get(0);
+                                            Leg leg = route.getLegList().get(0);
+                                            Info distanceInfo = leg.getDistance();
+                                            String distance = distanceInfo.getText().replace("km","").replace("m","");
+
+                                            totalDeliveryFee = (Double.parseDouble(distance)*6) + Double.parseDouble(delivery);
+
+                                            tvDeliveryFee.setText("PKR "+totalDeliveryFee);
+
+                                            tvGrandTotal.setText("PKR" + (allTotalPrice + totalDeliveryFee));
+
+                                            btnCheckOut.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+
+                                                    Intent intent = new Intent(Cart.this, Checkout.class);
+                                                    intent.putExtra("first_name", first_name);
+                                                    intent.putExtra("last_name", last_name);
+                                                    intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
+                                                    intent.putExtra("deliveryFee", String.valueOf(totalDeliveryFee));
+                                                    intent.putExtra("restaurant", restaurant);
+                                                    intent.putExtra("subTotal", tvSubTotal.getText().toString().replace("PKR", ""));
+
+                                                    startActivity(intent);
+
+                                                }
+                                            });
+                                        }
+
+                                        @Override
+                                        public void onDirectionFailure(@NonNull Throwable t) {
+                                            Log.d("address: ", "Chala2");
+
+                                            Snackbar.make(findViewById(android.R.id.content), t.getMessage(), Snackbar.LENGTH_LONG).show();
+                                        }
+                                    });
+                        }
+                    }
+                });
+            }
+        });
     }
 
     public void updateNumberofItems() {
