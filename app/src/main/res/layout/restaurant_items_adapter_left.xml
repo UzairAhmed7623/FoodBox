@@ -23,7 +23,7 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="190dp"
-                android:layout_height="260dp"
+                android:layout_height="280dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="40dp"
                 android:background="#00000000"
@@ -36,7 +36,7 @@
                     android:layout_width="120dp"
                     android:layout_height="55dp"
                     android:layout_gravity="center_vertical|center_horizontal"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="35dp"
                     android:ellipsize="end"
                     android:fontFamily="@font/sf_pro_rounded_regular"
                     android:gravity="center_horizontal"
@@ -48,20 +48,61 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tvItemPrice"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|center_horizontal"
                     android:layout_marginTop="80dp"
-                    android:fontFamily="@font/sf_pro_rounded_regular"
-                    android:includeFontPadding="false"
-                    android:text="PKR0.00"
-                    android:textAlignment="center"
-                    android:textColor="@color/myColor"
-                    android:textFontWeight="600"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvItemPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:fontFamily="@font/sf_pro_rounded_regular"
+                        android:includeFontPadding="false"
+                        android:text="PKR0.00"
+                        android:textAlignment="center"
+                        android:textColor="@color/myColor"
+                        android:textFontWeight="600"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <RelativeLayout
+                        android:id="@+id/discountLayout"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone">
+
+                        <com.libRG.CustomTextView
+                            android:id="@+id/tvItemCuttingPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="15dp"
+                            android:fontFamily="@font/sf_pro_rounded_regular"
+                            android:text="PKR0.00"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:lib_setStrikeText="true"/>
+
+                        <com.libRG.CustomTextView
+                            android:id="@+id/tvItemDiscount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="15dp"
+                            android:fontFamily="@font/sf_pro_rounded_regular"
+                            android:text="-20%"
+                            android:textAlignment="center"
+                            android:textColor="@color/red"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
 
             </androidx.cardview.widget.CardView>
 
@@ -71,7 +112,7 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="-275dp"
+            android:layout_marginTop="-295dp"
             android:background="@color/white"
             app:cardCornerRadius="75dp"
             app:cardElevation="15dp">

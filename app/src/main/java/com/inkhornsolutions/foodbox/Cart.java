@@ -76,14 +76,13 @@ public class Cart extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private String delivery = "45";
-    private String restaurant, itemImage;
+    private String restaurant;
 
     private ArrayList<CartItemsModelClass> cartItemsList;
     private CartItemsAdapter cartItemsAdapter;
     private CartItemsModelClass cartItemsModelClass;
 
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private ImageView backArrow;
     private Toolbar toolbar;
     static Cart instance;
     private String first_name, last_name;

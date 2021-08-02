@@ -120,7 +120,6 @@ public class RestaurantItems extends AppCompatActivity {
         menuView.addItem("Sides", R.drawable.sides);
 //        menuView.addItem("Desserts", R.drawable.desserts);
 
-
         menuView.setOnHSMenuClickListener(new HorizontalScrollMenuView.OnHSMenuClickListener() {
             @Override
             public void onHSMClick(com.darwindeveloper.horizontalscrollmenulibrary.extras.MenuItem menuItem, int position) {

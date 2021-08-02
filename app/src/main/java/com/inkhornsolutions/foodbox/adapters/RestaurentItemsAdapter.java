@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -66,12 +67,17 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
         final ItemsModelClass itemsModelClass = productList.get(position);
 
         holder.tvItem.setText(itemsModelClass.getItemName());
-        holder.tvItemPrice.setText("PKR"+itemsModelClass.getPrice());
         Glide.with(context).load(itemsModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivItem);
 //            holder.tvItemSchedule.setText("Available from: "+ modelClass.getFrom()+" to "+modelClass.getTo());
 
-        String resName = ((RestaurantItems)context).restaurant;
+        int percentage = 20;
 
+        int discountedPrice = ((100 - percentage) * Integer.parseInt(itemsModelClass.getPrice())) / 100;
+
+        holder.tvItemPrice.setText("PKR"+discountedPrice);
+        holder.tvItemCuttingPrice.setText("PKR"+itemsModelClass.getPrice());
+
+        String resName = ((RestaurantItems)context).restaurant;
 
         name = itemsModelClass.getUserName();
 
@@ -97,8 +103,9 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvItem, tvItemPrice, tvItemSchedule;
+        private TextView tvItem, tvItemPrice, tvItemCuttingPrice, tvItemDiscount, tvItemSchedule;
         private CircleImageView ivItem;
+        private RelativeLayout discountLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -106,6 +113,10 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
             tvItem = itemView.findViewById(R.id.tvItem);
             tvItemPrice = itemView.findViewById(R.id.tvItemPrice);
             ivItem = itemView.findViewById(R.id.ivItem);
+            tvItemCuttingPrice = itemView.findViewById(R.id.tvItemCuttingPrice);
+            tvItemDiscount = itemView.findViewById(R.id.tvItemDiscount);
+            discountLayout = itemView.findViewById(R.id.discountLayout);
+
 //            tvItemSchedule = (TextView) itemView.findViewById(R.id.tvItemSchedule);
         }
     }
