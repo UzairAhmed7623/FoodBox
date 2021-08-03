@@ -14,6 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.inkhornsolutions.foodbox.RestaurantItems;
 import com.inkhornsolutions.foodbox.ShowItemDetails;
 import com.inkhornsolutions.foodbox.models.ItemsModelClass;
@@ -70,28 +74,69 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
         Glide.with(context).load(itemsModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivItem);
 //            holder.tvItemSchedule.setText("Available from: "+ modelClass.getFrom()+" to "+modelClass.getTo());
 
-        int percentage = 20;
-
-        int discountedPrice = ((100 - percentage) * Integer.parseInt(itemsModelClass.getPrice())) / 100;
-
-        holder.tvItemPrice.setText("PKR"+discountedPrice);
-        holder.tvItemCuttingPrice.setText("PKR"+itemsModelClass.getPrice());
-
-        String resName = ((RestaurantItems)context).restaurant;
-
-        name = itemsModelClass.getUserName();
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        FirebaseDatabase.getInstance().getReference("Admin").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String percentage = snapshot.child("percentage").getValue(String.class);
+                    String available = snapshot.child("available").getValue(String.class);
 
-                Intent intent = new Intent(context, ShowItemDetails.class);
-                intent.putExtra("resName",resName);
-                intent.putExtra("itemName",itemsModelClass.getItemName());
-                context.startActivity(intent);
-                ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    if (available.equals("yes")){
+                        holder.discountLayout.setVisibility(View.VISIBLE);
 
-//                showQuantityDialog(modelClass);
+                        holder.tvItemDiscount.setText("-" + percentage + "%");
+
+                        int discountedPrice = ((100 - Integer.parseInt(percentage)) * Integer.parseInt(itemsModelClass.getPrice())) / 100;
+
+                        holder.tvItemPrice.setText("PKR"+discountedPrice);
+                        holder.tvItemCuttingPrice.setText("PKR"+itemsModelClass.getPrice());
+
+                        String resName = ((RestaurantItems)context).restaurant;
+
+                        name = itemsModelClass.getUserName();
+
+                        holder.itemView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                Intent intent = new Intent(context, ShowItemDetails.class);
+                                intent.putExtra("resName",resName);
+                                intent.putExtra("itemName",itemsModelClass.getItemName());
+                                context.startActivity(intent);
+                                ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
+                            }
+                        });
+                    }
+                    else {
+                        holder.discountLayout.setVisibility(View.GONE);
+
+                        holder.tvItemPrice.setText("PKR"+itemsModelClass.getPrice());
+                        holder.tvItemCuttingPrice.setText("PKR"+itemsModelClass.getPrice());
+
+                        String resName = ((RestaurantItems)context).restaurant;
+
+                        name = itemsModelClass.getUserName();
+
+                        holder.itemView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                Intent intent = new Intent(context, ShowItemDetails.class);
+                                intent.putExtra("resName",resName);
+                                intent.putExtra("itemName",itemsModelClass.getItemName());
+                                context.startActivity(intent);
+                                ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }

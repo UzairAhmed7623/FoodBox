@@ -29,6 +29,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -218,7 +222,7 @@ public class RestaurantItems extends AppCompatActivity {
 
                                 itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
 
-                                itemsModelClass.setUserName(first_name +" "+ last_name);
+                                itemsModelClass.setUserName(first_name + " " + last_name);
                                 itemsModelClass.setItemName(name);
                                 itemsModelClass.setId(getDateTime());
 

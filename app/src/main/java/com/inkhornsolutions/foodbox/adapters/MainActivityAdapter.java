@@ -42,6 +42,8 @@ import java.util.Objects;
 
 import per.wsj.library.AndRatingBar;
 
+//import per.wsj.library.AndRatingBar;
+
 public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapter.ViewHolder> {
 
     private Context context;
@@ -192,7 +194,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
         finalRating = tempRating/resList.size();
 
-        holder.ratingStar.setRating(finalRating);
+//        holder.ratingStar.setRating(finalRating);
 
 
         firebaseFirestore.collection("Users").get()
@@ -248,7 +250,8 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private final ImageView ivRestaurant;
-        private final TextView tvRestaurant, tvNoOrders;
+        private final TextView tvRestaurant;
+        private  TextView tvNoOrders;
         private final LinearLayout layout;
         private AndRatingBar ratingStar;
 
