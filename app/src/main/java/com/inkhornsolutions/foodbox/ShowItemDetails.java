@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
@@ -49,15 +50,15 @@ public class ShowItemDetails extends AppCompatActivity {
     private MaterialButton btnIncrement, btnDecrement;
     private int count = 1;
     private ImageButton backArrow;
-    private ImageView civItemImage;
+    private KenBurnsView civItemImage;
     private TextView tvItem, tvPrice, tvDescription, tvQuantity, tvDisplay, tvFinalPrice;
     private MaterialButton btnAddtoCart;
-    private String resName, itemName, itemImage, itemPrice, userName;
+    private String resName, itemName, itemImage, itemPrice, userName, available, percentage;
     private DocumentReference documentReference;
     private FirebaseFirestore firebaseFirestore;
     private double price = 0;
     private double finalPrice = 0;
-    private int itemCount;
+    private int itemCount, discountedPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class ShowItemDetails extends AppCompatActivity {
         setContentView(R.layout.activity_show_item_details);
 
         backArrow = (ImageButton) findViewById(R.id.backArrow);
-        civItemImage = (ImageView) findViewById(R.id.civItemImage);
+        civItemImage = (KenBurnsView) findViewById(R.id.civItemImage);
         tvItem = (TextView) findViewById(R.id.tvItem);
         tvPrice = (TextView) findViewById(R.id.tvPrice);
         tvQuantity = (TextView) findViewById(R.id.tvQuantity);
@@ -82,6 +83,8 @@ public class ShowItemDetails extends AppCompatActivity {
 
         resName = getIntent().getStringExtra("resName");
         itemName = getIntent().getStringExtra("itemName");
+        available = getIntent().getStringExtra("available");
+        percentage = getIntent().getStringExtra("percentage");
 
         backArrow.bringToFront();
         backArrow.setOnClickListener(new View.OnClickListener() {
@@ -107,11 +110,22 @@ public class ShowItemDetails extends AppCompatActivity {
                             tvItem.setText(itemName);
                             Glide.with(ShowItemDetails.this).load(itemImage).placeholder(R.drawable.food_placeholder).into(civItemImage);
                             price = Double.parseDouble(itemPrice.replace("PKR",""));
-                            tvPrice.setText("PKR" + price);
+
+                            if (available.equals("yes")){
+
+                                discountedPrice = ((100 - Integer.parseInt(percentage)) * (int) price) / 100;
+
+                                tvPrice.setText("PKR" + discountedPrice);
+                                tvFinalPrice.setText(String.valueOf(discountedPrice));
+
+                            }
+                            else {
+                                tvPrice.setText("PKR" + price);
+                                tvFinalPrice.setText(String.valueOf(price));
+
+                            }
                             tvDescription.setText(itemDescription);
                             tvQuantity.setText("(" + quantity + ")");
-
-                            tvFinalPrice.setText(String.valueOf(itemPrice));
                         }
                     }
                 })
@@ -132,7 +146,12 @@ public class ShowItemDetails extends AppCompatActivity {
                 tvDisplay.setText(String.valueOf(count));
                 itemCount = Integer.parseInt(tvDisplay.getText().toString().trim());
 
-                finalPrice = Integer.parseInt(itemPrice) * itemCount;
+                if (available.equals("yes")){
+                    finalPrice = discountedPrice * itemCount;
+                }
+                else {
+                    finalPrice = Integer.parseInt(itemPrice) * itemCount;
+                }
 
                 tvFinalPrice.setText(""+finalPrice);
             }
@@ -146,7 +165,12 @@ public class ShowItemDetails extends AppCompatActivity {
                     tvDisplay.setText(String.valueOf(count));
                     itemCount = Integer.parseInt(tvDisplay.getText().toString().trim());
 
-                    finalPrice = Integer.parseInt(itemPrice) * itemCount;
+                    if (available.equals("yes")){
+                        finalPrice = discountedPrice * itemCount;
+                    }
+                    else {
+                        finalPrice = Integer.parseInt(itemPrice) * itemCount;
+                    }
 
                     tvFinalPrice.setText(""+finalPrice);
                 }

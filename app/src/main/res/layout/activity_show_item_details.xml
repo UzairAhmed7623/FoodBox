@@ -14,13 +14,13 @@
         android:layout_gravity="bottom"
         android:gravity="bottom">
 
-        <ImageView
+        <com.flaviofaria.kenburnsview.KenBurnsView
             android:id="@+id/civItemImage"
             android:layout_width="match_parent"
             android:layout_height="300dp"
+            android:background="@drawable/restaurats_items_back"
             android:scaleType="fitXY"
-            android:src="@drawable/food_placeholder"
-            android:background="@drawable/restaurats_items_back" />
+            android:src="@drawable/food_placeholder" />
 
     </RelativeLayout>
 

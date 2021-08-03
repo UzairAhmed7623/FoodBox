@@ -136,4 +136,7 @@ dependencies {
 
     implementation 'com.libRG:customtextview:2.2'
 
+    implementation 'com.flaviofaria:kenburnsview:1.0.7'
+
+
 }
