@@ -181,7 +181,13 @@ public class ShowItemDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String title = tvItem.getText().toString().trim();
-                String Price = String.valueOf(price);
+                String Price;
+                if (available.equals("yes")){
+                    Price = String.valueOf(discountedPrice);
+                }
+                else {
+                    Price = String.valueOf(price);
+                }
                 finalPrice = Double.parseDouble(tvFinalPrice.getText().toString().trim());
 
                 addToCart(getDateTime(), title, itemImage, Price, String.valueOf(finalPrice), String.valueOf(itemCount));

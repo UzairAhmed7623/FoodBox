@@ -235,8 +235,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 });
     }
 
+    //Event listner lagana ha live update k lie.
+
     private void loadData(){
-        firebaseFirestore.collection("Restaurants").orderBy("resName", Query.Direction.ASCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        firebaseFirestore.collection("Restaurants").orderBy("resName", Query.Direction.ASCENDING).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 resDetails.clear();

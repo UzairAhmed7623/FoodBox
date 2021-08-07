@@ -269,6 +269,8 @@ public class RestaurantItems extends AppCompatActivity {
                                 intent.putExtra("restaurant", restaurant);
                                 intent.putExtra("first_name", first_name);
                                 intent.putExtra("last_name", last_name);
+
+
                                 startActivity(intent);
                             }
                         }

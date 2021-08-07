@@ -80,7 +80,7 @@ public class Checkout extends AppCompatActivity {
     private TextView tvChangeAddress, tvUserName, tvAddress, tvPhone, tvTotalPrice;
     private RadioButton rbDoorDelivery;
     private Button btnCheckOut;
-    private String phone, userName, total, add, restaurant, deliveryFee, subTotal;
+    private String phone, userName, total, add, restaurant, deliveryFee, subTotal, available;
     private LatLng latLng;
     private ArrayList<CartItemsModelClass> cartItemsList;
     private CartItemsModelClass cartItemsModelClass;
@@ -146,6 +146,7 @@ public class Checkout extends AppCompatActivity {
         restaurant = getIntent().getStringExtra("restaurant");
         deliveryFee = getIntent().getStringExtra("deliveryFee");
         subTotal = getIntent().getStringExtra("subTotal");
+        available = getIntent().getStringExtra("available");
 
         cartItemsList = new ArrayList<>();
 
@@ -265,6 +266,7 @@ public class Checkout extends AppCompatActivity {
                                     order1.put("deliveryFee", deliveryFee);
                                     order1.put("subTotal", subTotal);
                                     order1.put("total", total);
+                                    order1.put("promotedOrder", available);
 
                                     firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
                                             .collection("Cart").document(restaurant+" "+getDateTime())
@@ -383,7 +385,7 @@ public class Checkout extends AppCompatActivity {
 
         //dd=day, MM=month, yyyy=year, hh=hour, mm=minute, ss=second.
 
-        String date = DateFormat.format("dd-MM-yyyy hh-mm",calendar).toString();
+        String date = DateFormat.format("dd-MM-yyyy kk-mm",calendar).toString();
 
         return date;
     }

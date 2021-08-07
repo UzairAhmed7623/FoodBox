@@ -1,5 +1,6 @@
 package com.inkhornsolutions.foodbox.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -48,7 +49,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
     double Price;
 
     @Override
-    public void onBindViewHolder(@NonNull HolderCartItem holder, int position) {
+    public void onBindViewHolder(@NonNull HolderCartItem holder, @SuppressLint("RecyclerView") int position) {
         CartItemsModelClass cartItemsModelClass = cartItems.get(position);
 
         String id = cartItemsModelClass.getId();
@@ -72,7 +73,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
 //                itemsCount = itemsCount + itemsCount;
 
                 if (allTotalPrice == 0.00){
-                    allTotalPrice = Double.parseDouble(((Cart)context).tvSubTotal.getText().toString().trim().replace("PKR ",""));
+                    allTotalPrice = Double.parseDouble(((Cart)context).tvSubTotal.getText().toString().trim().replace("PKR",""));
                 }
 
                 EasyDB easyDB = EasyDB.init(context, "ItemsDatabase")

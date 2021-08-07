@@ -124,6 +124,8 @@
         <item name="cornerSizeBottomLeft">20dp</item>
     </style>
 
-
+    <style name="SlidingDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/shake</item>
+    </style>
 
 </resources>

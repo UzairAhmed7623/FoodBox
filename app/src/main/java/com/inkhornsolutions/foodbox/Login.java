@@ -76,6 +76,10 @@ public class Login extends AppCompatActivity {
         buttonContinue = findViewById(R.id.buttonContinue);
         close = findViewById(R.id.close);
 
+        countryCode.setDefaultCountryUsingNameCode("PK");
+        countryCode.setCountryForNameCode("PK");
+        countryCode.setCountryForPhoneCode(+92);
+
         buttonContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

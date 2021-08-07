@@ -127,6 +127,8 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                                 Intent intent = new Intent(context, ShowItemDetails.class);
                                 intent.putExtra("resName",resName);
                                 intent.putExtra("itemName",itemsModelClass.getItemName());
+                                intent.putExtra("available","no");
+
                                 context.startActivity(intent);
                                 ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 

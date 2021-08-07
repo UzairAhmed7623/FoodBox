@@ -2,13 +2,17 @@ package com.inkhornsolutions.foodbox;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -18,13 +22,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog.Builder;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -37,7 +44,17 @@ import com.akexorcist.googledirection.model.Direction;
 import com.akexorcist.googledirection.model.Info;
 import com.akexorcist.googledirection.model.Leg;
 import com.akexorcist.googledirection.model.Route;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.inkhornsolutions.foodbox.adapters.CartItemsAdapter;
 import com.inkhornsolutions.foodbox.models.CartItemsModelClass;
@@ -65,7 +82,7 @@ import java.util.UUID;
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
 
-public class Cart extends AppCompatActivity {
+public class Cart extends AppCompatActivity implements LocationListener {
 
     private static int AUTOCOMPLETE_REQUEST_CODE = 1;
     private static final String DIRECTION_API_KEY = "AIzaSyDl7YXtTZQNBkthV3PjFS0fQOKvL8SIR7k";
@@ -87,6 +104,7 @@ public class Cart extends AppCompatActivity {
     static Cart instance;
     private String first_name, last_name;
     private double totalDeliveryFee;
+    private LatLng origin;
 
     public static Cart getInstance() {
         return instance;
@@ -125,6 +143,7 @@ public class Cart extends AppCompatActivity {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(Cart.this);
 
         showCart();
+
     }
 
     public double allTotalPrice = 0.00;
@@ -177,7 +196,7 @@ public class Cart extends AppCompatActivity {
 
         tvSubTotal.setText("PKR" + String.format("%.2f", allTotalPrice));
 
-        deliveryFee();
+//        deliveryFee();
 
     }
 
@@ -189,63 +208,158 @@ public class Cart extends AppCompatActivity {
         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                LatLng origin = new LatLng(location.getLatitude(), location.getLongitude());
 
-                firebaseFirestore.collection("Restaurants").document(restaurant)
-                        .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            double latitude = documentSnapshot.getDouble("location.latitude");
-                            double longitude = documentSnapshot.getDouble("location.longitude");
+                if (location != null){
+                    origin = new LatLng(location.getLatitude(), location.getLongitude());
 
-                            LatLng destination = new LatLng(latitude, longitude);
+                    firebaseFirestore.collection("Restaurants").document(restaurant)
+                            .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if (documentSnapshot.exists()) {
+                                double latitude = documentSnapshot.getDouble("location.latitude");
+                                double longitude = documentSnapshot.getDouble("location.longitude");
 
-                            GoogleDirection.withServerKey(DIRECTION_API_KEY)
-                                    .from(origin)
-                                    .to(destination)
-                                    .execute(new DirectionCallback() {
-                                        @Override
-                                        public void onDirectionSuccess(@Nullable Direction direction) {
-                                            Route route = direction.getRouteList().get(0);
-                                            Leg leg = route.getLegList().get(0);
-                                            Info distanceInfo = leg.getDistance();
-                                            String distance = distanceInfo.getText().replace("km","").replace("m","");
+                                LatLng destination = new LatLng(latitude, longitude);
 
-                                            totalDeliveryFee = (Double.parseDouble(distance)*6) + Double.parseDouble(delivery);
+                                GoogleDirection.withServerKey(DIRECTION_API_KEY)
+                                        .from(origin)
+                                        .to(destination)
+                                        .execute(new DirectionCallback() {
+                                            @Override
+                                            public void onDirectionSuccess(@Nullable Direction direction) {
+                                                Route route = direction.getRouteList().get(0);
+                                                Leg leg = route.getLegList().get(0);
+                                                Info distanceInfo = leg.getDistance();
+                                                String distance = distanceInfo.getText().replace("km","").replace("m","");
 
-                                            tvDeliveryFee.setText("PKR "+totalDeliveryFee);
+                                                totalDeliveryFee = (Double.parseDouble(distance) * 3.5) + Double.parseDouble(delivery);
 
-                                            tvGrandTotal.setText("PKR" + (allTotalPrice + totalDeliveryFee));
+                                                tvDeliveryFee.setText("PKR "+totalDeliveryFee);
 
-                                            btnCheckOut.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
+                                                tvGrandTotal.setText("PKR" + (allTotalPrice + totalDeliveryFee));
 
-                                                    Intent intent = new Intent(Cart.this, Checkout.class);
-                                                    intent.putExtra("first_name", first_name);
-                                                    intent.putExtra("last_name", last_name);
-                                                    intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
-                                                    intent.putExtra("deliveryFee", String.valueOf(totalDeliveryFee));
-                                                    intent.putExtra("restaurant", restaurant);
-                                                    intent.putExtra("subTotal", tvSubTotal.getText().toString().replace("PKR", ""));
 
-                                                    startActivity(intent);
+                                                btnCheckOut.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
 
-                                                }
-                                            });
-                                        }
+                                                        FirebaseDatabase.getInstance().getReference("Admin").addValueEventListener(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                if (snapshot.exists()) {
+                                                                    String percentage = snapshot.child("percentage").getValue(String.class);
+                                                                    String available = snapshot.child("available").getValue(String.class);
 
-                                        @Override
-                                        public void onDirectionFailure(@NonNull Throwable t) {
-                                            Log.d("address: ", "Chala2");
+                                                                    if (available.equals("yes")){
+                                                                        Intent intent = new Intent(Cart.this, Checkout.class);
+                                                                        intent.putExtra("first_name", first_name);
+                                                                        intent.putExtra("last_name", last_name);
+                                                                        intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
+                                                                        intent.putExtra("deliveryFee", String.valueOf(totalDeliveryFee));
+                                                                        intent.putExtra("restaurant", restaurant);
+                                                                        intent.putExtra("subTotal", tvSubTotal.getText().toString().replace("PKR", ""));
+                                                                        intent.putExtra("available", "yes");
 
-                                            Snackbar.make(findViewById(android.R.id.content), t.getMessage(), Snackbar.LENGTH_LONG).show();
-                                        }
-                                    });
+                                                                        startActivity(intent);
+                                                                    }
+                                                                    else {
+                                                                        Intent intent = new Intent(Cart.this, Checkout.class);
+                                                                        intent.putExtra("first_name", first_name);
+                                                                        intent.putExtra("last_name", last_name);
+                                                                        intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
+                                                                        intent.putExtra("deliveryFee", String.valueOf(totalDeliveryFee));
+                                                                        intent.putExtra("restaurant", restaurant);
+                                                                        intent.putExtra("subTotal", tvSubTotal.getText().toString().replace("PKR", ""));
+                                                                        intent.putExtra("available", "no");
+
+                                                                        startActivity(intent);
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            }
+
+                                            @Override
+                                            public void onDirectionFailure(@NonNull Throwable t) {
+                                                Log.d("address: ", "Chala2");
+
+                                                Snackbar.make(findViewById(android.R.id.content), t.getMessage(), Snackbar.LENGTH_LONG).show();
+                                            }
+                                        });
+                            }
                         }
+                    });
+                }
+                else {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Cart.this);
+                    builder.setTitle("Alert");
+                    builder.setMessage("Enable to identify your location. Press ok to turn your location on!");
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            });
+                    builder.setCancelable(false);
+
+                    AlertDialog dialog = builder.create();
+                    if (dialog.getWindow() != null){
+                        dialog.getWindow().getAttributes().windowAnimations = R.style.SlidingDialogAnimation;
                     }
-                });
+                    dialog.show();
+
+
+                }
+            }
+        });
+    }
+
+    private void isGPSOn() {
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+
+        SettingsClient client = LocationServices.getSettingsClient(this);
+        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+
+        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                Log.d("TAG", locationSettingsResponse.toString());
+                
+                LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                boolean providerEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                    if (providerEnabled) {
+                        deliveryFee();
+                    }
+                    else {
+                        isGPSOn();
+                    }
+
+                 
+            }
+        });
+        task.addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e instanceof ResolvableApiException) {
+                    try {
+                        ResolvableApiException resolvableApiException = (ResolvableApiException) e;
+                        resolvableApiException.startResolutionForResult(Cart.this, 1003);
+                    } catch (IntentSender.SendIntentException sendEx) {
+                        Log.d("TAG", "Error : " + sendEx);
+                    }
+                }
             }
         });
     }
@@ -288,5 +402,27 @@ public class Cart extends AppCompatActivity {
             onBackPressed();
         }
         return true;
+    }
+
+
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+
+        deliveryFee();
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        deliveryFee();
+    }
+
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+        deliveryFee();
+    }
+
+    @Override
+    public void onProviderDisabled(@NonNull String provider) {
+        isGPSOn();
     }
 }
