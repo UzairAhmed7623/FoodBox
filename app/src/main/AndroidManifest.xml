@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.inkhornsolutions.foodbox">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
@@ -21,7 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodBox"
         tools:replace="android:theme">
-        <activity android:name=".Checkout"></activity>
+        <activity android:name=".Checkout" />
         <activity
             android:name=".ShowItemDetails"
             android:screenOrientation="portrait" />

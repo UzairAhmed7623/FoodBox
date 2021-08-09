@@ -256,7 +256,7 @@ public class ShowItemDetails extends AppCompatActivity {
 
         //dd=day, MM=month, yyyy=year, hh=hour, mm=minute, ss=second.
 
-        String date = DateFormat.format("dd-MM-yyyy hh-mm",calendar).toString();
+        String date = DateFormat.format("dd-MM-yyyy kk-mm",calendar).toString();
 
         return date;
     }

@@ -2,6 +2,7 @@ package com.inkhornsolutions.foodbox.adapters;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -74,6 +75,10 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
         Glide.with(context).load(itemsModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivItem);
 //            holder.tvItemSchedule.setText("Available from: "+ modelClass.getFrom()+" to "+modelClass.getTo());
 
+        ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage("Please wait...");
+        progressDialog.show();
+
         FirebaseDatabase.getInstance().getReference("Admin").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -95,6 +100,8 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
                         name = itemsModelClass.getUserName();
 
+                        progressDialog.dismiss();
+
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -106,7 +113,6 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                                 intent.putExtra("percentage",percentage);
                                 context.startActivity(intent);
                                 ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-
                             }
                         });
                     }
@@ -120,6 +126,8 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
                         name = itemsModelClass.getUserName();
 
+                        progressDialog.dismiss();
+
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -131,7 +139,6 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
                                 context.startActivity(intent);
                                 ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-
                             }
                         });
                     }

@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/InkHorn Solutions/AndroidStudioProjects/FoodBox/app/src/main/res/drawable/account_circle.xml" value="0.27685185185185185" />
         <entry key="..\:/Users/InkHorn Solutions/AndroidStudioProjects/FoodBox/app/src/main/res/layout/activity_cart.xml" value="0.33" />
         <entry key="..\:/Users/InkHorn Solutions/AndroidStudioProjects/FoodBox/app/src/main/res/layout/activity_login.xml" value="0.1641337386018237" />
+        <entry key="..\:/Users/InkHorn Solutions/AndroidStudioProjects/FoodBox/app/src/main/res/layout/activity_profile.xml" value="0.25" />
         <entry key="..\:/Users/InkHorn Solutions/AndroidStudioProjects/FoodBox/app/src/main/res/layout/activity_show_item_details.xml" value="0.1641337386018237" />
         <entry key="..\:/Users/InkHorn Solutions/AndroidStudioProjects/FoodBox/app/src/main/res/layout/main_activity_adapter_layout.xml" value="0.33" />
         <entry key="..\:/Users/InkHorn Solutions/AndroidStudioProjects/FoodBox/app/src/main/res/layout/restaurant_items_adapter_left.xml" value="0.5" />

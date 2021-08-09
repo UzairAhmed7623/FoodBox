@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -34,7 +35,9 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -235,34 +238,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 });
     }
 
-    //Event listner lagana ha live update k lie.
-
     private void loadData(){
-        firebaseFirestore.collection("Restaurants").orderBy("resName", Query.Direction.ASCENDING).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                resDetails.clear();
+        firebaseFirestore.collection("Restaurants").orderBy("resName", Query.Direction.ASCENDING)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot querySnapshot, @Nullable FirebaseFirestoreException error) {
+                        resDetails.clear();
 
-                if (task.isSuccessful()){
-                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                        if (error == null){
+                            for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()){
+                                RestaurantModelClass restaurantModelClass = documentSnapshot.toObject(RestaurantModelClass.class);
 
-                        RestaurantModelClass restaurantModelClass = documentSnapshot.toObject(RestaurantModelClass.class);
-
-                        resDetails.add(restaurantModelClass);
+                                resDetails.add(restaurantModelClass);
+                            }
+                            rvRestaurant.setAdapter(new MainActivityAdapter(getApplicationContext(), resDetails));
+                            progressDialog.dismiss();
+                            mPullToRefreshView.setRefreshing(false);
+                        }
+                        else {
+                            Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    rvRestaurant.setAdapter(new MainActivityAdapter(getApplicationContext(), resDetails));
-                }
-                progressDialog.dismiss();
-                mPullToRefreshView.setRefreshing(false);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                progressDialog.dismiss();
-                Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
-            }
-        });
+                });
     }
 
     public void headerTextView(){

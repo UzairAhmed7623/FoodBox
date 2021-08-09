@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -38,6 +40,7 @@ import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -79,6 +82,8 @@ public class Profile extends AppCompatActivity {
     private DatePickerDialog datePickerDialog;
     private ProgressDialog progressDialog;
     private RelativeLayout layoutUserName,layoutUserEmail,layoutUserAddress,layoutUserDOB;
+    private MaterialButton btnCompleteProfile;
+    private String imageUri = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +111,8 @@ public class Profile extends AppCompatActivity {
         layoutUserEmail = (RelativeLayout) findViewById(R.id.layoutUserEmail);
         layoutUserAddress = (RelativeLayout) findViewById(R.id.layoutUserAddress);
         layoutUserDOB = (RelativeLayout) findViewById(R.id.layoutUserDOB);
+
+        btnCompleteProfile = (MaterialButton) findViewById(R.id.btnCompleteProfile);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
@@ -151,8 +158,9 @@ public class Profile extends AppCompatActivity {
                                 tvDateOfBirth.setText(dob);
                             }
                             if (documentSnapshot.getString("UsersImageProfile") != null) {
-                                String dob = documentSnapshot.getString("UsersImageProfile");
-                                Glide.with(Profile.this).load(dob).placeholder(ContextCompat.getDrawable(getApplicationContext(), R.drawable.user)).into(ivProfile);
+                                String userImage = documentSnapshot.getString("UsersImageProfile");
+                                imageUri = userImage;
+                                Glide.with(Profile.this).load(userImage).placeholder(ContextCompat.getDrawable(getApplicationContext(), R.drawable.user)).into(ivProfile);
                             }
 
                         }
@@ -421,6 +429,45 @@ public class Profile extends AppCompatActivity {
                 }
 
         });
+
+        SharedPreferences preferences = getSharedPreferences("profile", MODE_PRIVATE);
+        boolean isFirstTime = preferences.getBoolean("isFirstTime", false);
+
+        if (isFirstTime){
+            Intent intent = new Intent(Profile.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+
+        btnCompleteProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (imageUri.equals("")
+                        && tvName.getText().toString().equals("Your name")
+                        && tvMobile.getText().toString().equals("+923000000000")
+                        && tvEmail.getText().toString().equals("yourmail@gmail.com")
+                        && tvAddress.getText().toString().equals("Your address")
+                        && tvDateOfBirth.getText().toString().equals("12/05/1990")){
+
+                    SharedPreferences preferences = getSharedPreferences("profile", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean("isFirstTime", true);
+                    editor.apply();
+
+                    Toast.makeText(Profile.this, "Please complete your profile.", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    SharedPreferences preferences = getSharedPreferences("profile", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean("isFirstTime", false);
+                    editor.apply();
+
+                    Intent intent = new Intent(Profile.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override
@@ -476,6 +523,8 @@ public class Profile extends AppCompatActivity {
 
                 //Image Uri will not be null for RESULT_OK
                 Uri uri = data.getData();
+
+                imageUri = String.valueOf(uri);
 
                 Glide.with(this)
                         .load(uri)

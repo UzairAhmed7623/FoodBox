@@ -51,11 +51,11 @@
                         android:id="@+id/tvFirstName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="User"
-                        android:textSize="24dp"
                         android:fontFamily="@font/poppins_medium"
+                        android:text="Your"
                         android:textColor="@color/white"
-                        android:textStyle="bold"/>
+                        android:textSize="24dp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tvLastName"
@@ -75,7 +75,7 @@
                     android:id="@+id/tvEmailAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="developer@gmail.com"
+                    android:text="yourmail@gmail.com"
                     android:fontFamily="@font/poppins_medium"
                     android:layout_marginBottom="10dp"
                     android:textSize="16dp"
@@ -135,10 +135,10 @@
 
                 <TextView
                     android:id="@+id/tvName"
-                    android:text="Your name"
-                    android:fontFamily="@font/uber_move"
+                    style="@style/profileDetailsMiniText"
                     android:layout_toRightOf="@id/nameImageView"
-                    style="@style/profileDetailsMiniText" />
+                    android:fontFamily="@font/uber_move"
+                    android:text="Your name" />
 
             </RelativeLayout>
 
@@ -160,10 +160,10 @@
 
                 <TextView
                     android:id="@+id/tvMobile"
-                    android:text="+923012345678"
-                    android:fontFamily="@font/uber_move"
+                    style="@style/profileDetailsMiniText"
                     android:layout_toRightOf="@id/mobileImageView"
-                    style="@style/profileDetailsMiniText" />
+                    android:fontFamily="@font/uber_move"
+                    android:text="+923000000000" />
 
             </RelativeLayout>
 
@@ -186,10 +186,10 @@
 
                 <TextView
                     android:id="@+id/tvEmail"
-                    android:text="developer@gmail.com"
-                    android:fontFamily="@font/uber_move"
+                    style="@style/profileDetailsMiniText"
                     android:layout_toRightOf="@id/emailImageView"
-                    style="@style/profileDetailsMiniText" />
+                    android:fontFamily="@font/uber_move"
+                    android:text="yourmail@gmail.com" />
 
             </RelativeLayout>
 
@@ -213,11 +213,11 @@
 
                 <TextView
                     android:id="@+id/tvAddress"
-                    android:text="Avenue 2nd Street NW SY."
-                    android:fontFamily="@font/uber_move"
+                    style="@style/profileDetailsMiniText"
                     android:layout_below="@+id/addressLabel"
                     android:layout_toRightOf="@id/addressImageView"
-                    style="@style/profileDetailsMiniText" />
+                    android:fontFamily="@font/uber_move"
+                    android:text="Your address" />
 
             </RelativeLayout>
 
@@ -240,14 +240,21 @@
 
                 <TextView
                     android:id="@+id/tvDateOfBirth"
-                    android:text="12/05/1990"
-                    android:fontFamily="@font/uber_move"
+                    style="@style/profileDetailsMiniText"
                     android:layout_toRightOf="@id/dobImageView"
-                    style="@style/profileDetailsMiniText" />
+                    android:fontFamily="@font/uber_move"
+                    android:text="12/05/1990" />
 
             </RelativeLayout>
 
             <View style="@style/proifleDetailsView" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCompleteProfile"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="Next"
+                app:backgroundTint="@color/myColor"/>
 
         </LinearLayout>
 
