@@ -14,7 +14,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.DatePicker;
@@ -37,13 +40,17 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
@@ -82,7 +89,6 @@ public class Profile extends AppCompatActivity {
     private DatePickerDialog datePickerDialog;
     private ProgressDialog progressDialog;
     private RelativeLayout layoutUserName,layoutUserEmail,layoutUserAddress,layoutUserDOB;
-    private MaterialButton btnCompleteProfile;
     private String imageUri = "";
 
     @Override
@@ -111,8 +117,6 @@ public class Profile extends AppCompatActivity {
         layoutUserEmail = (RelativeLayout) findViewById(R.id.layoutUserEmail);
         layoutUserAddress = (RelativeLayout) findViewById(R.id.layoutUserAddress);
         layoutUserDOB = (RelativeLayout) findViewById(R.id.layoutUserDOB);
-
-        btnCompleteProfile = (MaterialButton) findViewById(R.id.btnCompleteProfile);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
@@ -187,7 +191,6 @@ public class Profile extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-
         layoutUserName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -203,8 +206,8 @@ public class Profile extends AppCompatActivity {
                 editText.setInputType(InputType.TYPE_CLASS_TEXT);
                 editText2.setInputType(InputType.TYPE_CLASS_TEXT);
 
-                editText.setText(tvFirstName.getText().toString());
-                editText2.setText(tvLastName.getText().toString());
+                editText.setHint(tvFirstName.getText().toString());
+                editText2.setHint(tvLastName.getText().toString());
 
                 btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -263,7 +266,7 @@ public class Profile extends AppCompatActivity {
 
                 TextInputLayout2.setVisibility(View.GONE);
 
-                editText.setText(tvEmailAddress.getText().toString());
+                editText.setHint(tvEmailAddress.getText().toString());
 
                 btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -430,44 +433,6 @@ public class Profile extends AppCompatActivity {
 
         });
 
-        SharedPreferences preferences = getSharedPreferences("profile", MODE_PRIVATE);
-        boolean isFirstTime = preferences.getBoolean("isFirstTime", false);
-
-        if (isFirstTime){
-            Intent intent = new Intent(Profile.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        }
-
-        btnCompleteProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (imageUri.equals("")
-                        && tvName.getText().toString().equals("Your name")
-                        && tvMobile.getText().toString().equals("+923000000000")
-                        && tvEmail.getText().toString().equals("yourmail@gmail.com")
-                        && tvAddress.getText().toString().equals("Your address")
-                        && tvDateOfBirth.getText().toString().equals("12/05/1990")){
-
-                    SharedPreferences preferences = getSharedPreferences("profile", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putBoolean("isFirstTime", true);
-                    editor.apply();
-
-                    Toast.makeText(Profile.this, "Please complete your profile.", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    SharedPreferences preferences = getSharedPreferences("profile", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putBoolean("isFirstTime", false);
-                    editor.apply();
-
-                    Intent intent = new Intent(Profile.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                }
-            }
-        });
     }
 
     @Override
@@ -609,4 +574,67 @@ public class Profile extends AppCompatActivity {
                 });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.profile_image, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.image);
+        menuItem.setActionView(R.layout.toobar_profile_image);
+        View view = menuItem.getActionView();
+        CircleImageView toolbar_profile_Image = view.findViewById(R.id.toolbar_profile_Image);
+        toolbar_profile_Image.setVisibility(View.INVISIBLE);
+
+        AppBarLayout appBarLayout = findViewById(R.id.app_bar);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    //visible image view
+                    toolbar_profile_Image.setVisibility(View.VISIBLE);
+                    isShow = true;
+                }
+                else if (isShow) {
+                    //invisible image view
+                    toolbar_profile_Image.setVisibility(View.INVISIBLE);
+
+                    isShow = false;
+                }
+            }
+        });
+
+        if (firebaseAuth != null) {
+            DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
+            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()){
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        if (documentSnapshot.exists()){
+                            if (documentSnapshot.getString("UsersImageProfile") != null){
+                                imageUri = documentSnapshot.getString("UsersImageProfile");
+                                Glide.with(Profile.this).load(imageUri).placeholder(ContextCompat.getDrawable(getApplicationContext(), R.drawable.account_circle_black)).into(toolbar_profile_Image);
+                            }
+                            else {
+                                Log.d("TAG", "Not found!");
+                            }
+                        }
+                        else {
+                            Log.d("TAG", "No data found!");
+                        }
+                    }
+                    else {
+                        Log.d("TAG", task.getException().getMessage());
+                    }
+                }
+            });
+        }
+
+        return true;
+    }
 }

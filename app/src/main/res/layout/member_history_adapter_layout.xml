@@ -33,7 +33,7 @@
             android:textAllCaps="true"
             android:textColor="@android:color/black"
             android:textSize="15sp"
-            android:fontFamily="@font/poppins_medium"/>
+            android:fontFamily="@font/montserrat_medium"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,7 +53,7 @@
                 android:textAllCaps="true"
                 android:textColor="@android:color/black"
                 android:textSize="12sp"
-                android:fontFamily="@font/poppins_medium"
+                android:fontFamily="@font/montserrat_medium"
                 android:paddingEnd="5dp" />
 
             <TextView
@@ -66,7 +66,7 @@
                 android:textAllCaps="true"
                 android:textColor="@android:color/black"
                 android:textSize="12sp"
-                android:fontFamily="@font/poppins_medium"
+                android:fontFamily="@font/montserrat_medium"
                 android:paddingEnd="5dp" />
 
             <TextView
@@ -79,7 +79,7 @@
                 android:textAllCaps="true"
                 android:textColor="@android:color/black"
                 android:textSize="12sp"
-                android:fontFamily="@font/poppins_medium"
+                android:fontFamily="@font/montserrat_medium"
                 android:paddingEnd="5dp" />
 
             <TextView
@@ -92,7 +92,7 @@
                 android:textAllCaps="true"
                 android:textColor="@android:color/black"
                 android:textSize="12sp"
-                android:fontFamily="@font/poppins_medium"
+                android:fontFamily="@font/montserrat_medium"
                 android:paddingEnd="5dp" />
 
             <TextView
@@ -105,7 +105,7 @@
                 android:textAllCaps="true"
                 android:textColor="@android:color/black"
                 android:textSize="12sp"
-                android:fontFamily="@font/poppins_medium"
+                android:fontFamily="@font/montserrat_medium"
                 android:layout_marginEnd="5dp" />
 
             <TextView
@@ -119,7 +119,7 @@
                 android:textAllCaps="true"
                 android:textColor="@android:color/black"
                 android:textSize="12sp"
-                android:fontFamily="@font/poppins_medium" />
+                android:fontFamily="@font/montserrat_medium" />
 
         </LinearLayout>
 

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:id="@+id/rootLayout"
+    android:background="@color/white"
+    tools:context=".FirstProfile">
+
+  <com.google.android.material.appbar.AppBarLayout
+      android:id="@+id/app_bar"
+      android:layout_width="match_parent"
+      android:layout_height="280dp"
+      android:fitsSystemWindows="true"
+      android:theme="@style/AppTheme">
+
+    <com.google.android.material.appbar.CollapsingToolbarLayout
+        android:id="@+id/toolbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        app:contentScrim="@color/myColor"
+        app:title="Account Info"
+        app:expandedTitleTextAppearance="@style/ExpandedAppBar"
+        app:collapsedTitleTextAppearance="@style/CollapsedAppBar"
+        android:background="@drawable/profile_bk"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_centerInParent="true"
+          android:gravity="center_horizontal"
+          android:orientation="vertical"
+          android:id="@+id/linearLayout"
+          app:layout_collapseMode="parallax">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivProfile"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/account_circle"
+            android:layout_gravity="center"
+            app:layout_collapseMode="parallax"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+          <TextView
+              android:id="@+id/tvFirstName"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:fontFamily="@font/montserra_regular_bold"
+              android:text="Your"
+              android:textColor="@color/white"
+              android:textSize="24dp"
+              android:textStyle="bold"/>
+
+          <TextView
+              android:id="@+id/tvLastName"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginStart="4dp"
+              android:layout_toEndOf="@id/tvFirstName"
+              android:fontFamily="@font/montserra_regular_bold"
+              android:text="Name"
+              android:textColor="@color/white"
+              android:textSize="24dp"
+              android:textStyle="bold"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tvEmailAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="yourmail@gmail.com"
+            android:fontFamily="@font/montserrat_medium"
+            android:layout_marginBottom="10dp"
+            android:textSize="16dp"
+            android:textStyle="bold"/>
+
+      </LinearLayout>
+
+      <androidx.appcompat.widget.Toolbar
+          android:id="@+id/toolbar"
+          android:layout_width="match_parent"
+          android:layout_height="?attr/actionBarSize"
+          app:layout_collapseMode="pin"/>
+
+    </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+  </com.google.android.material.appbar.AppBarLayout>
+
+  <androidx.core.widget.NestedScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+      tools:context=".Profile"
+      tools:showIn="@layout/activity_profile">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp">
+
+      <RelativeLayout
+          android:id="@+id/layoutUserName"
+          style="@style/profileDetailsLayout">
+        <ImageView
+            android:id="@+id/nameImageView"
+            android:src="@drawable/account_circle"
+            android:background="@color/myColor"
+            style="@style/profileDetailsImage" />
+
+        <TextView
+            android:id="@+id/nameTextView"
+            style="@style/profileDetailsTextMain"
+            android:layout_toRightOf="@id/nameImageView"
+            android:fontFamily="@font/montserra_regular_bold"
+            android:text="Name" />
+
+        <TextView
+            android:id="@+id/tvName"
+            style="@style/profileDetailsMiniText"
+            android:layout_toRightOf="@id/nameImageView"
+            android:fontFamily="@font/montserra_regular"
+            android:text="Your name" />
+
+      </RelativeLayout>
+
+      <View style="@style/proifleDetailsView" />
+
+      <RelativeLayout
+          style="@style/profileDetailsLayout">
+        <ImageView
+            android:id="@+id/mobileImageView"
+            android:src="@drawable/phone"
+            android:background="@color/myColor"
+            style="@style/profileDetailsImage" />
+
+        <TextView
+            style="@style/profileDetailsTextMain"
+            android:layout_toRightOf="@id/mobileImageView"
+            android:fontFamily="@font/montserra_regular_bold"
+            android:text="Mobile" />
+
+        <TextView
+            android:id="@+id/tvMobile"
+            style="@style/profileDetailsMiniText"
+            android:layout_toRightOf="@id/mobileImageView"
+            android:fontFamily="@font/montserra_regular"
+            android:text="+923000000000" />
+
+      </RelativeLayout>
+
+      <View style="@style/proifleDetailsView" />
+
+      <RelativeLayout
+          android:id="@+id/layoutUserEmail"
+          style="@style/profileDetailsLayout">
+        <ImageView
+            android:id="@+id/emailImageView"
+            android:src="@drawable/email"
+            android:background="@color/myColor"
+            style="@style/profileDetailsImage" />
+
+        <TextView
+            android:text="Email"
+            android:fontFamily="@font/montserra_regular_bold"
+            android:layout_toRightOf="@id/emailImageView"
+            style="@style/profileDetailsTextMain" />
+
+        <TextView
+            android:id="@+id/tvEmail"
+            style="@style/profileDetailsMiniText"
+            android:layout_toRightOf="@id/emailImageView"
+            android:fontFamily="@font/montserra_regular"
+            android:text="yourmail@gmail.com" />
+
+      </RelativeLayout>
+
+      <View style="@style/proifleDetailsView" />
+
+      <RelativeLayout
+          android:id="@+id/layoutUserAddress"
+          style="@style/profileDetailsLayout">
+        <ImageView
+            android:id="@+id/addressImageView"
+            android:src="@drawable/location"
+            android:background="@color/myColor"
+            style="@style/profileDetailsImage" />
+
+        <TextView
+            android:id="@+id/addressLabel"
+            style="@style/profileDetailsTextMain"
+            android:layout_toRightOf="@id/addressImageView"
+            android:fontFamily="@font/montserra_regular_bold"
+            android:text="Address" />
+
+        <TextView
+            android:id="@+id/tvAddress"
+            style="@style/profileDetailsMiniText"
+            android:layout_below="@+id/addressLabel"
+            android:layout_toRightOf="@id/addressImageView"
+            android:fontFamily="@font/montserra_regular"
+            android:text="Your address" />
+
+      </RelativeLayout>
+
+      <View style="@style/proifleDetailsView" />
+
+      <RelativeLayout
+          android:id="@+id/layoutUserDOB"
+          style="@style/profileDetailsLayout">
+        <ImageView
+            android:id="@+id/dobImageView"
+            android:src="@drawable/dob"
+            android:background="@color/myColor"
+            style="@style/profileDetailsImage" />
+
+        <TextView
+            style="@style/profileDetailsTextMain"
+            android:layout_toRightOf="@id/dobImageView"
+            android:fontFamily="@font/montserra_regular_bold"
+            android:text="D.O.B" />
+
+        <TextView
+            android:id="@+id/tvDateOfBirth"
+            style="@style/profileDetailsMiniText"
+            android:layout_toRightOf="@id/dobImageView"
+            android:fontFamily="@font/montserra_regular"
+            android:text="12/05/1990" />
+
+      </RelativeLayout>
+
+      <View style="@style/proifleDetailsView" />
+
+    </LinearLayout>
+
+  </androidx.core.widget.NestedScrollView>
+
+  <com.google.android.material.floatingactionbutton.FloatingActionButton
+      android:id="@+id/btnCompleteProfile"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:src="@drawable/arrow_forward"
+      app:backgroundTint="@color/myColor"
+      android:contentDescription="Next"
+      app:fabSize="normal"
+      app:layout_anchor="@id/app_bar"
+      app:layout_anchorGravity="end|bottom"
+      android:baselineAlignBottom="false"
+      android:layout_marginEnd="25dp"
+      android:layout_marginBottom="50dp"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

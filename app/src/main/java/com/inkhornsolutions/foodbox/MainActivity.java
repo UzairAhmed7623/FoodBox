@@ -419,6 +419,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
+        else if (item.getItemId() == R.id.logout){
+            firebaseAuth.signOut();
+            finish();
+            startActivity(new Intent(this, SplashScreen.class));
+        }
 
         drawerLayout.closeDrawer(GravityCompat.START);
 

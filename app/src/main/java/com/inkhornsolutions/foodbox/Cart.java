@@ -309,6 +309,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
 
                                                                 @Override
                                                                 public void onCancelled(@NonNull DatabaseError error) {
+                                                                    progressDialog.dismiss();
 
                                                                 }
                                                             });
@@ -317,13 +318,14 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                                                 }
                                                 else {
                                                     Log.d("location",direction.getStatus());
+                                                    progressDialog.dismiss();
                                                 }
                                             }
 
                                             @Override
                                             public void onDirectionFailure(@NonNull Throwable t) {
                                                 Log.d("address: ", "Chala2");
-
+                                                progressDialog.dismiss();
                                                 Snackbar.make(findViewById(android.R.id.content), t.getMessage(), Snackbar.LENGTH_LONG).show();
                                             }
                                         });

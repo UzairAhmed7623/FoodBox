@@ -45,7 +45,7 @@
                                 android:textAllCaps="true"
                                 android:textColor="@android:color/black"
                                 android:textSize="15sp"
-                                android:fontFamily="@font/poppins_medium"/>
+                                android:fontFamily="@font/montserrat_medium"/>
 
                             <TextView
                                 android:id="@+id/tvDateHistory"
@@ -58,7 +58,7 @@
                                 android:textAllCaps="true"
                                 android:textColor="@android:color/black"
                                 android:textSize="15sp"
-                                android:fontFamily="@font/poppins_medium"/>
+                                android:fontFamily="@font/montserrat_medium"/>
 
                             <TextView
                                 android:id="@+id/tvGrandTotalHistory"
@@ -72,7 +72,7 @@
                                 android:textAllCaps="true"
                                 android:textColor="@android:color/black"
                                 android:textSize="15sp"
-                                android:fontFamily="@font/poppins_medium"/>
+                                android:fontFamily="@font/montserrat_medium"/>
 
                             <ImageView
                                 android:id="@+id/ivStatusHistory"
