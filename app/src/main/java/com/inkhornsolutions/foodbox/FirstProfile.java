@@ -8,9 +8,11 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -129,6 +131,59 @@ public class FirstProfile extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.setContentView(R.layout.progress_bar);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        firebaseFirestore.collection("Users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                        if (documentSnapshot.exists()) {
+                            if (documentSnapshot.getString("firstName") != null &&
+                                    documentSnapshot.getString("lastName") != null) {
+                                String fName = documentSnapshot.getString("firstName");
+                                String lName = documentSnapshot.getString("lastName");
+                                tvFirstName.setText(fName);
+                                tvLastName.setText(lName);
+                                tvName.setText(fName + " " + lName);
+                            }
+                            if (documentSnapshot.getString("emailAddress") != null) {
+                                String email = documentSnapshot.getString("emailAddress");
+                                tvEmailAddress.setText(email);
+                                tvEmail.setText(email);
+                            }
+                            if (documentSnapshot.getString("phoneNumber") != null) {
+                                String mobile = documentSnapshot.getString("phoneNumber");
+                                tvMobile.setText(mobile);
+                            }
+                            if (documentSnapshot.getString("address") != null) {
+                                String address = documentSnapshot.getString("address");
+                                tvAddress.setText(address);
+                            }
+                            if (documentSnapshot.getString("DOB") != null) {
+                                String dob = documentSnapshot.getString("DOB");
+                                tvDateOfBirth.setText(dob);
+                            }
+                            if (documentSnapshot.getString("UsersImageProfile") != null) {
+
+                                if (isValidContextForGlide(FirstProfile.this)){
+
+                                    String userImage = documentSnapshot.getString("UsersImageProfile");
+                                    imageUri = userImage;
+                                    Glide.with(FirstProfile.this).load(userImage).placeholder(ContextCompat.getDrawable(getApplicationContext(), R.drawable.user)).into(ivProfile);
+                                }
+                            }
+
+                        }
+                        progressDialog.dismiss();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                        progressDialog.dismiss();
+                    }
+                });
 
         View view = LayoutInflater.from(this).inflate(R.layout.edit_details, null);
         EditText editText = (EditText) view.findViewById(R.id.editText);
@@ -388,6 +443,7 @@ public class FirstProfile extends AppCompatActivity {
         boolean isFirstTime = preferences.getBoolean("isFirstTime", true);
 
         if (!isFirstTime){
+            finish();
             Intent intent = new Intent(FirstProfile.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -571,4 +627,98 @@ public class FirstProfile extends AppCompatActivity {
                 });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.profile_image, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.image);
+        menuItem.setActionView(R.layout.toobar_profile_image);
+        View view = menuItem.getActionView();
+        CircleImageView toolbar_profile_Image = view.findViewById(R.id.toolbar_profile_Image);
+        toolbar_profile_Image.setVisibility(View.INVISIBLE);
+
+        AppBarLayout appBarLayout = findViewById(R.id.app_bar);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    //visible image view
+                    toolbar_profile_Image.setVisibility(View.VISIBLE);
+                    isShow = true;
+                }
+                else if (isShow) {
+                    //invisible image view
+                    toolbar_profile_Image.setVisibility(View.INVISIBLE);
+
+                    isShow = false;
+                }
+            }
+        });
+
+        if (firebaseAuth != null) {
+            DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
+            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()){
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        if (documentSnapshot.exists()){
+                            if (documentSnapshot.getString("UsersImageProfile") != null){
+
+                                if (isValidContextForGlide(FirstProfile.this)){
+
+                                    imageUri = documentSnapshot.getString("UsersImageProfile");
+                                    Glide.with(FirstProfile.this).load(imageUri).placeholder(ContextCompat.getDrawable(getApplicationContext(), R.drawable.account_circle_black)).into(toolbar_profile_Image);
+                                }
+                            }
+                            else {
+                                Log.d("TAG", "Not found!");
+                            }
+                        }
+                        else {
+                            Log.d("TAG", "No data found!");
+                        }
+                    }
+                    else {
+                        Log.d("TAG", task.getException().getMessage());
+                    }
+                }
+            });
+        }
+
+        return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        SharedPreferences preferences = getSharedPreferences("profile", MODE_PRIVATE);
+        boolean isFirstTime = preferences.getBoolean("isFirstTime", true);
+
+        if (!isFirstTime){
+            finish();
+            Intent intent = new Intent(FirstProfile.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        }
+    }
+
+    public static boolean isValidContextForGlide(final Context context) {
+        if (context == null) {
+            return false;
+        }
+        if (context instanceof Activity) {
+            final Activity activity = (Activity) context;
+            return !activity.isDestroyed() && !activity.isFinishing();
+        }
+        return true;
+    }
 }

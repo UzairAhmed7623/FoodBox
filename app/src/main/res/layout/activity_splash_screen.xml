@@ -35,28 +35,28 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_width="120dp"
-                android:layout_height="100dp"
-                android:src="@drawable/chj_logo"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="45dp"/>
+                <ImageView
+                    android:id="@+id/icon"
+                    android:layout_width="120dp"
+                    android:layout_height="100dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="45dp"
+                    android:src="@drawable/chj_logo" />
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Food for Everyone"
-                android:textColor="@color/myColor"
-                android:textSize="10sp"
-                android:letterSpacing="0.10"
-                android:textFontWeight="600"
-                android:includeFontPadding="false"
-                android:fontFamily="@font/sf_pro_rounded_regular"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
-                android:layout_below="@+id/icon"/>
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/icon"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/sf_pro_rounded_regular"
+                    android:includeFontPadding="false"
+                    android:letterSpacing="0.10"
+                    android:text="Food for Everyone"
+                    android:textColor="@color/myColor"
+                    android:textFontWeight="600"
+                    android:textSize="10sp" />
 
                 <com.google.android.material.progressindicator.CircularProgressIndicator
                     android:id="@+id/progressBar"

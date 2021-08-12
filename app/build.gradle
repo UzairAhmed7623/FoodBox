@@ -138,4 +138,10 @@ dependencies {
 
     implementation 'com.flaviofaria:kenburnsview:1.0.7'
 
+    implementation 'com.github.AppIntro:AppIntro:6.1.0'
+
+    implementation 'com.daimajia.androidanimations:library:2.4@aar'
+
+    implementation 'com.github.ratty3697:android-smart-animation-library:1.6'
+
 }
