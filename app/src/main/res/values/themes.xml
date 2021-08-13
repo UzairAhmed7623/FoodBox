@@ -65,6 +65,12 @@
         <item name="fontFamily">@font/montserra_regular_bold</item>
     </style>
 
+    <style name="materialPrefix" parent="parent">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/blackTextColor</item>
+        <item name="fontFamily">@font/montserrat_medium</item>
+    </style>
+
     <style name="textInputHintStyle" parent="TextAppearance.AppCompat.Medium.Inverse">
         <item name="android:textColorHint">@color/blackTextColor</item>
         <item name="android:textColor">@color/blackTextColor</item>
