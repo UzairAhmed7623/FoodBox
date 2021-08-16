@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/signup_screen"
+    android:id="@+id/rootLayout"
+    android:fitsSystemWindows="true"
     tools:context=".SignUp">
 
     <com.google.android.material.button.MaterialButton
@@ -19,7 +21,7 @@
         app:iconTint="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:rippleColor="#CECECE" />
+        app:rippleColor="#20000000" />
 
     <TextView
         android:id="@+id/tvHello2"
@@ -43,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="15dp"
         app:boxBackgroundColor="#EEF3F6"
         app:boxCornerRadiusBottomEnd="50dp"
         app:boxCornerRadiusBottomStart="50dp"
@@ -55,13 +57,19 @@
         app:endIconCheckable="true"
         app:endIconDrawable="@drawable/arrow_forward"
         app:endIconMode="custom"
-        app:hintTextColor="#464646"
+        app:hintTextColor="#A1464646"
         app:hintEnabled="false"
+        android:focusable="false"
+        app:helperTextEnabled="true"
+        app:helperText="Please provide your 10 digit phone number."
+        app:counterEnabled="true"
+        app:counterTextColor="@color/counter"
+        app:counterMaxLength="10"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.41"
+        app:layout_constraintVertical_bias="0.35"
         app:prefixText="+92"
         app:prefixTextAppearance="@style/materialPrefix"
         app:prefixTextColor="@color/black">
@@ -72,10 +80,10 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_medium"
             android:gravity="center_horizontal|center_vertical"
-            android:hint="Phone Number"
+            android:hint="3001234567"
             android:inputType="phone"
             android:letterSpacing="0.10"
-            android:textColorHint="#464646"
+            android:textColorHint="#7C464646"
             android:textCursorDrawable="@color/black"
             android:textSize="14sp" />
 
@@ -87,7 +95,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="50dp"
         app:boxBackgroundColor="#EEF3F6"
         app:boxCornerRadiusBottomEnd="50dp"
@@ -97,8 +105,9 @@
         app:boxStrokeColor="#CECECE"
         app:boxStrokeWidth="0.7dp"
         app:boxStrokeWidthFocused="0.7dp"
-        app:hintTextColor="#464646"
         app:hintEnabled="false"
+        app:helperTextEnabled="true"
+        app:helperText="Please write the received otp code and press sign up button."
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -117,7 +126,7 @@
             android:hint="Code"
             android:inputType="phone"
             android:letterSpacing="0.10"
-            android:textColorHint="#464646"
+            android:textColorHint="#7C464646"
             android:textCursorDrawable="@color/black"
             android:textSize="14sp" />
 
@@ -160,6 +169,7 @@
         app:layout_constraintVertical_bias="0.774" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnGoogleSignIn"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="100dp"
         android:layout_height="60dp"
@@ -182,6 +192,7 @@
         app:strokeWidth="0.5dp" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnFacebookSignIn"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="100dp"
         android:layout_height="60dp"

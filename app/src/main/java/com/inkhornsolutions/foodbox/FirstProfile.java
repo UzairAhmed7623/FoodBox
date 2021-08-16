@@ -212,9 +212,6 @@ public class FirstProfile extends AppCompatActivity {
                 editText.setInputType(InputType.TYPE_CLASS_TEXT);
                 editText2.setInputType(InputType.TYPE_CLASS_TEXT);
 
-                editText.setHint(tvFirstName.getText().toString());
-                editText2.setHint(tvLastName.getText().toString());
-
                 btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -271,8 +268,6 @@ public class FirstProfile extends AppCompatActivity {
                 editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 
                 TextInputLayout2.setVisibility(View.GONE);
-
-                editText.setHint(tvEmailAddress.getText().toString());
 
                 btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -458,13 +453,10 @@ public class FirstProfile extends AppCompatActivity {
                         || tvMobile.getText().toString().equals("+923000000000")
                         || tvEmail.getText().toString().equals("yourmail@gmail.com")
                         || tvAddress.getText().toString().equals("Your address")
-                        || tvDateOfBirth.getText().toString().equals("12/05/1990")
-                        || imageUri == null
                         || tvName.getText().toString().equals("")
                         || tvMobile.getText().toString().equals("")
                         || tvEmail.getText().toString().equals("")
-                        || tvAddress.getText().toString().equals("")
-                        || tvDateOfBirth.getText().toString().equals("")){
+                        || tvAddress.getText().toString().equals("")){
 
                     SharedPreferences preferences = getSharedPreferences("profile", MODE_PRIVATE);
                     SharedPreferences.Editor editor = preferences.edit();

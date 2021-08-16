@@ -13,7 +13,7 @@
     <color name="statusBar">#F0F0F0</color>
     <color name="stars">#FFA9A2</color>
     <color name="log_back">#F2F2F2</color>
-
+    <color name="counter">#464646</color>
     <color name="progress1">#e60000</color>
     <color name="progress2">#FBCF00</color>
     <color name="progress3">#009E1A</color>

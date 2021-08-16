@@ -3,6 +3,7 @@ package com.inkhornsolutions.foodbox;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +42,7 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.hbb20.CountryCodePicker;
+import com.tombayley.activitycircularreveal.CircularReveal;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -62,6 +65,8 @@ public class Login extends AppCompatActivity {
     private View view;
     private ProgressDialog progressDialog;
     private ImageButton close;
+    private CircularReveal mActivityCircularReveal;
+    private RelativeLayout rootLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +79,11 @@ public class Login extends AppCompatActivity {
         countryCode = findViewById(R.id.countryCode);
         editTextPhone = findViewById(R.id.editTextPhone);
         buttonContinue = findViewById(R.id.buttonContinue);
-        close = findViewById(R.id.close);
+        close = (ImageButton) findViewById(R.id.close);
+        rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
+
+        mActivityCircularReveal = new CircularReveal(rootLayout);
+        mActivityCircularReveal.onActivityCreate(getIntent());
 
         countryCode.setDefaultCountryUsingNameCode("PK");
         countryCode.setCountryForNameCode("PK");
@@ -256,5 +265,13 @@ public class Login extends AppCompatActivity {
 //            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 //        }
 //    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        mActivityCircularReveal.unRevealActivity(this);
+    }
 
 }

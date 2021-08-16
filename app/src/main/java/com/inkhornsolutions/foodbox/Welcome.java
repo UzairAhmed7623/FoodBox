@@ -11,8 +11,10 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.podcopic.animationlib.library.AnimationType;
 import com.podcopic.animationlib.library.StartSmartAnimation;
+import com.tombayley.activitycircularreveal.CircularReveal;
 
 public class Welcome extends AppCompatActivity {
 
@@ -33,14 +35,19 @@ public class Welcome extends AppCompatActivity {
         btnSignUp = (MaterialButton) findViewById(R.id.btnSignUp);
         btnLogin = (MaterialButton) findViewById(R.id.btnLogin);
 
-        tvHello.setVisibility(View.VISIBLE);
-        tvHello2.setVisibility(View.VISIBLE);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                tvHello.setVisibility(View.VISIBLE);
+                tvHello2.setVisibility(View.VISIBLE);
 
-        StartSmartAnimation.startAnimation( tvHello,
-                AnimationType.FadeInRight , 1000 , 0 , true,300);
+                StartSmartAnimation.startAnimation( tvHello,
+                        AnimationType.FadeInRight , 1000 , 0 , true,300);
 
-        StartSmartAnimation.startAnimation( tvHello2,
-                AnimationType.FadeInLeft , 1000 , 0 , true, 300);
+                StartSmartAnimation.startAnimation( tvHello2,
+                        AnimationType.FadeInLeft , 1000 , 0 , true, 300);
+            }
+        }, 500);
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -77,9 +84,13 @@ public class Welcome extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Welcome.this, SignUp.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
+                CircularReveal.presentActivity(new CircularReveal.Builder(
+                        Welcome.this,
+                        btnSignUp,
+                        intent,
+                        800
+                ));
             }
         });
 
@@ -87,9 +98,12 @@ public class Welcome extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Welcome.this, Login.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                CircularReveal.presentActivity(new CircularReveal.Builder(
+                        Welcome.this,
+                        btnLogin,
+                        intent,
+                        800
+                ));
             }
         });
     }
