@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -33,6 +36,7 @@ import com.inkhornsolutions.foodbox.RestaurantItems;
 import com.inkhornsolutions.foodbox.models.RatingClass;
 import com.inkhornsolutions.foodbox.models.RatingsList;
 import com.inkhornsolutions.foodbox.models.RestaurantModelClass;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -78,7 +82,15 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
         holder.tvRestaurant.setText(restaurantModelClass.getResName());
 
-        Glide.with(context).load(restaurantModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivRestaurant);
+//        Glide.with(context).load(restaurantModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivRestaurant);
+//        Picasso.get().load(restaurantModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fit().centerCrop().into(holder.ivRestaurant);
+
+
+        Uri uri = Uri.parse(restaurantModelClass.getImageUri());
+        holder.draweeView.setImageURI(uri);
+
+
+
 
         holder.itemView.setSelected(checkedPosition == position);
 
@@ -95,7 +107,6 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                     public void onClick(View v) {
                         notifyItemChanged(checkedPosition);
                         checkedPosition = holder.getLayoutPosition();
-                        notifyItemChanged(checkedPosition);
 
                         String resName = holder.tvRestaurant.getText().toString();
 
@@ -136,7 +147,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                 holder.layout.setEnabled(false);
                 ColorMatrix matrix = new ColorMatrix();
                 matrix.setSaturation(0);
-                holder.ivRestaurant.setColorFilter(new ColorMatrixColorFilter(matrix));
+//                holder.ivRestaurant.setColorFilter(new ColorMatrixColorFilter(matrix));
 //                Toast.makeText(context, "Restaurant is offline for now, Please try later.", Toast.LENGTH_LONG).show();
             }
         }
@@ -145,7 +156,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
             holder.layout.setEnabled(false);
             ColorMatrix matrix = new ColorMatrix();
             matrix.setSaturation(0);
-            holder.ivRestaurant.setColorFilter(new ColorMatrixColorFilter(matrix));
+//            holder.ivRestaurant.setColorFilter(new ColorMatrixColorFilter(matrix));
 //            Toast.makeText(context, "Restaurant not approved yet", Toast.LENGTH_LONG).show();
         }
 
@@ -249,21 +260,26 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final ImageView ivRestaurant;
+//        private final ImageView ivRestaurant;
+        SimpleDraweeView draweeView;
+
         private final TextView tvRestaurant;
-        private  TextView tvNoOrders;
+        private TextView tvNoOrders;
         private final LinearLayout layout;
         private AndRatingBar ratingStar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            ivRestaurant = itemView.findViewById(R.id.ivRestaurant);
+//            ivRestaurant = itemView.findViewById(R.id.ivRestaurant);
             tvRestaurant = itemView.findViewById(R.id.tvRestaurant);
             ratingStar = itemView.findViewById(R.id.ratingStar);
             tvNoOrders = itemView.findViewById(R.id.tvNoOrders);
 
             layout = itemView.findViewById(R.id.layout);
+
+            draweeView = itemView.findViewById(R.id.ivRestaurant);
+
         }
     }
 }

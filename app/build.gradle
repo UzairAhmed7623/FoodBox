@@ -145,4 +145,10 @@ dependencies {
     implementation 'com.github.tombayley:ActivityCircularReveal:1.0.2'
 
     implementation 'com.github.GrenderG:Toasty:1.5.0'
+
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    implementation 'com.facebook.fresco:fresco:1.11.0'
+
+
 }

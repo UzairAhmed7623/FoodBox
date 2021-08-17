@@ -206,9 +206,6 @@ public class Profile extends AppCompatActivity {
                 editText.setInputType(InputType.TYPE_CLASS_TEXT);
                 editText2.setInputType(InputType.TYPE_CLASS_TEXT);
 
-                editText.setHint(tvFirstName.getText().toString());
-                editText2.setHint(tvLastName.getText().toString());
-
                 btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -265,8 +262,6 @@ public class Profile extends AppCompatActivity {
                 editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
 
                 TextInputLayout2.setVisibility(View.GONE);
-
-                editText.setHint(tvEmailAddress.getText().toString());
 
                 btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override

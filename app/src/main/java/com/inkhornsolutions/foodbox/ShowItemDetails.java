@@ -35,6 +35,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.inkhornsolutions.foodbox.models.ItemsModelClass;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -108,7 +109,9 @@ public class ShowItemDetails extends AppCompatActivity {
                             String itemDescription = documentSnapshot.getString("description");
 
                             tvItem.setText(itemName);
-                            Glide.with(ShowItemDetails.this).load(itemImage).placeholder(R.drawable.food_placeholder).into(civItemImage);
+                            Picasso.get().load(itemImage).placeholder(R.drawable.food_placeholder).fit().centerCrop().into(civItemImage);
+
+//                            Glide.with(ShowItemDetails.this).load(itemImage).placeholder(R.drawable.food_placeholder).into(civItemImage);
                             price = Double.parseDouble(itemPrice.replace("PKR",""));
 
                             if (available.equals("yes")){

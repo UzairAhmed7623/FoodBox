@@ -39,33 +39,32 @@ import com.akexorcist.googledirection.model.Info;
 import com.akexorcist.googledirection.model.Leg;
 import com.akexorcist.googledirection.model.Route;
 import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.inkhornsolutions.foodbox.adapters.CartItemsAdapter;
 import com.inkhornsolutions.foodbox.models.CartItemsModelClass;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
-import io.nlopez.smartlocation.location.providers.LocationBasedOnActivityProvider;
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
 
@@ -143,13 +142,11 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
         boolean providerAvailable = SmartLocation.with(this).location().state().isAnyProviderAvailable();
         boolean locationServices = SmartLocation.with(this).location().state().locationServicesEnabled();
 
-        if (providerAvailable)
-        {
-            if (locationServices){
+        if (providerAvailable) {
+            if (locationServices) {
                 deliveryFee();
             }
-        }
-        else {
+        } else {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Cart.this);
             alertDialogBuilder
                     .setTitle("Location Required!")
@@ -163,7 +160,8 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                     });
 
             AlertDialog alert = alertDialogBuilder.create();
-            alert.show();        }
+            alert.show();
+        }
     }
 
     public double allTotalPrice = 0.00;
@@ -234,103 +232,102 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                     public void onLocationUpdated(Location location) {
                         if (location != null) {
 
-                            Log.d("location", ""+location.getLatitude()+location.getLongitude());
+                            Log.d("location", "" + location.getLatitude() + location.getLongitude());
 
                             LatLng origin = new LatLng(location.getLatitude(), location.getLongitude());
 
-                    firebaseFirestore.collection("Restaurants").document(restaurant)
-                            .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                        @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            if (documentSnapshot.exists()) {
-                                double latitude = documentSnapshot.getDouble("location.latitude");
-                                double longitude = documentSnapshot.getDouble("location.longitude");
+                            firebaseFirestore.collection("Restaurants").document(restaurant)
+                                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    if (documentSnapshot.exists()) {
+                                        double latitude = documentSnapshot.getDouble("location.latitude");
+                                        double longitude = documentSnapshot.getDouble("location.longitude");
 
-                                LatLng destination = new LatLng(latitude, longitude);
+                                        LatLng destination = new LatLng(latitude, longitude);
 
-                                Log.d("location", ""+origin+" "+destination);
+                                        Log.d("location", "" + origin + " " + destination);
 
-                                GoogleDirection.withServerKey(DIRECTION_API_KEY)
-                                        .from(origin)
-                                        .to(destination)
-                                        .execute(new DirectionCallback() {
-                                            @Override
-                                            public void onDirectionSuccess(@Nullable Direction direction) {
-                                                if (direction != null && direction.isOK()) {
-                                                    Route route = direction.getRouteList().get(0);
-                                                    Leg leg = route.getLegList().get(0);
-                                                    Info distanceInfo = leg.getDistance();
-                                                    String distance = distanceInfo.getText().replace("km", "").replace("m", "");
+                                        GoogleDirection.withServerKey(DIRECTION_API_KEY)
+                                                .from(origin)
+                                                .to(destination)
+                                                .execute(new DirectionCallback() {
+                                                    @Override
+                                                    public void onDirectionSuccess(@Nullable Direction direction) {
+                                                        if (direction != null && direction.isOK()) {
+                                                            Route route = direction.getRouteList().get(0);
+                                                            Leg leg = route.getLegList().get(0);
+                                                            Info distanceInfo = leg.getDistance();
+                                                            String distance = distanceInfo.getText().replace("km", "").replace("m", "");
 
-                                                    totalDeliveryFee = (Double.parseDouble(distance) * 3) + Double.parseDouble(delivery);
+                                                            totalDeliveryFee = (Double.parseDouble(distance) * 3) + Double.parseDouble(delivery);
 
-                                                    tvDeliveryFee.setText("PKR " + totalDeliveryFee);
+                                                            tvDeliveryFee.setText("PKR " + totalDeliveryFee);
 
-                                                    tvGrandTotal.setText("PKR" + (allTotalPrice + totalDeliveryFee));
+                                                            tvGrandTotal.setText("PKR" + (allTotalPrice + totalDeliveryFee));
 
-                                                    progressDialog.dismiss();
+                                                            progressDialog.dismiss();
 
-                                                    btnCheckOut.setOnClickListener(new View.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View v) {
-
-                                                            FirebaseDatabase.getInstance().getReference("Admin").addValueEventListener(new ValueEventListener() {
+                                                            btnCheckOut.setOnClickListener(new View.OnClickListener() {
                                                                 @Override
-                                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                    if (snapshot.exists()) {
-                                                                        String percentage = snapshot.child("percentage").getValue(String.class);
-                                                                        String available = snapshot.child("available").getValue(String.class);
+                                                                public void onClick(View v) {
 
-                                                                        if (available.equals("yes")) {
-                                                                            Intent intent = new Intent(Cart.this, Checkout.class);
-                                                                            intent.putExtra("first_name", first_name);
-                                                                            intent.putExtra("last_name", last_name);
-                                                                            intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
-                                                                            intent.putExtra("deliveryFee", String.valueOf(totalDeliveryFee));
-                                                                            intent.putExtra("restaurant", restaurant);
-                                                                            intent.putExtra("subTotal", tvSubTotal.getText().toString().replace("PKR", ""));
-                                                                            intent.putExtra("available", "yes");
+                                                                    FirebaseDatabase.getInstance().getReference("Admin").addValueEventListener(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                            if (snapshot.exists()) {
+                                                                                String percentage = snapshot.child("percentage").getValue(String.class);
+                                                                                String available = snapshot.child("available").getValue(String.class);
 
-                                                                            startActivity(intent);
-                                                                        } else {
-                                                                            Intent intent = new Intent(Cart.this, Checkout.class);
-                                                                            intent.putExtra("first_name", first_name);
-                                                                            intent.putExtra("last_name", last_name);
-                                                                            intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
-                                                                            intent.putExtra("deliveryFee", String.valueOf(totalDeliveryFee));
-                                                                            intent.putExtra("restaurant", restaurant);
-                                                                            intent.putExtra("subTotal", tvSubTotal.getText().toString().replace("PKR", ""));
-                                                                            intent.putExtra("available", "no");
+                                                                                if (available.equals("yes")) {
+                                                                                    Intent intent = new Intent(Cart.this, Checkout.class);
+                                                                                    intent.putExtra("first_name", first_name);
+                                                                                    intent.putExtra("last_name", last_name);
+                                                                                    intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
+                                                                                    intent.putExtra("deliveryFee", String.valueOf(totalDeliveryFee));
+                                                                                    intent.putExtra("restaurant", restaurant);
+                                                                                    intent.putExtra("subTotal", tvSubTotal.getText().toString().replace("PKR", ""));
+                                                                                    intent.putExtra("available", "yes");
 
-                                                                            startActivity(intent);
+                                                                                    startActivity(intent);
+                                                                                } else {
+                                                                                    Intent intent = new Intent(Cart.this, Checkout.class);
+                                                                                    intent.putExtra("first_name", first_name);
+                                                                                    intent.putExtra("last_name", last_name);
+                                                                                    intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
+                                                                                    intent.putExtra("deliveryFee", String.valueOf(totalDeliveryFee));
+                                                                                    intent.putExtra("restaurant", restaurant);
+                                                                                    intent.putExtra("subTotal", tvSubTotal.getText().toString().replace("PKR", ""));
+                                                                                    intent.putExtra("available", "no");
+
+                                                                                    startActivity(intent);
+                                                                                }
+                                                                            }
                                                                         }
-                                                                    }
-                                                                }
 
-                                                                @Override
-                                                                public void onCancelled(@NonNull DatabaseError error) {
-                                                                    progressDialog.dismiss();
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError error) {
+                                                                            progressDialog.dismiss();
 
+                                                                        }
+                                                                    });
                                                                 }
                                                             });
+                                                        } else {
+                                                            Log.d("location", direction.getStatus());
+                                                            progressDialog.dismiss();
                                                         }
-                                                    });
-                                                }
-                                                else {
-                                                    Log.d("location",direction.getStatus());
-                                                    progressDialog.dismiss();
-                                                }
-                                            }
+                                                    }
 
-                                            @Override
-                                            public void onDirectionFailure(@NonNull Throwable t) {
-                                                Log.d("address: ", "Chala2");
-                                                progressDialog.dismiss();
-                                                Snackbar.make(findViewById(android.R.id.content), t.getMessage(), Snackbar.LENGTH_LONG).show();
-                                            }
-                                        });
-                            }
-                        }
+                                                    @Override
+                                                    public void onDirectionFailure(@NonNull Throwable t) {
+                                                        Log.d("address: ", "Chala2");
+                                                        progressDialog.dismiss();
+                                                        Snackbar.make(findViewById(android.R.id.content), t.getMessage(), Snackbar.LENGTH_LONG).show();
+                                                    }
+                                                });
+                                    }
+                                }
                             });
                         }
                     }
@@ -357,8 +354,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                     isGPSOn();
                 }
             }
-        });
-        task.addOnFailureListener(this, new OnFailureListener() {
+        }).addOnFailureListener(this, new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 if (e instanceof ResolvableApiException) {
@@ -416,7 +412,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        Log.d("location", "onLocationChanged"+location);
+        Log.d("location", "onLocationChanged" + location);
     }
 
     @Override
@@ -424,11 +420,11 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
         switch (status) {
             case LocationProvider.OUT_OF_SERVICE:
             case LocationProvider.TEMPORARILY_UNAVAILABLE:
-                Log.d("location", "TEMPORARILY_UNAVAILABLE"+status);
+                Log.d("location", "TEMPORARILY_UNAVAILABLE" + status);
                 isGPSOn();
                 break;
             case LocationProvider.AVAILABLE:
-                Log.d("location", "AVAILABLE"+status);
+                Log.d("location", "AVAILABLE" + status);
                 deliveryFee();
 
                 break;
@@ -437,13 +433,13 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
 
     @Override
     public void onProviderEnabled(@NonNull String provider) {
-        Log.d("location", "onProviderEnabled"+provider);
+        Log.d("location", "onProviderEnabled" + provider);
         deliveryFee();
     }
 
     @Override
     public void onProviderDisabled(@NonNull String provider) {
-        Log.d("location", "onProviderDisabled"+provider);
+        Log.d("location", "onProviderDisabled" + provider);
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,8 @@ import com.inkhornsolutions.foodbox.RestaurantItems;
 import com.inkhornsolutions.foodbox.ShowItemDetails;
 import com.inkhornsolutions.foodbox.models.ItemsModelClass;
 import com.inkhornsolutions.foodbox.R;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -72,8 +75,10 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
         final ItemsModelClass itemsModelClass = productList.get(position);
 
         holder.tvItem.setText(itemsModelClass.getItemName());
-        Glide.with(context).load(itemsModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivItem);
+//        Glide.with(context).load(itemsModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivItem);
 //            holder.tvItemSchedule.setText("Available from: "+ modelClass.getFrom()+" to "+modelClass.getTo());
+
+        Picasso.get().load(itemsModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fit().centerCrop().into(holder.ivItem);
 
         ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Please wait...");
