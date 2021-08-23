@@ -58,6 +58,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     private List<RatingClass> ratingsList = new ArrayList<>();
     private List<String> resList = new ArrayList<>();
     View view;
+    String first_name = "",last_name = "";
 
     int size;
     String rating;
@@ -82,15 +83,8 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
         holder.tvRestaurant.setText(restaurantModelClass.getResName());
 
-//        Glide.with(context).load(restaurantModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivRestaurant);
+        Glide.with(context).load(restaurantModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivRestaurant);
 //        Picasso.get().load(restaurantModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fit().centerCrop().into(holder.ivRestaurant);
-
-
-        Uri uri = Uri.parse(restaurantModelClass.getImageUri());
-        holder.draweeView.setImageURI(uri);
-
-
-
 
         holder.itemView.setSelected(checkedPosition == position);
 
@@ -102,15 +96,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
                 holder.layout.setEnabled(true);
 
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        notifyItemChanged(checkedPosition);
-                        checkedPosition = holder.getLayoutPosition();
-
-                        String resName = holder.tvRestaurant.getText().toString();
-
-                        firebaseFirestore.collection("Users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid()).get()
+                firebaseFirestore.collection("Users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid()).get()
                                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -118,19 +104,8 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                                     DocumentSnapshot documentSnapshot = task.getResult();
                                     if (documentSnapshot.exists()){
 
-                                        String first_name = documentSnapshot.getString("firstName");
-                                        String last_name = documentSnapshot.getString("lastName");
-
-                                        if (first_name == null && last_name == null) {
-                                            Toast.makeText(context, "Please complete your profile first.", Toast.LENGTH_LONG).show();
-                                        } else {
-                                            Intent intent = new Intent(context, RestaurantItems.class);
-                                            intent.putExtra("restaurant", resName);
-                                            intent.putExtra("first_name", first_name);
-                                            intent.putExtra("last_name", last_name);
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            context.startActivity(intent);
-                                        }
+                                        first_name = documentSnapshot.getString("firstName");
+                                        last_name = documentSnapshot.getString("lastName");
                                     }
                                 }
                             }
@@ -140,29 +115,59 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                                 Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
-                    }
-                });
+
             }
             else {
                 holder.layout.setEnabled(false);
+                holder.layout.setClickable(false);
+                holder.itemView.setEnabled(false);
+                holder.itemView.setClickable(false);
+
                 ColorMatrix matrix = new ColorMatrix();
                 matrix.setSaturation(0);
-//                holder.ivRestaurant.setColorFilter(new ColorMatrixColorFilter(matrix));
+                holder.ivRestaurant.setColorFilter(new ColorMatrixColorFilter(matrix));
 //                Toast.makeText(context, "Restaurant is offline for now, Please try later.", Toast.LENGTH_LONG).show();
             }
         }
         else {
             Log.d("approval", "restaurant not approved yet");
             holder.layout.setEnabled(false);
+            holder.layout.setClickable(false);
             ColorMatrix matrix = new ColorMatrix();
             matrix.setSaturation(0);
-//            holder.ivRestaurant.setColorFilter(new ColorMatrixColorFilter(matrix));
+            holder.ivRestaurant.setColorFilter(new ColorMatrixColorFilter(matrix));
 //            Toast.makeText(context, "Restaurant not approved yet", Toast.LENGTH_LONG).show();
         }
 
         String resName = restaurantModelClass.getResName().trim();
         Log.d("TAG1", resName);
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (first_name.equals("") && last_name.equals("")) {
+                    Toast.makeText(context, "Please complete your profile first.", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    if (approved.equals("yes")) {
+                        if (status.equals("online")) {
+                            Intent intent = new Intent(context, RestaurantItems.class);
+                            intent.putExtra("restaurant", resName);
+                            intent.putExtra("first_name", first_name);
+                            intent.putExtra("last_name", last_name);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
+                        }
+                        else {
+                            Toast.makeText(context, "Restaurant is offline for now, Please try again later.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                    else {
+                        Toast.makeText(context, "This restaurant is not approved yet", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        });
 
         firebaseFirestore.collection("Rating").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -206,7 +211,6 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         finalRating = tempRating/resList.size();
 
 //        holder.ratingStar.setRating(finalRating);
-
 
         firebaseFirestore.collection("Users").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -260,9 +264,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-//        private final ImageView ivRestaurant;
-        SimpleDraweeView draweeView;
-
+        private final ImageView ivRestaurant;
         private final TextView tvRestaurant;
         private TextView tvNoOrders;
         private final LinearLayout layout;
@@ -271,14 +273,12 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-//            ivRestaurant = itemView.findViewById(R.id.ivRestaurant);
+            ivRestaurant = itemView.findViewById(R.id.ivRestaurant);
             tvRestaurant = itemView.findViewById(R.id.tvRestaurant);
             ratingStar = itemView.findViewById(R.id.ratingStar);
             tvNoOrders = itemView.findViewById(R.id.tvNoOrders);
 
             layout = itemView.findViewById(R.id.layout);
-
-            draweeView = itemView.findViewById(R.id.ivRestaurant);
 
         }
     }

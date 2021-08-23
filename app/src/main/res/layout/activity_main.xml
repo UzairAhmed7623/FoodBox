@@ -106,8 +106,9 @@
             android:gravity="center_vertical"
             android:textSize="17dp" />
 
-        <com.yalantis.pulltomakesoup.PullToRefreshView
-            android:id="@+id/pull_to_refresh"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+
+        android:id="@+id/pull_to_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/tvItemSearch">
@@ -117,7 +118,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-        </com.yalantis.pulltomakesoup.PullToRefreshView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </RelativeLayout>
 

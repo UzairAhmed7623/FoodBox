@@ -98,15 +98,13 @@
         app:strokeColor="@color/white_greyish"
         app:strokeWidth="1dp">
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/ivRestaurant"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            app:actualImageScaleType="fitXY"
             android:scaleType="fitXY"
-            app:placeholderImageScaleType="fitXY"
-            app:placeholderImage="@drawable/food_placeholder" />
+            android:src="@drawable/food_placeholder" />
 
     </com.google.android.material.card.MaterialCardView>
 

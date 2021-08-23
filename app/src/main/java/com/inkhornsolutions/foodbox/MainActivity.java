@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView tvUserName;
     private CircleImageView ivProfileImage;
     private TextView tvAddress;
-    private PullToRefreshView mPullToRefreshView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private ProgressDialog progressDialog;
     private String imageUri;
     private TextView tvItemSearch;
@@ -88,13 +89,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawerLayout = (AdvanceDrawerLayout) findViewById(R.id.drawerLayout);
         tvAddress = (TextView) findViewById(R.id.tvAddress);
-        mPullToRefreshView = (PullToRefreshView) findViewById(R.id.pull_to_refresh);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.pull_to_refresh);
         tvItemSearch = (TextView) findViewById(R.id.tvItemSearch);
 
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        Fresco.initialize(this);
+        mSwipeRefreshLayout.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+        mSwipeRefreshLayout.setColorSchemeColors(Color.BLACK, Color.BLACK);
 
         // Hide status bar
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -173,15 +175,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                    }
 //                });
 
-        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mPullToRefreshView.postDelayed(new Runnable() {
+                mSwipeRefreshLayout.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         loadData();
                     }
-                }, 3000);
+                }, 1500);
             }
         });
 
@@ -256,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                             rvRestaurant.setAdapter(new MainActivityAdapter(getApplicationContext(), resDetails));
                             progressDialog.dismiss();
-                            mPullToRefreshView.setRefreshing(false);
+                            mSwipeRefreshLayout.setRefreshing(false);
                         }
                         else {
                             Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();

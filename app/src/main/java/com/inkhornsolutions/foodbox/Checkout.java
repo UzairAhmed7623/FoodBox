@@ -46,7 +46,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ServerTimestamp;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.inkhornsolutions.foodbox.UserUtils.UserUtils;
@@ -267,6 +269,7 @@ public class Checkout extends AppCompatActivity {
                                     order1.put("subTotal", subTotal);
                                     order1.put("total", total);
                                     order1.put("promotedOrder", available);
+                                    order1.put("timeStamp", FieldValue.serverTimestamp());
 
                                     firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
                                             .collection("Cart").document(restaurant+" "+getDateTime())
