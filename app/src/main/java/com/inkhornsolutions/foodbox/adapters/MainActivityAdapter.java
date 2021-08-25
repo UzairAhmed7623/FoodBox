@@ -2,10 +2,8 @@ package com.inkhornsolutions.foodbox.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
-import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,24 +17,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.inkhornsolutions.foodbox.MainActivity;
+import com.inkhornsolutions.foodbox.Common.Common;
 import com.inkhornsolutions.foodbox.R;
 import com.inkhornsolutions.foodbox.RestaurantItems;
 import com.inkhornsolutions.foodbox.models.RatingClass;
 import com.inkhornsolutions.foodbox.models.RatingsList;
 import com.inkhornsolutions.foodbox.models.RestaurantModelClass;
-import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -212,49 +206,32 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
 //        holder.ratingStar.setRating(finalRating);
 
-        firebaseFirestore.collection("Users").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
+        for (String id : Common.id) {
 
-                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                            if (documentSnapshot.exists()){
+            firebaseFirestore.collection("Users").document(id)
+                    .collection("Cart").whereEqualTo("restaurantName", resName).get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                if (documentSnapshot.exists()) {
+                                    size = task.getResult().size();
 
-                                String id = documentSnapshot.getId();
+                                    Log.d("size", "" + size);
 
-                            firebaseFirestore.collection("Users").document(id)
-                                    .collection("Cart").whereEqualTo("restaurantName", resName).get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
-                                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                                if (documentSnapshot.exists()) {
-                                                    size = task.getResult().size();
-
-                                                    Log.d("size", ""+size);
-
-                                                    holder.tvNoOrders.setText("(" + size + ")");
-                                                }
-                                            }
-                                            size = 0;
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                                    holder.tvNoOrders.setText("(" + size + ")");
+                                }
                             }
+                            size = 0;
                         }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 
     @Override

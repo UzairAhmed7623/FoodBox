@@ -448,8 +448,7 @@ public class FirstProfile extends AppCompatActivity {
         btnCompleteProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (imageUri.equals("")
-                        || tvName.getText().toString().equals("Your name")
+                if (tvName.getText().toString().equals("Your name")
                         || tvMobile.getText().toString().equals("+923000000000")
                         || tvEmail.getText().toString().equals("yourmail@gmail.com")
                         || tvAddress.getText().toString().equals("Your address")

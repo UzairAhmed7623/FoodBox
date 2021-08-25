@@ -19,6 +19,14 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -56,6 +64,9 @@ public class SignUp extends AppCompatActivity {
     private String phoneNumber;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mFirebaseAuth;
+    private CallbackManager callbackManager;
+    private LoginButton login_button;
+    private LoginManager loginManager;
 
     ActivityResultLauncher<Intent> launcher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -95,12 +106,40 @@ public class SignUp extends AppCompatActivity {
         rootLayout = (ConstraintLayout) findViewById(R.id.rootLayout);
         btnGoogleSignIn = (MaterialButton) findViewById(R.id.btnGoogleSignIn);
         btnFacebookSignIn = (MaterialButton) findViewById(R.id.btnFacebookSignIn);
+//        login_button = (LoginButton) findViewById(R.id.login_button);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
 
         mActivityCircularReveal = new CircularReveal(rootLayout);
         mActivityCircularReveal.onActivityCreate(getIntent());
 
+        callbackManager = CallbackManager.Factory.create();
+        loginManager = LoginManager.getInstance();
+
+        btnFacebookSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+
+                    @Override
+                    public void onError(FacebookException error) {
+
+                    }
+                });
+            }
+        });
 
         textInputLayout.setEndIconOnClickListener(new View.OnClickListener() {
             @Override

@@ -68,14 +68,14 @@
                         android:id="@+id/tvNoOrders"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="start"
                         android:layout_marginStart="10dp"
                         android:layout_toEndOf="@+id/ratingStar"
-                        android:layout_gravity="start"
+                        android:fontFamily="sans-serif-black"
                         android:text="(0)"
                         android:textAllCaps="true"
                         android:textColor="@color/grey_90"
-                        android:textSize="14sp"
-                        android:fontFamily="sans-serif-black"/>
+                        android:textSize="14sp" />
 
                 </RelativeLayout>
 

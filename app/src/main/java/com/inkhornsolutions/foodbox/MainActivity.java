@@ -27,7 +27,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -59,6 +58,7 @@ import java.util.Objects;
 import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
 
@@ -207,6 +207,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
+        loadAllIds();
         loadData();
         firebaseFirestore.collection("Users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -241,6 +242,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                     }
                 });
+    }
+
+    private void loadAllIds() {
+        firebaseFirestore.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error == null){
+                    for (DocumentSnapshot documentSnapshot : value.getDocuments()){
+                        if (documentSnapshot.exists()){
+                            Common.id.add(documentSnapshot.getId());
+                        }
+                    }
+                }
+                else {
+                    Toasty.error(getApplicationContext(), Objects.requireNonNull(error.getMessage()), Toasty.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     private void loadData(){
