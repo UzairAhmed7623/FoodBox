@@ -23,6 +23,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
@@ -37,12 +38,14 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -69,6 +72,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import es.dmoral.toasty.Toasty;
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
 
@@ -143,6 +147,25 @@ public class Checkout extends AppCompatActivity {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(Checkout.this);
 
         phone = firebaseAuth.getCurrentUser().getPhoneNumber();
+        if (TextUtils.isEmpty(phone)){
+            firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.exists()){
+                        String phoneNumber = documentSnapshot.getString("phoneNumber");
+                        tvPhone.setText(phoneNumber);
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toasty.error(Checkout.this, e.getMessage(), Toasty.LENGTH_LONG).show();
+                }
+            });
+        }
+        else {
+            tvPhone.setText(phone);
+        }
         userName = getIntent().getStringExtra("first_name") + " " + getIntent().getStringExtra("last_name");;
         total = getIntent().getStringExtra("total");
         restaurant = getIntent().getStringExtra("restaurant");
@@ -153,7 +176,6 @@ public class Checkout extends AppCompatActivity {
         cartItemsList = new ArrayList<>();
 
         tvUserName.setText(userName);
-        tvPhone.setText(phone);
         tvTotalPrice.setText(total);
 
         getCurrentLocation();
@@ -270,6 +292,7 @@ public class Checkout extends AppCompatActivity {
                                     order1.put("total", total);
                                     order1.put("promotedOrder", available);
                                     order1.put("timeStamp", FieldValue.serverTimestamp());
+
 
                                     firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
                                             .collection("Cart").document(restaurant+" "+getDateTime())

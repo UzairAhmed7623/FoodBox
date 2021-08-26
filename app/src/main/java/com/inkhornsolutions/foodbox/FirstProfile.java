@@ -50,6 +50,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -72,6 +73,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 
 public class FirstProfile extends AppCompatActivity {
 
@@ -132,12 +134,20 @@ public class FirstProfile extends AppCompatActivity {
         progressDialog.setContentView(R.layout.progress_bar);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+        String displayName = firebaseUser.getDisplayName();
+        String email = firebaseUser.getEmail();
+        String pic = firebaseUser.getPhotoUrl().toString();
+        String phone = firebaseUser.getPhoneNumber();
+
         firebaseFirestore.collection("Users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
 
                         if (documentSnapshot.exists()) {
+
                             if (documentSnapshot.getString("firstName") != null &&
                                     documentSnapshot.getString("lastName") != null) {
                                 String fName = documentSnapshot.getString("firstName");
@@ -146,23 +156,92 @@ public class FirstProfile extends AppCompatActivity {
                                 tvLastName.setText(lName);
                                 tvName.setText(fName + " " + lName);
                             }
+
+                            else if (!TextUtils.isEmpty(displayName)){
+
+                                tvFirstName.setText(displayName);
+                                tvLastName.setText(displayName);
+                                tvName.setText(displayName + " " + displayName);
+
+                                Map<String, Object> addData = new HashMap<>();
+                                addData.put("firstName", displayName);
+                                addData.put("lastName", displayName);
+
+                                firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).set(addData, SetOptions.merge())
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Snackbar.make(rootLayout, "Your name is saved in database successfully!", Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+
+                                    }
+                                });
+                            }
+
                             if (documentSnapshot.getString("emailAddress") != null) {
                                 String email = documentSnapshot.getString("emailAddress");
                                 tvEmailAddress.setText(email);
                                 tvEmail.setText(email);
                             }
+                            else if (!TextUtils.isEmpty(email)){
+                                tvEmailAddress.setText(email);
+                                tvEmail.setText(email);
+
+                                Map<String, Object> addData = new HashMap<>();
+                                addData.put("emailAddress", email);
+
+                                firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).set(addData, SetOptions.merge())
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Snackbar.make(rootLayout, "Your email is saved in database successfully!", Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                                    }
+                                });
+                            }
+
                             if (documentSnapshot.getString("phoneNumber") != null) {
                                 String mobile = documentSnapshot.getString("phoneNumber");
                                 tvMobile.setText(mobile);
                             }
+                            else if (!TextUtils.isEmpty(phone)){
+                                tvMobile.setText(phone);
+
+                                Map<String, Object> addData = new HashMap<>();
+                                addData.put("phoneNumber", phone);
+
+                                firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).set(addData, SetOptions.merge())
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Snackbar.make(rootLayout, "Your phone number is saved in database successfully!", Snackbar.LENGTH_LONG).show();
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
+
                             if (documentSnapshot.getString("address") != null) {
                                 String address = documentSnapshot.getString("address");
                                 tvAddress.setText(address);
                             }
+
                             if (documentSnapshot.getString("DOB") != null) {
                                 String dob = documentSnapshot.getString("DOB");
                                 tvDateOfBirth.setText(dob);
                             }
+
                             if (documentSnapshot.getString("UsersImageProfile") != null) {
 
                                 if (isValidContextForGlide(FirstProfile.this)){
@@ -170,6 +249,32 @@ public class FirstProfile extends AppCompatActivity {
                                     String userImage = documentSnapshot.getString("UsersImageProfile");
                                     imageUri = userImage;
                                     Glide.with(FirstProfile.this).load(userImage).placeholder(ContextCompat.getDrawable(getApplicationContext(), R.drawable.user)).into(ivProfile);
+                                }
+                            }
+                            else if (!TextUtils.isEmpty(pic)){
+                                if (isValidContextForGlide(FirstProfile.this)) {
+
+                                    Glide.with(FirstProfile.this).load(pic).placeholder(ContextCompat.getDrawable(getApplicationContext(), R.drawable.user)).into(ivProfile);
+
+                                    HashMap<String, Object> img = new HashMap<>();
+                                    img.put("UsersImageProfile", pic);
+
+                                    firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).set(img, SetOptions.merge())
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    progressDialog.dismiss();
+                                                    Snackbar.make(rootLayout, "Image saved in database successfully!", Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    progressDialog.dismiss();
+                                                    Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                                                }
+                                            });
                                 }
                             }
 
@@ -306,53 +411,53 @@ public class FirstProfile extends AppCompatActivity {
             }
         });
 
-//        tvMobile.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                alertDialog.show();
-//
-//                editText.setHint("Write your phone with +92");
-//
-//                editText.setInputType(InputType.TYPE_CLASS_PHONE);
-//
-//                TextInputLayout2.setVisibility(View.GONE);
-//
-//                editText.setText(tvMobile.getText().toString());
-//
-//                btnAdd.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        String phoneNumber = editText.getText().toString();
-//                        if (TextUtils.isEmpty(phoneNumber)){
-//                            editText.setError("Please write your phone");
-//                        }
-//                        else {
-//                            tvMobile.setText(phoneNumber);
-//
-//                            Map<String, Object> addData = new HashMap<>();
-//                            addData.put("phoneNumber", phoneNumber);
-//
-//                            firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).set(addData, SetOptions.merge())
-//                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                        @Override
-//                                        public void onSuccess(Void aVoid) {
-//                                            Snackbar.make(rootLayout, "Your phone number is updated successfully!", Snackbar.LENGTH_LONG).show();
-//                                            editText.clearComposingText();
-//                                        }
-//                                    }).addOnFailureListener(new OnFailureListener() {
-//                                @Override
-//                                public void onFailure(@NonNull Exception e) {
-//                                    Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).show();
-//                                }
-//                            });
-//
-//                            alertDialog.dismiss();
-//                        }
-//                    }
-//                });
-//            }
-//        });
+        tvMobile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                alertDialog.show();
+
+                editText.setHint("Write your phone with +92");
+
+                editText.setInputType(InputType.TYPE_CLASS_PHONE);
+
+                TextInputLayout2.setVisibility(View.GONE);
+
+                editText.setText("");
+
+                btnAdd.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String phoneNumber = editText.getText().toString();
+                        if (TextUtils.isEmpty(phoneNumber)){
+                            editText.setError("Please write your phone");
+                        }
+                        else {
+                            tvMobile.setText(phoneNumber);
+
+                            Map<String, Object> addData = new HashMap<>();
+                            addData.put("phoneNumber", phoneNumber);
+
+                            firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).set(addData, SetOptions.merge())
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Snackbar.make(rootLayout, "Your phone number is updated successfully!", Snackbar.LENGTH_LONG).show();
+                                            editText.clearComposingText();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).show();
+                                }
+                            });
+
+                            alertDialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
 
         layoutUserAddress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -437,13 +542,13 @@ public class FirstProfile extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("profile", MODE_PRIVATE);
         boolean isFirstTime = preferences.getBoolean("isFirstTime", true);
 
-        if (!isFirstTime){
-            finish();
-            Intent intent = new Intent(FirstProfile.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        }
+//        if (!isFirstTime){
+//            finish();
+//            Intent intent = new Intent(FirstProfile.this, MainActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(intent);
+//            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+//        }
 
         btnCompleteProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -693,13 +798,13 @@ public class FirstProfile extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("profile", MODE_PRIVATE);
         boolean isFirstTime = preferences.getBoolean("isFirstTime", true);
 
-        if (!isFirstTime){
-            finish();
-            Intent intent = new Intent(FirstProfile.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        }
+//        if (!isFirstTime){
+//            finish();
+//            Intent intent = new Intent(FirstProfile.this, MainActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(intent);
+//            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+//        }
     }
 
     public static boolean isValidContextForGlide(final Context context) {
