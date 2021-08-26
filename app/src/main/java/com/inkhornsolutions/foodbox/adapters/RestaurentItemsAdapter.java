@@ -1,11 +1,8 @@
 package com.inkhornsolutions.foodbox.adapters;
 
-import android.app.Activity;
-import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,17 +12,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.inkhornsolutions.foodbox.Common.Common;
+import com.inkhornsolutions.foodbox.R;
 import com.inkhornsolutions.foodbox.RestaurantItems;
 import com.inkhornsolutions.foodbox.ShowItemDetails;
 import com.inkhornsolutions.foodbox.models.ItemsModelClass;
-import com.inkhornsolutions.foodbox.R;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +25,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItemsAdapter.ViewHolder>{
+public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItemsAdapter.ViewHolder> {
 
     final private Context context;
     final private List<ItemsModelClass> productList;
@@ -46,10 +38,9 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 1){
+        if (position == 1) {
             return 1;
-        }
-        else {
+        } else {
             return 0;
         }
     }
@@ -59,11 +50,10 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
     @Override
     public RestaurentItemsAdapter.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        if (viewType == 0){
+        if (viewType == 0) {
             View view = inflater.inflate(R.layout.restaurant_items_adapter_left, parent, false);
             return new ViewHolder(view);
-        }
-        else {
+        } else {
             View view = inflater.inflate(R.layout.restaurant_items_adapter_right, parent, false);
             return new ViewHolder(view);
         }
@@ -84,77 +74,63 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
 
-        FirebaseDatabase.getInstance().getReference("Admin").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    String percentage = snapshot.child("percentage").getValue(String.class);
-                    String available = snapshot.child("available").getValue(String.class);
 
-                    if (available.equals("yes")){
-                        holder.discountLayout.setVisibility(View.VISIBLE);
+        if (Common.discountAvailable.get("available").toString().equals("yes")) {
+            holder.discountLayout.setVisibility(View.VISIBLE);
 
-                        holder.tvItemDiscount.setText("-" + percentage + "%");
+            holder.tvItemDiscount.setText("-" + Common.discountAvailable.get("percentage").toString() + "%");
 
-                        int discountedPrice = ((100 - Integer.parseInt(percentage)) * Integer.parseInt(itemsModelClass.getPrice())) / 100;
+            int discountedPrice = ((100 - Integer.parseInt(Common.discountAvailable.get("percentage").toString())) * Integer.parseInt(itemsModelClass.getPrice())) / 100;
 
-                        holder.tvItemPrice.setText("PKR"+discountedPrice);
-                        holder.tvItemCuttingPrice.setText("PKR"+itemsModelClass.getPrice());
+            holder.tvItemPrice.setText("PKR" + discountedPrice);
+            holder.tvItemCuttingPrice.setText("PKR" + itemsModelClass.getPrice());
 
-                        String resName = ((RestaurantItems)context).restaurant;
+            String resName = ((RestaurantItems) context).restaurant;
 
-                        name = itemsModelClass.getUserName();
+            name = itemsModelClass.getUserName();
 
-                        progressDialog.dismiss();
+            progressDialog.dismiss();
 
-                        holder.itemView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                                Intent intent = new Intent(context, ShowItemDetails.class);
-                                intent.putExtra("resName",resName);
-                                intent.putExtra("itemName",itemsModelClass.getItemName());
-                                intent.putExtra("available","yes");
-                                intent.putExtra("percentage",percentage);
-                                context.startActivity(intent);
-                                ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                            }
-                        });
-                    }
-                    else {
-                        holder.discountLayout.setVisibility(View.GONE);
-
-                        holder.tvItemPrice.setText("PKR"+itemsModelClass.getPrice());
-                        holder.tvItemCuttingPrice.setText("PKR"+itemsModelClass.getPrice());
-
-                        String resName = ((RestaurantItems)context).restaurant;
-
-                        name = itemsModelClass.getUserName();
-
-                        progressDialog.dismiss();
-
-                        holder.itemView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                Intent intent = new Intent(context, ShowItemDetails.class);
-                                intent.putExtra("resName",resName);
-                                intent.putExtra("itemName",itemsModelClass.getItemName());
-                                intent.putExtra("available","no");
-
-                                context.startActivity(intent);
-                                ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                            }
-                        });
-                    }
+                    Intent intent = new Intent(context, ShowItemDetails.class);
+                    intent.putExtra("resName", resName);
+                    intent.putExtra("itemName", itemsModelClass.getItemName());
+                    intent.putExtra("available", "yes");
+                    intent.putExtra("percentage", Common.discountAvailable.get("percentage").toString());
+                    context.startActivity(intent);
+                    ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 }
-            }
+            });
+        } else {
+            holder.discountLayout.setVisibility(View.GONE);
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            holder.tvItemPrice.setText("PKR" + itemsModelClass.getPrice());
+            holder.tvItemCuttingPrice.setText("PKR" + itemsModelClass.getPrice());
 
-            }
-        });
+            String resName = ((RestaurantItems) context).restaurant;
+
+            name = itemsModelClass.getUserName();
+
+            progressDialog.dismiss();
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent intent = new Intent(context, ShowItemDetails.class);
+                    intent.putExtra("resName", resName);
+                    intent.putExtra("itemName", itemsModelClass.getItemName());
+                    intent.putExtra("available", "no");
+
+                    context.startActivity(intent);
+                    ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }
+            });
+        }
+
     }
 
     @Override

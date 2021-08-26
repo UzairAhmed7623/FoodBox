@@ -6,10 +6,16 @@ import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.inkhornsolutions.foodbox.Common.Common;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -23,6 +29,24 @@ public class SplashScreen extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         progressBar = (CircularProgressIndicator) findViewById(R.id.progressBar);
+
+        FirebaseDatabase.getInstance().getReference("Admin").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String percentage = snapshot.child("percentage").getValue(String.class);
+                    String available = snapshot.child("available").getValue(String.class);
+
+                    Common.discountAvailable.put("percentage", percentage);
+                    Common.discountAvailable.put("available", available);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         new Handler().postDelayed(new Runnable() {
             @Override

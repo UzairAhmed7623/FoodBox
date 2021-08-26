@@ -20,10 +20,12 @@ import androidx.core.app.NotificationCompat;
 import com.inkhornsolutions.foodbox.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Common {
 
     public static ArrayList<String> id = new ArrayList<>();
+    public static HashMap<String, Object> discountAvailable = new HashMap<>();
 
     public static void showNotification(Context context, int id, String title, String body, Intent intent) {
 
