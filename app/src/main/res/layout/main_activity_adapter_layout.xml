@@ -5,6 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:paddingTop="10dp"
+    android:paddingEnd="15dp"
+    android:paddingStart="15dp"
     android:background="?attr/selectableItemBackground"
     android:foreground="@drawable/ripple">
 
@@ -13,21 +16,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/newColor">
+        android:background="@color/white">
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="290dp"
-            app:cardCornerRadius="30dp"
-            app:cardElevation="10dp"
-            app:cardUseCompatPadding="true"
-            app:strokeColor="@color/white_greyish"
-            app:strokeWidth="1dp">
+            android:layout_height="240dp"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:layout_marginBottom="5dp"
                 android:orientation="vertical"
                 android:background="@color/white">
 
@@ -36,7 +37,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="2dp"
                     android:layout_gravity="start"
                     android:letterSpacing="0.05"
                     android:textStyle="bold"
@@ -46,7 +47,7 @@
                     android:textColor="@color/grey_90"
                     android:textSize="14sp"
                     android:includeFontPadding="false"
-                    android:fontFamily="@font/sf_pro_rounded_regular"/>
+                    android:fontFamily="@font/montserra_regular_bold"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -56,13 +57,12 @@
                         android:id="@+id/ratingStar"
                         android:layout_width="110dp"
                         android:layout_height="20dp"
-                        android:layout_marginStart="18dp"
                         android:layout_marginBottom="7dp"
                         android:isIndicator="true"
-                        app:keepOriginColor="true"
-                        app:starColor="@color/myColor"
                         app:bgColor="@color/myColorthird"
-                        app:scaleFactor="1.1" />
+                        app:keepOriginColor="true"
+                        app:scaleFactor="1"
+                        app:starColor="@color/myColor" />
 
                     <TextView
                         android:id="@+id/tvNoOrders"
@@ -71,7 +71,7 @@
                         android:layout_gravity="start"
                         android:layout_marginStart="10dp"
                         android:layout_toEndOf="@+id/ratingStar"
-                        android:fontFamily="sans-serif-black"
+                        android:fontFamily="@font/montserrat_medium"
                         android:text="(0)"
                         android:textAllCaps="true"
                         android:textColor="@color/grey_90"
@@ -88,20 +88,16 @@
     <com.google.android.material.card.MaterialCardView
 
         android:layout_width="match_parent"
-        android:layout_height="225dp"
+        android:layout_height="180dp"
         android:padding="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="-283dp"
-        app:cardCornerRadius="30dp"
-        app:cardElevation="5dp"
-        app:cardUseCompatPadding="true"
-        app:strokeColor="@color/white_greyish"
-        app:strokeWidth="1dp">
+        android:layout_marginTop="-239dp"
+        app:cardBackgroundColor="@color/black"
+        app:cardCornerRadius="8dp">
 
         <ImageView
             android:id="@+id/ivRestaurant"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
             android:src="@drawable/food_placeholder" />

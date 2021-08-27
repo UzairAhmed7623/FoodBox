@@ -88,7 +88,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Toolbar toolbar;
     static Cart instance;
-    private String first_name, last_name;
+    private String name, last_name;
     private double totalDeliveryFee;
     private LocationManager locationManager;
 
@@ -104,8 +104,8 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
         instance = this;
 
         restaurant = getIntent().getStringExtra("restaurant");
-        first_name = getIntent().getStringExtra("first_name");
-        last_name = getIntent().getStringExtra("last_name");
+        name = getIntent().getStringExtra("name");
+//        last_name = getIntent().getStringExtra("last_name");
 
         cartItemsList = new ArrayList<>();
 
@@ -257,8 +257,8 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
 
                                                     if (available.equals("yes")) {
                                                         Intent intent = new Intent(Cart.this, Checkout.class);
-                                                        intent.putExtra("first_name", first_name);
-                                                        intent.putExtra("last_name", last_name);
+                                                        intent.putExtra("name", name);
+//                                                        intent.putExtra("last_name", last_name);
                                                         intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
                                                         intent.putExtra("deliveryFee", String.valueOf(deliveryDiscountAmount));
                                                         intent.putExtra("restaurant", restaurant);
@@ -268,7 +268,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                                                         startActivity(intent);
                                                     } else {
                                                         Intent intent = new Intent(Cart.this, Checkout.class);
-                                                        intent.putExtra("first_name", first_name);
+                                                        intent.putExtra("name", name);
                                                         intent.putExtra("last_name", last_name);
                                                         intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
                                                         intent.putExtra("deliveryFee", String.valueOf(deliveryDiscountAmount));
@@ -347,8 +347,8 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
 
                                                                                                         if (available.equals("yes")) {
                                                                                                             Intent intent = new Intent(Cart.this, Checkout.class);
-                                                                                                            intent.putExtra("first_name", first_name);
-                                                                                                            intent.putExtra("last_name", last_name);
+                                                                                                            intent.putExtra("name", name);
+//                                                                                                            intent.putExtra("last_name", last_name);
                                                                                                             intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
                                                                                                             intent.putExtra("deliveryFee", String.valueOf(totalDeliveryFee));
                                                                                                             intent.putExtra("restaurant", restaurant);
@@ -358,8 +358,8 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                                                                                                             startActivity(intent);
                                                                                                         } else {
                                                                                                             Intent intent = new Intent(Cart.this, Checkout.class);
-                                                                                                            intent.putExtra("first_name", first_name);
-                                                                                                            intent.putExtra("last_name", last_name);
+                                                                                                            intent.putExtra("name", name);
+//                                                                                                            intent.putExtra("last_name", last_name);
                                                                                                             intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
                                                                                                             intent.putExtra("deliveryFee", String.valueOf(totalDeliveryFee));
                                                                                                             intent.putExtra("restaurant", restaurant);

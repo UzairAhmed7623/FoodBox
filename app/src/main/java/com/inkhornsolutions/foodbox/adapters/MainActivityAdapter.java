@@ -1,9 +1,12 @@
 package com.inkhornsolutions.foodbox.adapters;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +29,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.inkhornsolutions.foodbox.Common.Common;
+import com.inkhornsolutions.foodbox.FirstProfile;
+import com.inkhornsolutions.foodbox.MainActivity;
+import com.inkhornsolutions.foodbox.Profile;
 import com.inkhornsolutions.foodbox.R;
 import com.inkhornsolutions.foodbox.RestaurantItems;
 import com.inkhornsolutions.foodbox.models.RatingClass;
@@ -38,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import es.dmoral.toasty.Toasty;
 import per.wsj.library.AndRatingBar;
 
 //import per.wsj.library.AndRatingBar;
@@ -87,36 +94,13 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
         if (approved.equals("yes")){
             if (status.equals("online")){
-
                 holder.layout.setEnabled(true);
-
-                firebaseFirestore.collection("Users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid()).get()
-                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()){
-                                    DocumentSnapshot documentSnapshot = task.getResult();
-                                    if (documentSnapshot.exists()){
-
-                                        first_name = documentSnapshot.getString("firstName");
-                                        last_name = documentSnapshot.getString("lastName");
-                                    }
-                                }
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
             }
             else {
                 holder.layout.setEnabled(false);
                 holder.layout.setClickable(false);
                 holder.itemView.setEnabled(false);
                 holder.itemView.setClickable(false);
-
                 ColorMatrix matrix = new ColorMatrix();
                 matrix.setSaturation(0);
                 holder.ivRestaurant.setColorFilter(new ColorMatrixColorFilter(matrix));
@@ -132,6 +116,8 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
             holder.ivRestaurant.setColorFilter(new ColorMatrixColorFilter(matrix));
 //            Toast.makeText(context, "Restaurant not approved yet", Toast.LENGTH_LONG).show();
         }
+        SharedPreferences sharedPreferences = context.getSharedPreferences("userName", context.MODE_PRIVATE);
+        String name = sharedPreferences.getString("name", "User Name");
 
         String resName = restaurantModelClass.getResName().trim();
         Log.d("TAG1", resName);
@@ -139,27 +125,39 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (first_name.equals("") && last_name.equals("")) {
-                    Toast.makeText(context, "Please complete your profile first.", Toast.LENGTH_LONG).show();
-                }
-                else {
-                    if (approved.equals("yes")) {
-                        if (status.equals("online")) {
-                            Intent intent = new Intent(context, RestaurantItems.class);
-                            intent.putExtra("restaurant", resName);
-                            intent.putExtra("first_name", first_name);
-                            intent.putExtra("last_name", last_name);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(intent);
+                ProgressDialog progressDialog = new ProgressDialog(context);
+                progressDialog.setMessage("Loading");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+
+                        if (name.equals("")) {
+                            progressDialog.dismiss();
+
+                            Toast.makeText(context, "Please complete your profile first.", Toast.LENGTH_LONG).show();
                         }
                         else {
-                            Toast.makeText(context, "Restaurant is offline for now, Please try again later.", Toast.LENGTH_LONG).show();
+                            if (approved.equals("yes")) {
+                                if (status.equals("online")) {
+                                    progressDialog.dismiss();
+
+                                    Intent intent = new Intent(context, RestaurantItems.class);
+                                    intent.putExtra("restaurant", resName);
+                                    intent.putExtra("name", name);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    context.startActivity(intent);
+                                }
+                                else {
+                                    progressDialog.dismiss();
+
+                                    Toast.makeText(context, "Restaurant is offline for now, Please try again later.", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                            else {
+                                progressDialog.dismiss();
+
+                                Toast.makeText(context, "This restaurant is not approved yet", Toast.LENGTH_LONG).show();
+                            }
                         }
-                    }
-                    else {
-                        Toast.makeText(context, "This restaurant is not approved yet", Toast.LENGTH_LONG).show();
-                    }
-                }
             }
         });
 

@@ -62,7 +62,7 @@ public class RestaurantItems extends AppCompatActivity {
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-    public String first_name,last_name, restaurant;
+    public String name,last_name, restaurant;
     private int badgeCount;
     private NotificationBadge notificationBadge;
     private boolean status = false;
@@ -100,8 +100,7 @@ public class RestaurantItems extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         restaurant = getIntent().getStringExtra("restaurant");
-        first_name = getIntent().getStringExtra("first_name");
-        last_name = getIntent().getStringExtra("last_name");
+        name = getIntent().getStringExtra("name");
 
         rvItems = (RecyclerView) findViewById(R.id.rvItems);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
@@ -180,7 +179,7 @@ public class RestaurantItems extends AppCompatActivity {
 
                                             ItemsModelClass itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
 
-                                            itemsModelClass.setUserName(first_name+" "+last_name);
+                                            itemsModelClass.setUserName(name);
                                             itemsModelClass.setItemName(name);
                                             itemsModelClass.setId(getDateTime());
 
@@ -214,7 +213,7 @@ public class RestaurantItems extends AppCompatActivity {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         productList.clear();
-                        adapter.notifyDataSetChanged();
+//                        adapter.notifyDataSetChanged();
 
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
                             if (documentSnapshot.exists()) {
@@ -222,7 +221,7 @@ public class RestaurantItems extends AppCompatActivity {
 
                                 itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
 
-                                itemsModelClass.setUserName(first_name + " " + last_name);
+                                itemsModelClass.setUserName(name);
                                 itemsModelClass.setItemName(name);
                                 itemsModelClass.setId(getDateTime());
 
@@ -267,8 +266,8 @@ public class RestaurantItems extends AppCompatActivity {
                             else {
                                 Intent intent = new Intent(RestaurantItems.this, Cart.class);
                                 intent.putExtra("restaurant", restaurant);
-                                intent.putExtra("first_name", first_name);
-                                intent.putExtra("last_name", last_name);
+                                intent.putExtra("name", name);
+//                                intent.putExtra("last_name", last_name);
                                 startActivity(intent);
                             }
                         }

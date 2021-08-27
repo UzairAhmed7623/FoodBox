@@ -23,6 +23,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -95,7 +97,8 @@ public class ShowItemDetails extends AppCompatActivity {
             }
         });
 
-        documentReference = firebaseFirestore.collection("Restaurants").document(resName).collection("Items").document(itemName);
+        documentReference = firebaseFirestore.collection("Restaurants").document(resName)
+                .collection("Items").document(itemName);
 
         documentReference.get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -109,9 +112,12 @@ public class ShowItemDetails extends AppCompatActivity {
                             String itemDescription = documentSnapshot.getString("description");
 
                             tvItem.setText(itemName);
-                            Picasso.get().load(itemImage).placeholder(R.drawable.food_placeholder).fit().centerCrop().into(civItemImage);
 
-//                            Glide.with(ShowItemDetails.this).load(itemImage).placeholder(R.drawable.food_placeholder).into(civItemImage);
+                            Glide.with(ShowItemDetails.this).load(itemImage).placeholder(R.drawable.food_placeholder).fitCenter()
+                                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                                    .apply(new RequestOptions().override(300))
+                                    .into(civItemImage);
+
                             price = Double.parseDouble(itemPrice.replace("PKR",""));
 
                             if (available.equals("yes")){

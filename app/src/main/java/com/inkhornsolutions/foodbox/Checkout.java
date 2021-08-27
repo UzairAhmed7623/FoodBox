@@ -166,7 +166,8 @@ public class Checkout extends AppCompatActivity {
         else {
             tvPhone.setText(phone);
         }
-        userName = getIntent().getStringExtra("first_name") + " " + getIntent().getStringExtra("last_name");;
+//        userName = getIntent().getStringExtra("first_name") + " " + getIntent().getStringExtra("last_name");;
+        userName = getIntent().getStringExtra("name");
         total = getIntent().getStringExtra("total");
         restaurant = getIntent().getStringExtra("restaurant");
         deliveryFee = getIntent().getStringExtra("deliveryFee");

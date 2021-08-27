@@ -3,6 +3,8 @@ package com.inkhornsolutions.foodbox.adapters;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +12,25 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.inkhornsolutions.foodbox.Common.Common;
 import com.inkhornsolutions.foodbox.R;
 import com.inkhornsolutions.foodbox.RestaurantItems;
 import com.inkhornsolutions.foodbox.ShowItemDetails;
 import com.inkhornsolutions.foodbox.models.ItemsModelClass;
-import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -50,33 +63,71 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
     @Override
     public RestaurentItemsAdapter.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        if (viewType == 0) {
-            View view = inflater.inflate(R.layout.restaurant_items_adapter_left, parent, false);
-            return new ViewHolder(view);
-        } else {
-            View view = inflater.inflate(R.layout.restaurant_items_adapter_right, parent, false);
-            return new ViewHolder(view);
-        }
+        View view;
+        ViewHolder vh = null;
 
+        switch (viewType){
+            case 0:
+                view = inflater.inflate(R.layout.restaurant_items_adapter_left, parent, false);
+                vh = new ViewHolder(view);
+
+            break;
+
+            case 1:
+                view = inflater.inflate(R.layout.restaurant_items_adapter_right, parent, false);
+            vh = new ViewHolder(view);
+        }
+        return vh;
     }
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull RestaurentItemsAdapter.ViewHolder holder, int position) {
         final ItemsModelClass itemsModelClass = productList.get(position);
 
-        holder.tvItem.setText(itemsModelClass.getItemName());
-//        Glide.with(context).load(itemsModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivItem);
-//            holder.tvItemSchedule.setText("Available from: "+ modelClass.getFrom()+" to "+modelClass.getTo());
-
-        Picasso.get().load(itemsModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fit().centerCrop().into(holder.ivItem);
-
         ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
 
+        holder.tvItem.setText(itemsModelClass.getItemName());
+
+        RequestOptions reqOpt = RequestOptions
+                .fitCenterTransform()
+                .transform(new CircleCrop())
+                .diskCacheStrategy(DiskCacheStrategy.DATA) // It will cache your image after loaded for first time
+                .override(300,300)
+                .priority(Priority.IMMEDIATE)
+                .encodeFormat(Bitmap.CompressFormat.JPEG)
+                .format(DecodeFormat.DEFAULT);
+
+        switch (holder.getItemViewType()) {
+            case 0:
+//                Glide.with(context).load(itemsModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter()
+//                        .diskCacheStrategy(DiskCacheStrategy.DATA)
+//                        .apply(new RequestOptions().override(150).override(250, 250))
+//                        .into(holder.ivItem);
+
+                Glide.with(context)
+                        .load(itemsModelClass.getImageUri())
+                        .thumbnail(0.25f)
+                        .apply(reqOpt)
+                        .placeholder(R.drawable.food_placeholder)
+                        .into(holder.ivItem);
+                break;
+
+            case 1:
+
+                Glide.with(context)
+                        .load(itemsModelClass.getImageUri())
+                        .thumbnail(0.25f)
+                        .apply(reqOpt)
+                        .placeholder(R.drawable.food_placeholder)
+                        .into(holder.ivItem2);
+                break;
+        }
 
         if (Common.discountAvailable.get("available").toString().equals("yes")) {
             holder.discountLayout.setVisibility(View.VISIBLE);
+            progressDialog.dismiss();
 
             holder.tvItemDiscount.setText("-" + Common.discountAvailable.get("percentage").toString() + "%");
 
@@ -89,7 +140,6 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
             name = itemsModelClass.getUserName();
 
-            progressDialog.dismiss();
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -106,6 +156,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
             });
         } else {
             holder.discountLayout.setVisibility(View.GONE);
+            progressDialog.dismiss();
 
             holder.tvItemPrice.setText("PKR" + itemsModelClass.getPrice());
             holder.tvItemCuttingPrice.setText("PKR" + itemsModelClass.getPrice());
@@ -113,8 +164,6 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
             String resName = ((RestaurantItems) context).restaurant;
 
             name = itemsModelClass.getUserName();
-
-            progressDialog.dismiss();
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -141,7 +190,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvItem, tvItemPrice, tvItemCuttingPrice, tvItemDiscount, tvItemSchedule;
-        private CircleImageView ivItem;
+        private CircleImageView ivItem, ivItem2;
         private RelativeLayout discountLayout;
 
         public ViewHolder(@NonNull View itemView) {
@@ -150,6 +199,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
             tvItem = itemView.findViewById(R.id.tvItem);
             tvItemPrice = itemView.findViewById(R.id.tvItemPrice);
             ivItem = itemView.findViewById(R.id.ivItem);
+            ivItem2 = itemView.findViewById(R.id.ivItem2);
             tvItemCuttingPrice = itemView.findViewById(R.id.tvItemCuttingPrice);
             tvItemDiscount = itemView.findViewById(R.id.tvItemDiscount);
             discountLayout = itemView.findViewById(R.id.discountLayout);

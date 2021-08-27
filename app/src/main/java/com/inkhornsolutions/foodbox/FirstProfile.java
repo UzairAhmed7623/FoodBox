@@ -135,12 +135,25 @@ public class FirstProfile extends AppCompatActivity {
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        String displayName = "", email  = "", pic  = "", phone  = "";
 
-        String displayName = firebaseUser.getDisplayName();
-        String email = firebaseUser.getEmail();
-        String pic = firebaseUser.getPhotoUrl().toString();
-        String phone = firebaseUser.getPhoneNumber();
+        if (firebaseUser.getDisplayName() != null){
+            displayName = firebaseUser.getDisplayName();
+        }
+        if (firebaseUser.getEmail() != null){
+            email = firebaseUser.getEmail();
+        }
+        if (firebaseUser.getPhotoUrl() != null){
+            pic = firebaseUser.getPhotoUrl().toString();
+        }
+        if (firebaseUser.getPhoneNumber() != null){
+            phone = firebaseUser.getPhoneNumber();
+        }
 
+        String finalDisplayName = displayName;
+        String finalEmail = email;
+        String finalPhone = phone;
+        String finalPic = pic;
         firebaseFirestore.collection("Users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -157,15 +170,15 @@ public class FirstProfile extends AppCompatActivity {
                                 tvName.setText(fName + " " + lName);
                             }
 
-                            else if (!TextUtils.isEmpty(displayName)){
+                            else if (!TextUtils.isEmpty(finalDisplayName)){
 
-                                tvFirstName.setText(displayName);
-                                tvLastName.setText(displayName);
-                                tvName.setText(displayName + " " + displayName);
+                                tvFirstName.setText(finalDisplayName);
+                                tvLastName.setText(finalDisplayName);
+                                tvName.setText(finalDisplayName + " " + finalDisplayName);
 
                                 Map<String, Object> addData = new HashMap<>();
-                                addData.put("firstName", displayName);
-                                addData.put("lastName", displayName);
+                                addData.put("firstName", finalDisplayName);
+                                addData.put("lastName", finalDisplayName);
 
                                 firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).set(addData, SetOptions.merge())
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -187,12 +200,12 @@ public class FirstProfile extends AppCompatActivity {
                                 tvEmailAddress.setText(email);
                                 tvEmail.setText(email);
                             }
-                            else if (!TextUtils.isEmpty(email)){
-                                tvEmailAddress.setText(email);
-                                tvEmail.setText(email);
+                            else if (!TextUtils.isEmpty(finalEmail)){
+                                tvEmailAddress.setText(finalEmail);
+                                tvEmail.setText(finalEmail);
 
                                 Map<String, Object> addData = new HashMap<>();
-                                addData.put("emailAddress", email);
+                                addData.put("emailAddress", finalEmail);
 
                                 firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).set(addData, SetOptions.merge())
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -212,11 +225,11 @@ public class FirstProfile extends AppCompatActivity {
                                 String mobile = documentSnapshot.getString("phoneNumber");
                                 tvMobile.setText(mobile);
                             }
-                            else if (!TextUtils.isEmpty(phone)){
-                                tvMobile.setText(phone);
+                            else if (!TextUtils.isEmpty(finalPhone)){
+                                tvMobile.setText(finalPhone);
 
                                 Map<String, Object> addData = new HashMap<>();
-                                addData.put("phoneNumber", phone);
+                                addData.put("phoneNumber", finalPhone);
 
                                 firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).set(addData, SetOptions.merge())
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -251,13 +264,13 @@ public class FirstProfile extends AppCompatActivity {
                                     Glide.with(FirstProfile.this).load(userImage).placeholder(ContextCompat.getDrawable(getApplicationContext(), R.drawable.user)).into(ivProfile);
                                 }
                             }
-                            else if (!TextUtils.isEmpty(pic)){
+                            else if (!TextUtils.isEmpty(finalPic)){
                                 if (isValidContextForGlide(FirstProfile.this)) {
 
-                                    Glide.with(FirstProfile.this).load(pic).placeholder(ContextCompat.getDrawable(getApplicationContext(), R.drawable.user)).into(ivProfile);
+                                    Glide.with(FirstProfile.this).load(finalPic).placeholder(ContextCompat.getDrawable(getApplicationContext(), R.drawable.user)).into(ivProfile);
 
                                     HashMap<String, Object> img = new HashMap<>();
-                                    img.put("UsersImageProfile", pic);
+                                    img.put("UsersImageProfile", finalPic);
 
                                     firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid()).set(img, SetOptions.merge())
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -542,13 +555,13 @@ public class FirstProfile extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("profile", MODE_PRIVATE);
         boolean isFirstTime = preferences.getBoolean("isFirstTime", true);
 
-//        if (!isFirstTime){
-//            finish();
-//            Intent intent = new Intent(FirstProfile.this, MainActivity.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            startActivity(intent);
-//            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-//        }
+        if (!isFirstTime){
+            finish();
+            Intent intent = new Intent(FirstProfile.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        }
 
         btnCompleteProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -798,13 +811,13 @@ public class FirstProfile extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("profile", MODE_PRIVATE);
         boolean isFirstTime = preferences.getBoolean("isFirstTime", true);
 
-//        if (!isFirstTime){
-//            finish();
-//            Intent intent = new Intent(FirstProfile.this, MainActivity.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            startActivity(intent);
-//            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-//        }
+        if (!isFirstTime){
+            finish();
+            Intent intent = new Intent(FirstProfile.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        }
     }
 
     public static boolean isValidContextForGlide(final Context context) {
