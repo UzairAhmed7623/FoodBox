@@ -139,13 +139,14 @@
             style="@style/profileDetailsMiniText"
             android:layout_toRightOf="@id/nameImageView"
             android:fontFamily="@font/montserra_regular"
-            android:text="Your name" />
+            android:text="" />
 
       </RelativeLayout>
 
       <View style="@style/proifleDetailsView" />
 
       <RelativeLayout
+          android:id="@+id/layoutUserMobile"
           style="@style/profileDetailsLayout">
         <ImageView
             android:id="@+id/mobileImageView"
@@ -164,7 +165,7 @@
             style="@style/profileDetailsMiniText"
             android:layout_toRightOf="@id/mobileImageView"
             android:fontFamily="@font/montserra_regular"
-            android:text="+923000000000" />
+            android:text="" />
 
       </RelativeLayout>
 
@@ -190,7 +191,7 @@
             style="@style/profileDetailsMiniText"
             android:layout_toRightOf="@id/emailImageView"
             android:fontFamily="@font/montserra_regular"
-            android:text="yourmail@gmail.com" />
+            android:text="" />
 
       </RelativeLayout>
 
@@ -218,7 +219,7 @@
             android:layout_below="@+id/addressLabel"
             android:layout_toRightOf="@id/addressImageView"
             android:fontFamily="@font/montserra_regular"
-            android:text="Your address" />
+            android:text="" />
 
       </RelativeLayout>
 
@@ -244,28 +245,41 @@
             style="@style/profileDetailsMiniText"
             android:layout_toRightOf="@id/dobImageView"
             android:fontFamily="@font/montserra_regular"
-            android:text="12/05/1990" />
+            android:text="" />
 
       </RelativeLayout>
 
       <View style="@style/proifleDetailsView" />
 
+      <com.google.android.material.button.MaterialButton
+          android:id="@+id/btnCompleteProfile"
+          android:layout_width="match_parent"
+          android:layout_height="60dp"
+          android:layout_marginTop="20dp"
+          app:backgroundTint="@color/myColor"
+          android:text="Next"
+          app:layout_anchor="@id/app_bar"
+          app:cornerRadius="50dp"
+          app:rippleColor="@color/white"
+          />
+
     </LinearLayout>
 
   </androidx.core.widget.NestedScrollView>
 
-  <com.google.android.material.floatingactionbutton.FloatingActionButton
-      android:id="@+id/btnCompleteProfile"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:src="@drawable/arrow_forward"
-      app:backgroundTint="@color/myColor"
-      android:contentDescription="Next"
-      app:fabSize="normal"
-      app:layout_anchor="@id/app_bar"
-      app:layout_anchorGravity="end|bottom"
-      android:baselineAlignBottom="false"
-      android:layout_marginEnd="25dp"
-      android:layout_marginBottom="50dp"/>
+<!--  <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--      android:id="@+id/btnCompleteProfile"-->
+<!--      android:layout_width="wrap_content"-->
+<!--      android:layout_height="wrap_content"-->
+<!--      android:src="@drawable/arrow_forward"-->
+<!--      app:backgroundTint="@color/myColor"-->
+<!--      android:contentDescription="Next"-->
+<!--      app:fabSize="normal"-->
+<!--      tex-->
+<!--      app:layout_anchor="@id/app_bar"-->
+<!--      app:layout_anchorGravity="end|bottom"-->
+<!--      android:baselineAlignBottom="false"-->
+<!--      android:layout_marginEnd="25dp"-->
+<!--      android:layout_marginBottom="50dp"/>-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

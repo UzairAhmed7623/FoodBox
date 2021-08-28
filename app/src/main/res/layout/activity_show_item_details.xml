@@ -166,7 +166,6 @@
                     android:includeFontPadding="false"
                     android:letterSpacing="0.05"
                     android:maxLines="2"
-                    android:text="1 serving"
                     android:textColor="@color/black"
                     android:textFontWeight="400"
                     android:textSize="16sp"
@@ -218,7 +217,6 @@
                         android:fontFamily="@font/montserra_regular"
                         android:includeFontPadding="false"
                         android:letterSpacing="0.03"
-                        android:text="Description is the pattern of narrative development that aims to make vivid a place, object, character, or group. Description is one of four rhetorical modes, along with exposition, argumentation, and narration. In practice it would be difficult to write literature that drew on just one of the four basic modes."
                         android:textColor="@color/black"
                         android:textFontWeight="200"
                         android:textSize="16sp" />
@@ -294,10 +292,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="30dp"
-        android:src="@drawable/arrow_back"
-        android:scaleType="fitXY"
-        android:padding="8dp"
         android:background="@drawable/back_button_back"
+        android:padding="8dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/arrow_back"
         app:tint="@color/white" />
 
 </RelativeLayout>

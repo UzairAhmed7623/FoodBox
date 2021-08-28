@@ -10,6 +10,7 @@
     tools:context=".SignUp">
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/backButton"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="40dp"
         android:layout_height="52dp"
@@ -159,7 +160,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/montserrat_semi_bold"
         android:letterSpacing="0.05"
-        android:text="Or"
+        android:text="--- Or ---"
         android:textColor="#464646"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -1,6 +1,7 @@
 package com.inkhornsolutions.foodbox;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -16,6 +17,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.inkhornsolutions.foodbox.Common.Common;
+
+import es.dmoral.toasty.Toasty;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -44,7 +47,7 @@ public class SplashScreen extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toasty.error(SplashScreen.this, error.getMessage(), Toasty.LENGTH_LONG).show();
             }
         });
 
@@ -58,15 +61,17 @@ public class SplashScreen extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                SharedPreferences signUpPreferences = getSharedPreferences("signUp", MODE_PRIVATE);
+                boolean isSignUp = signUpPreferences.getBoolean("registered", false);
 
-                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                if (FirebaseAuth.getInstance().getCurrentUser() != null || isSignUp) {
                     Intent intent = new Intent(SplashScreen.this, FirstProfile.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 }
                 else {
-                    Intent intent = new Intent(SplashScreen.this, Login.class);
+                    Intent intent = new Intent(SplashScreen.this, Welcome.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,22 +42,17 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.infideap.drawerbehavior.AdvanceDrawerLayout;
 import com.inkhornsolutions.foodbox.Common.Common;
 import com.inkhornsolutions.foodbox.adapters.MainActivityAdapter;
 import com.inkhornsolutions.foodbox.models.RestaurantModelClass;
-import com.yalantis.pulltomakesoup.PullToRefreshView;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
@@ -78,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ProgressDialog progressDialog;
     private String imageUri;
     private TextView tvItemSearch;
+    private LoginManager loginManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
+        loginManager = LoginManager.getInstance();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawerLayout = (AdvanceDrawerLayout) findViewById(R.id.drawerLayout);
@@ -188,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        tvItemSearch .setOnClickListener(new View.OnClickListener() {
+        tvItemSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Search.class);
@@ -214,11 +212,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()){
+                        if (documentSnapshot.exists()) {
                             String address = documentSnapshot.getString("address");
 
                             progressDialog.dismiss();
-                            if (address != null){
+                            if (address != null) {
 
                                 tvAddress.setText(address);
 
@@ -230,8 +228,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                     }
                                 });
-                            }
-                            else {
+                            } else {
                                 Snackbar.make(findViewById(android.R.id.content), "Address not found!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                             }
                         }
@@ -249,29 +246,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         firebaseFirestore.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error == null){
-                    for (DocumentSnapshot documentSnapshot : value.getDocuments()){
-                        if (documentSnapshot.exists()){
+                if (error == null) {
+                    for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                        if (documentSnapshot.exists()) {
                             Common.id.add(documentSnapshot.getId());
                         }
                     }
-                }
-                else {
+                } else {
                     Toasty.error(getApplicationContext(), Objects.requireNonNull(error.getMessage()), Toasty.LENGTH_LONG).show();
                 }
             }
         });
     }
 
-    private void loadData(){
+    private void loadData() {
         firebaseFirestore.collection("Restaurants").orderBy("resName", Query.Direction.ASCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot querySnapshot, @Nullable FirebaseFirestoreException error) {
                         resDetails.clear();
 
-                        if (error == null){
-                            for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()){
+                        if (error == null) {
+                            for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
                                 RestaurantModelClass restaurantModelClass = documentSnapshot.toObject(RestaurantModelClass.class);
 
                                 resDetails.add(restaurantModelClass);
@@ -279,41 +275,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             rvRestaurant.setAdapter(new MainActivityAdapter(MainActivity.this, resDetails));
                             progressDialog.dismiss();
                             mSwipeRefreshLayout.setRefreshing(false);
-                        }
-                        else {
+                        } else {
                             Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
 
-    public void headerTextView(){
+    public void headerTextView() {
         if (firebaseAuth != null) {
             DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid());
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         DocumentSnapshot documentSnapshot = task.getResult();
-                        if (documentSnapshot.exists()){
-                            if (documentSnapshot.getString("firstName") != null && documentSnapshot.getString("lastName") != null){
+                        if (documentSnapshot.exists()) {
+                            if (documentSnapshot.getString("firstName") != null && documentSnapshot.getString("lastName") != null) {
                                 String fuser_Name = documentSnapshot.getString("firstName");
                                 String luser_Name = documentSnapshot.getString("lastName");
-                                tvUserName.setText(fuser_Name +" "+luser_Name);
+                                tvUserName.setText(fuser_Name + " " + luser_Name);
                                 SharedPreferences sharedPreferences = getSharedPreferences("userName", MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putString("name", fuser_Name +" "+luser_Name);
+                                editor.putString("name", fuser_Name + " " + luser_Name);
                                 editor.apply();
-                            }
-                            else {
+                            } else {
                                 Log.d("TAG", "No data found!");
                             }
-                        }
-                        else {
+                        } else {
                             Toast.makeText(MainActivity.this, "No data found!", Toast.LENGTH_SHORT).show();
                         }
-                    }
-                    else {
+                    } else {
                         Log.d("TAG", task.getException().getMessage());
                     }
                 }
@@ -321,28 +313,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    public void headerImage(){
+    public void headerImage() {
         if (firebaseAuth != null) {
             DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         DocumentSnapshot documentSnapshot = task.getResult();
-                        if (documentSnapshot.exists()){
-                            if (documentSnapshot.getString("UsersImageProfile") != null){
+                        if (documentSnapshot.exists()) {
+                            if (documentSnapshot.getString("UsersImageProfile") != null) {
                                 imageUri = documentSnapshot.getString("UsersImageProfile");
                                 Glide.with(MainActivity.this).load(imageUri).placeholder(ContextCompat.getDrawable(getApplicationContext(), R.drawable.user)).into(ivProfileImage);
-                            }
-                            else {
+                            } else {
                                 Log.d("TAG", "Not found!");
                             }
-                        }
-                        else {
+                        } else {
                             Log.d("TAG", "No data found!");
                         }
-                    }
-                    else {
+                    } else {
                         Log.d("TAG", task.getException().getMessage());
                     }
                 }
@@ -369,10 +358,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)){
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        }
-        else {
+        } else {
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             super.onBackPressed();
         }
@@ -392,22 +380,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         DocumentSnapshot documentSnapshot = task.getResult();
-                        if (documentSnapshot.exists()){
-                            if (documentSnapshot.getString("UsersImageProfile") != null){
+                        if (documentSnapshot.exists()) {
+                            if (documentSnapshot.getString("UsersImageProfile") != null) {
                                 imageUri = documentSnapshot.getString("UsersImageProfile");
                                 Glide.with(MainActivity.this).load(imageUri).placeholder(ContextCompat.getDrawable(getApplicationContext(), R.drawable.account_circle_black)).into(toolbar_profile_Image);
-                            }
-                            else {
+                            } else {
                                 Log.d("TAG", "Not found!");
                             }
-                        }
-                        else {
+                        } else {
                             Log.d("TAG", "No data found!");
                         }
-                    }
-                    else {
+                    } else {
                         Log.d("TAG", task.getException().getMessage());
                     }
                 }
@@ -438,18 +423,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem item) {
 
-        if (item.getItemId() == R.id.trackOrder){
+        if (item.getItemId() == R.id.trackOrder) {
             Intent intent = new Intent(MainActivity.this, TrackOrders.class);
             startActivity(intent);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        }
-        else if (item.getItemId() == R.id.orderHistory){
+        } else if (item.getItemId() == R.id.orderHistory) {
             Intent intent = new Intent(MainActivity.this, OrderHistory.class);
             startActivity(intent);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        }
-        else if (item.getItemId() == R.id.logout){
-            firebaseAuth.signOut();
+        } else if (item.getItemId() == R.id.logout) {
+            if (firebaseAuth != null) {
+                SharedPreferences signUpPreferences = getSharedPreferences("signUp", MODE_PRIVATE);
+                SharedPreferences.Editor editor = signUpPreferences.edit();
+                editor.putBoolean("registered", false);
+                editor.apply();
+
+                SharedPreferences preferences = getSharedPreferences("profile", MODE_PRIVATE);
+                SharedPreferences.Editor editor1 = preferences.edit();
+                editor1.putBoolean("isFirstTime", true);
+                editor1.apply();
+
+                firebaseAuth.signOut();
+            }
+            if (loginManager != null) {
+                SharedPreferences signUpPreferences = getSharedPreferences("signUp", MODE_PRIVATE);
+                SharedPreferences.Editor editor = signUpPreferences.edit();
+                editor.putBoolean("registered", false);
+                editor.apply();
+
+                SharedPreferences preferences = getSharedPreferences("profile", MODE_PRIVATE);
+                SharedPreferences.Editor editor1 = preferences.edit();
+                editor1.putBoolean("isFirstTime", true);
+                editor1.apply();
+
+                loginManager.logOut();
+            }
+
             finish();
             startActivity(new Intent(this, SplashScreen.class));
         }

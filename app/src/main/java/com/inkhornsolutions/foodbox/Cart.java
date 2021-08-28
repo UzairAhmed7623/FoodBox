@@ -501,11 +501,6 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                 Log.d("location", "TEMPORARILY_UNAVAILABLE" + status);
                 isGPSOn();
                 break;
-            case LocationProvider.AVAILABLE:
-                Log.d("location", "AVAILABLE" + status);
-                deliveryFee();
-
-                break;
         }
     }
 
@@ -523,5 +518,11 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
     @Override
     public void onLocationUpdated(Location location) {
         deliveryFee();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
     }
 }

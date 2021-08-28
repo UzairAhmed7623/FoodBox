@@ -46,6 +46,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
@@ -89,9 +90,9 @@ public class FirstProfile extends AppCompatActivity {
     private Toolbar toolbar;
     private CoordinatorLayout rootLayout;
     private DatePickerDialog datePickerDialog;
-    private ProgressDialog progressDialog;
-    private RelativeLayout layoutUserName,layoutUserEmail,layoutUserAddress,layoutUserDOB;
-    private FloatingActionButton btnCompleteProfile;
+//    private ProgressDialog progressDialog;
+    private RelativeLayout layoutUserName,layoutUserEmail,layoutUserAddress,layoutUserDOB, layoutUserMobile;
+    private MaterialButton btnCompleteProfile;
     private String imageUri = "";
 
     @Override
@@ -120,34 +121,37 @@ public class FirstProfile extends AppCompatActivity {
         layoutUserEmail = (RelativeLayout) findViewById(R.id.layoutUserEmail);
         layoutUserAddress = (RelativeLayout) findViewById(R.id.layoutUserAddress);
         layoutUserDOB = (RelativeLayout) findViewById(R.id.layoutUserDOB);
+        layoutUserMobile = (RelativeLayout) findViewById(R.id.layoutUserMobile);
 
-        btnCompleteProfile = (FloatingActionButton) findViewById(R.id.btnCompleteProfile);
+        btnCompleteProfile = (MaterialButton) findViewById(R.id.btnCompleteProfile);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.show();
-        progressDialog.setCancelable(false);
-        progressDialog.setContentView(R.layout.progress_bar);
-        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+//        progressDialog = new ProgressDialog(this);
+//        progressDialog.show();
+//        progressDialog.setCancelable(false);
+//        progressDialog.setContentView(R.layout.progress_bar);
+//        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         String displayName = "", email  = "", pic  = "", phone  = "";
 
-        if (firebaseUser.getDisplayName() != null){
-            displayName = firebaseUser.getDisplayName();
-        }
-        if (firebaseUser.getEmail() != null){
-            email = firebaseUser.getEmail();
-        }
-        if (firebaseUser.getPhotoUrl() != null){
-            pic = firebaseUser.getPhotoUrl().toString();
-        }
-        if (firebaseUser.getPhoneNumber() != null){
-            phone = firebaseUser.getPhoneNumber();
+        if (firebaseUser != null){
+            if (firebaseUser.getDisplayName() != null){
+                displayName = firebaseUser.getDisplayName();
+            }
+            if (firebaseUser.getEmail() != null){
+                email = firebaseUser.getEmail();
+            }
+            if (firebaseUser.getPhotoUrl() != null){
+                pic = firebaseUser.getPhotoUrl().toString();
+            }
+            if (firebaseUser.getPhoneNumber() != null){
+                phone = firebaseUser.getPhoneNumber();
+            }
         }
 
         String finalDisplayName = displayName;
@@ -276,7 +280,7 @@ public class FirstProfile extends AppCompatActivity {
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
-                                                    progressDialog.dismiss();
+//                                                    progressDialog.dismiss();
                                                     Snackbar.make(rootLayout, "Image saved in database successfully!", Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
 
                                                 }
@@ -284,7 +288,7 @@ public class FirstProfile extends AppCompatActivity {
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
-                                                    progressDialog.dismiss();
+//                                                    progressDialog.dismiss();
                                                     Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                                                 }
                                             });
@@ -292,14 +296,13 @@ public class FirstProfile extends AppCompatActivity {
                             }
 
                         }
-                        progressDialog.dismiss();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
-                        progressDialog.dismiss();
+//                        progressDialog.dismiss();
                     }
                 });
 
@@ -329,6 +332,9 @@ public class FirstProfile extends AppCompatActivity {
 
                 editText.setInputType(InputType.TYPE_CLASS_TEXT);
                 editText2.setInputType(InputType.TYPE_CLASS_TEXT);
+
+                editText.setText("");
+                editText2.setText("");
 
                 btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -387,6 +393,8 @@ public class FirstProfile extends AppCompatActivity {
 
                 TextInputLayout2.setVisibility(View.GONE);
 
+                editText.setText("");
+
                 btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -424,7 +432,7 @@ public class FirstProfile extends AppCompatActivity {
             }
         });
 
-        tvMobile.setOnClickListener(new View.OnClickListener() {
+        layoutUserMobile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -566,21 +574,37 @@ public class FirstProfile extends AppCompatActivity {
         btnCompleteProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (tvName.getText().toString().equals("Your name")
-                        || tvMobile.getText().toString().equals("+923000000000")
-                        || tvEmail.getText().toString().equals("yourmail@gmail.com")
-                        || tvAddress.getText().toString().equals("Your address")
-                        || tvName.getText().toString().equals("")
-                        || tvMobile.getText().toString().equals("")
-                        || tvEmail.getText().toString().equals("")
-                        || tvAddress.getText().toString().equals("")){
-
+                if (tvName.getText().toString().equals("")){
                     SharedPreferences preferences = getSharedPreferences("profile", MODE_PRIVATE);
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putBoolean("isFirstTime", true);
                     editor.apply();
 
-                    Snackbar.make(findViewById(android.R.id.content), "Please complete your profile.", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                    Toasty.error(FirstProfile.this, "Name is required!", Toasty.LENGTH_LONG).show();
+                }
+                else if (tvMobile.getText().toString().equals("")){
+                    SharedPreferences preferences = getSharedPreferences("profile", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean("isFirstTime", true);
+                    editor.apply();
+
+                    Toasty.error(FirstProfile.this, "Mobile number is required!", Toasty.LENGTH_LONG).show();
+                }
+                else if (tvEmail.getText().toString().equals("")){
+                    SharedPreferences preferences = getSharedPreferences("profile", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean("isFirstTime", true);
+                    editor.apply();
+
+                    Toasty.error(FirstProfile.this, "Email is required!", Toasty.LENGTH_LONG).show();
+                }
+                else if (tvAddress.getText().toString().equals("")){
+                    SharedPreferences preferences = getSharedPreferences("profile", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean("isFirstTime", true);
+                    editor.apply();
+
+                    Toasty.error(FirstProfile.this, "Address is required!", Toasty.LENGTH_LONG).show();
                 }
                 else {
                     SharedPreferences preferences = getSharedPreferences("profile", MODE_PRIVATE);
@@ -660,13 +684,13 @@ public class FirstProfile extends AppCompatActivity {
                         .listener(new RequestListener<Drawable>() {
                             @Override
                             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                progressDialog.dismiss();
+//                                progressDialog.dismiss();
                                 return false; // important to return false so the error placeholder can be placed
                             }
 
                             @Override
                             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                progressDialog.dismiss();
+//                                progressDialog.dismiss();
                                 return false;
                             }
                         })
@@ -687,7 +711,7 @@ public class FirstProfile extends AppCompatActivity {
 
     private void uploadImage(Uri imageUri) {
 
-        progressDialog.show();
+//        progressDialog.show();
 
         String someFilepath = String.valueOf(imageUri);
         String extension = someFilepath.substring(someFilepath.lastIndexOf("."));
@@ -713,7 +737,7 @@ public class FirstProfile extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                progressDialog.dismiss();
+//                                progressDialog.dismiss();
                                 Snackbar.make(rootLayout, "Image uploaded!", Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
 
                             }
@@ -721,7 +745,7 @@ public class FirstProfile extends AppCompatActivity {
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                progressDialog.dismiss();
+//                                progressDialog.dismiss();
                                 Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                             }
                         });
@@ -730,7 +754,7 @@ public class FirstProfile extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        progressDialog.dismiss();
+//                        progressDialog.dismiss();
                         Snackbar.make(rootLayout, e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                     }
                 });

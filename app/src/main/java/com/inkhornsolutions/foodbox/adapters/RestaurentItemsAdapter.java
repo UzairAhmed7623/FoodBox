@@ -96,11 +96,9 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                 .diskCacheStrategy(DiskCacheStrategy.DATA) // It will cache your image after loaded for first time
                 .override(300,300)
                 .priority(Priority.IMMEDIATE)
-                .encodeFormat(Bitmap.CompressFormat.JPEG)
+                .encodeFormat(Bitmap.CompressFormat.PNG)
                 .format(DecodeFormat.DEFAULT);
 
-        switch (holder.getItemViewType()) {
-            case 0:
 //                Glide.with(context).load(itemsModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter()
 //                        .diskCacheStrategy(DiskCacheStrategy.DATA)
 //                        .apply(new RequestOptions().override(150).override(250, 250))
@@ -112,18 +110,6 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                         .apply(reqOpt)
                         .placeholder(R.drawable.food_placeholder)
                         .into(holder.ivItem);
-                break;
-
-            case 1:
-
-                Glide.with(context)
-                        .load(itemsModelClass.getImageUri())
-                        .thumbnail(0.25f)
-                        .apply(reqOpt)
-                        .placeholder(R.drawable.food_placeholder)
-                        .into(holder.ivItem2);
-                break;
-        }
 
         if (Common.discountAvailable.get("available").toString().equals("yes")) {
             holder.discountLayout.setVisibility(View.VISIBLE);
@@ -190,7 +176,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvItem, tvItemPrice, tvItemCuttingPrice, tvItemDiscount, tvItemSchedule;
-        private CircleImageView ivItem, ivItem2;
+        private CircleImageView ivItem;
         private RelativeLayout discountLayout;
 
         public ViewHolder(@NonNull View itemView) {
@@ -199,7 +185,6 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
             tvItem = itemView.findViewById(R.id.tvItem);
             tvItemPrice = itemView.findViewById(R.id.tvItemPrice);
             ivItem = itemView.findViewById(R.id.ivItem);
-            ivItem2 = itemView.findViewById(R.id.ivItem2);
             tvItemCuttingPrice = itemView.findViewById(R.id.tvItemCuttingPrice);
             tvItemDiscount = itemView.findViewById(R.id.tvItemDiscount);
             discountLayout = itemView.findViewById(R.id.discountLayout);

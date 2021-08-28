@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/Users/InkHorn Solutions/AndroidStudioProjects/FoodBox/app/src/main/res/drawable/account_circle.xml" value="0.27685185185185185" />
         <entry key="..\:/Users/InkHorn Solutions/AndroidStudioProjects/FoodBox/app/src/main/res/drawable/arrow_forward.xml" value="0.3536458333333333" />
+        <entry key="..\:/Users/InkHorn Solutions/AndroidStudioProjects/FoodBox/app/src/main/res/drawable/back_button_back.xml" value="0.3536458333333333" />
         <entry key="..\:/Users/InkHorn Solutions/AndroidStudioProjects/FoodBox/app/src/main/res/drawable/cart.xml" value="0.33425925925925926" />
         <entry key="..\:/Users/InkHorn Solutions/AndroidStudioProjects/FoodBox/app/src/main/res/drawable/facebook_icon.xml" value="0.3536458333333333" />
         <entry key="..\:/Users/InkHorn Solutions/AndroidStudioProjects/FoodBox/app/src/main/res/drawable/google_icon.xml" value="0.3536458333333333" />
@@ -20,6 +21,7 @@
         <entry key="..\:/Users/InkHorn Solutions/AndroidStudioProjects/FoodBox/app/src/main/res/layout/activity_show_item_details.xml" value="0.25" />
         <entry key="..\:/Users/InkHorn Solutions/AndroidStudioProjects/FoodBox/app/src/main/res/layout/activity_sign_up.xml" value="0.33" />
         <entry key="..\:/Users/InkHorn Solutions/AndroidStudioProjects/FoodBox/app/src/main/res/layout/activity_splash_screen.xml" value="0.3323076923076923" />
+        <entry key="..\:/Users/InkHorn Solutions/AndroidStudioProjects/FoodBox/app/src/main/res/layout/activity_track_orders.xml" value="0.3375" />
         <entry key="..\:/Users/InkHorn Solutions/AndroidStudioProjects/FoodBox/app/src/main/res/layout/activity_welcome.xml" value="0.33" />
         <entry key="..\:/Users/InkHorn Solutions/AndroidStudioProjects/FoodBox/app/src/main/res/layout/cart_notification_icon.xml" value="0.33" />
         <entry key="..\:/Users/InkHorn Solutions/AndroidStudioProjects/FoodBox/app/src/main/res/layout/edit_details.xml" value="0.25" />

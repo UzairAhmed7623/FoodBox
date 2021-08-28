@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.facebook.login.LoginManager;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.podcopic.animationlib.library.AnimationType;
@@ -108,7 +109,10 @@ public class Welcome extends AppCompatActivity {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                LoginManager.getInstance().logOut();
+
                 Intent intent = new Intent(Welcome.this, SignUp.class);
+                intent.putExtra("signUpOrLogIn", "signUp");
 
                 CircularReveal.presentActivity(new CircularReveal.Builder(
                         Welcome.this,
@@ -122,12 +126,15 @@ public class Welcome extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Welcome.this, Login.class);
-                CircularReveal.presentActivity(new CircularReveal.Builder(
-                        Welcome.this,
+                LoginManager.getInstance().logOut();
+
+                Intent intent = new Intent(Welcome.this, SignUp.class);
+                intent.putExtra("signUpOrLogIn", "logIn");
+
+                CircularReveal.presentActivity(new CircularReveal.Builder(Welcome.this,
                         btnLogin,
                         intent,
-                        800
+                        700
                 ));
             }
         });

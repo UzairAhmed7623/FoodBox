@@ -293,6 +293,7 @@ public class Checkout extends AppCompatActivity {
                                     order1.put("total", total);
                                     order1.put("promotedOrder", available);
                                     order1.put("timeStamp", FieldValue.serverTimestamp());
+                                    order1.put("newOrder", "1");
 
 
                                     firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
