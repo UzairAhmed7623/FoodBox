@@ -21,7 +21,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodBox"
-        tools:replace="android:theme">
+        tools:replace="android:theme,android:icon">
         <activity
             android:name=".onBoardingScreens"
             android:exported="true" />

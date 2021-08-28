@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -33,7 +34,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.inkhornsolutions.foodbox.adapters.RestaurentItemsAdapter;
@@ -52,6 +56,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import es.dmoral.toasty.Toasty;
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
 
@@ -115,6 +121,7 @@ public class RestaurantItems extends AppCompatActivity {
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         getData();
+        checkRestaurantStatus(restaurant);
 
         menuView.addItem("All", R.drawable.all);
         menuView.addItem("Main Course", R.drawable.main_course);
@@ -204,6 +211,38 @@ public class RestaurantItems extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void checkRestaurantStatus(String restaurant) {
+        firebaseFirestore.collection("Restaurants").document(restaurant)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
+                        if (error == null){
+                            if (documentSnapshot != null){
+                                String status = documentSnapshot.getString("status");
+                                if (status != null && status.equals("offline")) {
+
+                                    SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(RestaurantItems.this, SweetAlertDialog.ERROR_TYPE);
+                                    sweetAlertDialog .setTitleText("Oops...");
+                                    sweetAlertDialog  .setContentText("Restaurants was closed!");
+                                    sweetAlertDialog.setCancelable(false);
+                                    sweetAlertDialog  .setConfirmButton("Ok!", new SweetAlertDialog.OnSweetClickListener() {
+                                                @Override
+                                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                    onBackPressed();
+                                                }
+                                            });
+                                    sweetAlertDialog   .show();
+
+                                }
+                            }
+                        }
+                        else {
+                            Toasty.error(RestaurantItems.this, error.getMessage(), Toasty.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
 
     private void getData(){

@@ -56,13 +56,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.inkhornsolutions.foodbox.adapters.CartItemsAdapter;
 import com.inkhornsolutions.foodbox.models.CartItemsModelClass;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import es.dmoral.toasty.Toasty;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
 import p32929.androideasysql_library.Column;
@@ -129,6 +133,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(Cart.this);
 
         showCart();
+        checkRestaurantStatus(restaurant);
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -166,6 +171,38 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
             AlertDialog alert = alertDialogBuilder.create();
             alert.show();
         }
+    }
+
+    private void checkRestaurantStatus(String restaurant) {
+        firebaseFirestore.collection("Restaurants").document(restaurant)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
+                        if (error == null){
+                            if (documentSnapshot != null){
+                                String status = documentSnapshot.getString("status");
+                                if (status != null && status.equals("offline")) {
+
+                                    SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(Cart.this, SweetAlertDialog.ERROR_TYPE);
+                                    sweetAlertDialog .setTitleText("Oops...");
+                                    sweetAlertDialog  .setContentText("Restaurants was closed!");
+                                    sweetAlertDialog.setCancelable(false);
+                                    sweetAlertDialog  .setConfirmButton("Ok!", new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                            onBackPressed();
+                                        }
+                                    });
+                                    sweetAlertDialog   .show();
+
+                                }
+                            }
+                        }
+                        else {
+                            Toasty.error(Cart.this, error.getMessage(), Toasty.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
 
     public double allTotalPrice = 0.00;

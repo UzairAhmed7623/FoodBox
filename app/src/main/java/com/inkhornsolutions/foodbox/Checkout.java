@@ -5,6 +5,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -49,8 +50,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ServerTimestamp;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -72,6 +75,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import es.dmoral.toasty.Toasty;
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
@@ -180,6 +184,8 @@ public class Checkout extends AppCompatActivity {
         tvTotalPrice.setText(total);
 
         getCurrentLocation();
+
+        checkRestaurantStatus(restaurant);
 
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
@@ -363,6 +369,38 @@ public class Checkout extends AppCompatActivity {
                     }
             }
         });
+    }
+
+    private void checkRestaurantStatus(String restaurant) {
+        firebaseFirestore.collection("Restaurants").document(restaurant)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
+                        if (error == null){
+                            if (documentSnapshot != null){
+                                String status = documentSnapshot.getString("status");
+                                if (status != null && status.equals("offline")) {
+
+                                    SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(Checkout.this, SweetAlertDialog.ERROR_TYPE);
+                                    sweetAlertDialog .setTitleText("Oops...");
+                                    sweetAlertDialog  .setContentText("Restaurants was closed!");
+                                    sweetAlertDialog.setCancelable(false);
+                                    sweetAlertDialog  .setConfirmButton("Ok!", new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                            onBackPressed();
+                                        }
+                                    });
+                                    sweetAlertDialog   .show();
+
+                                }
+                            }
+                        }
+                        else {
+                            Toasty.error(Checkout.this, error.getMessage(), Toasty.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
 
     private String showAddress(LatLng latLng) throws IOException {

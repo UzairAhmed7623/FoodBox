@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -34,7 +35,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.inkhornsolutions.foodbox.models.ItemsModelClass;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
@@ -44,7 +47,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Calendar;
 import java.util.Locale;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
 
@@ -96,6 +101,8 @@ public class ShowItemDetails extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        checkRestaurantStatus(resName);
 
         documentReference = firebaseFirestore.collection("Restaurants").document(resName)
                 .collection("Items").document(itemName);
@@ -204,6 +211,39 @@ public class ShowItemDetails extends AppCompatActivity {
                 Log.d("btnAddtoCart2", title + Price + finalPrice + itemCount);
             }
         });
+    }
+
+    private void checkRestaurantStatus(String resName) {
+            firebaseFirestore.collection("Restaurants").document(resName)
+                    .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
+                            if (error == null){
+                                if (documentSnapshot != null){
+                                    String status = documentSnapshot.getString("status");
+                                    if (status != null && status.equals("offline")) {
+
+                                        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(ShowItemDetails.this, SweetAlertDialog.ERROR_TYPE);
+                                        sweetAlertDialog .setTitleText("Oops...");
+                                        sweetAlertDialog  .setContentText("Restaurants was closed!");
+                                        sweetAlertDialog.setCancelable(false);
+                                        sweetAlertDialog  .setConfirmButton("Ok!", new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                onBackPressed();
+                                            }
+                                        });
+                                        sweetAlertDialog   .show();
+
+                                    }
+                                }
+                            }
+                            else {
+                                Toasty.error(ShowItemDetails.this, error.getMessage(), Toasty.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+
     }
 
     private int itemId = 0;
