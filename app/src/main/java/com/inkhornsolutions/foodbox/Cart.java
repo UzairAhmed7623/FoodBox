@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -95,6 +96,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
     private String name, last_name;
     private double totalDeliveryFee;
     private LocationManager locationManager;
+    SweetAlertDialog sweetAlertDialog;
 
     public static Cart getInstance() {
         return instance;
@@ -132,8 +134,9 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(Cart.this);
 
-        showCart();
         checkRestaurantStatus(restaurant);
+
+        showCart();
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -171,38 +174,57 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
             AlertDialog alert = alertDialogBuilder.create();
             alert.show();
         }
+
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (sweetAlertDialog != null){
+            sweetAlertDialog.dismiss();
+            sweetAlertDialog = null;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (sweetAlertDialog != null){
+            sweetAlertDialog.dismiss();
+            sweetAlertDialog = null;
+        }
+    }
     private void checkRestaurantStatus(String restaurant) {
         firebaseFirestore.collection("Restaurants").document(restaurant)
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
-                        if (error == null){
-                            if (documentSnapshot != null){
-                                String status = documentSnapshot.getString("status");
-                                if (status != null && status.equals("offline")) {
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()){
+                    String status = documentSnapshot.getString("status");
+                    if (status != null && status.equals("offline")) {
 
-                                    SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(Cart.this, SweetAlertDialog.ERROR_TYPE);
-                                    sweetAlertDialog .setTitleText("Oops...");
-                                    sweetAlertDialog  .setContentText("Restaurants was closed!");
-                                    sweetAlertDialog.setCancelable(false);
-                                    sweetAlertDialog  .setConfirmButton("Ok!", new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            onBackPressed();
-                                        }
-                                    });
-                                    sweetAlertDialog   .show();
-
-                                }
+                        sweetAlertDialog = new SweetAlertDialog(Cart.this, SweetAlertDialog.ERROR_TYPE);
+                        sweetAlertDialog.setTitleText("Oops...");
+                        sweetAlertDialog.setContentText("Restaurants was closed!");
+                        sweetAlertDialog.setCancelable(false);
+                        sweetAlertDialog.setConfirmButton("Ok!", new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                Intent intent = new Intent(Cart.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
                             }
-                        }
-                        else {
-                            Toasty.error(Cart.this, error.getMessage(), Toasty.LENGTH_LONG).show();
-                        }
+                        });
+                        sweetAlertDialog.show();
                     }
-                });
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toasty.error(Cart.this, e.getMessage(), Toasty.LENGTH_LONG).show();
+            }
+        });
     }
 
     public double allTotalPrice = 0.00;
@@ -286,44 +308,49 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                                     public void onClick(View v) {
 
                                         FirebaseDatabase.getInstance().getReference("Admin").addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if (snapshot.exists()) {
-                                                    String percentage = snapshot.child("percentage").getValue(String.class);
-                                                    String available = snapshot.child("available").getValue(String.class);
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    if (snapshot.exists()) {
+                                                        String percentage = snapshot.child("percentage").getValue(String.class);
+                                                        String available = snapshot.child("available").getValue(String.class);
+                                                        String CHJPercentage = snapshot.child("CHJPercentage").getValue(String.class);
 
-                                                    if (available.equals("yes")) {
-                                                        Intent intent = new Intent(Cart.this, Checkout.class);
-                                                        intent.putExtra("name", name);
+                                                        if (available.equals("yes")) {
+                                                            Intent intent = new Intent(Cart.this, Checkout.class);
+                                                            intent.putExtra("name", name);
 //                                                        intent.putExtra("last_name", last_name);
-                                                        intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
-                                                        intent.putExtra("deliveryFee", String.valueOf(deliveryDiscountAmount));
-                                                        intent.putExtra("restaurant", restaurant);
-                                                        intent.putExtra("subTotal", tvSubTotal.getText().toString().replace("PKR", ""));
-                                                        intent.putExtra("available", "yes");
+                                                            intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
+                                                            intent.putExtra("deliveryFee", String.valueOf(deliveryDiscountAmount));
+                                                            intent.putExtra("restaurant", restaurant);
+                                                            intent.putExtra("subTotal", tvSubTotal.getText().toString().replace("PKR", ""));
+                                                            intent.putExtra("available", "yes");
+                                                            intent.putExtra("percentage", percentage);
+                                                            intent.putExtra("percentage", CHJPercentage);
 
-                                                        startActivity(intent);
-                                                    } else {
-                                                        Intent intent = new Intent(Cart.this, Checkout.class);
-                                                        intent.putExtra("name", name);
-                                                        intent.putExtra("last_name", last_name);
-                                                        intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
-                                                        intent.putExtra("deliveryFee", String.valueOf(deliveryDiscountAmount));
-                                                        intent.putExtra("restaurant", restaurant);
-                                                        intent.putExtra("subTotal", tvSubTotal.getText().toString().replace("PKR", ""));
-                                                        intent.putExtra("available", "no");
+                                                            startActivity(intent);
+                                                        } else {
+                                                            Intent intent = new Intent(Cart.this, Checkout.class);
+                                                            intent.putExtra("name", name);
+                                                            intent.putExtra("last_name", last_name);
+                                                            intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
+                                                            intent.putExtra("deliveryFee", String.valueOf(deliveryDiscountAmount));
+                                                            intent.putExtra("restaurant", restaurant);
+                                                            intent.putExtra("subTotal", tvSubTotal.getText().toString().replace("PKR", ""));
+                                                            intent.putExtra("available", "no");
+                                                            intent.putExtra("percentage", "0");
+                                                            intent.putExtra("percentage", CHJPercentage);
 
-                                                        startActivity(intent);
+                                                            startActivity(intent);
+                                                        }
                                                     }
                                                 }
-                                            }
 
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-                                                progressDialog.dismiss();
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+                                                    progressDialog.dismiss();
 
-                                            }
-                                        });
+                                                }
+                                            });
                                     }
                                 });
                             }
@@ -375,45 +402,50 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                                                                                         @Override
                                                                                         public void onClick(View v) {
 
-                                                                                            FirebaseDatabase.getInstance().getReference("Admin").addValueEventListener(new ValueEventListener() {
-                                                                                                @Override
-                                                                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                                                    if (snapshot.exists()) {
-                                                                                                        String percentage = snapshot.child("percentage").getValue(String.class);
-                                                                                                        String available = snapshot.child("available").getValue(String.class);
+                                                                                                FirebaseDatabase.getInstance().getReference("Admin").addValueEventListener(new ValueEventListener() {
+                                                                                                    @Override
+                                                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                                                        if (snapshot.exists()) {
+                                                                                                            String percentage = snapshot.child("percentage").getValue(String.class);
+                                                                                                            String available = snapshot.child("available").getValue(String.class);
+                                                                                                            String CHJPercentage = snapshot.child("CHJPercentage").getValue(String.class);
 
-                                                                                                        if (available.equals("yes")) {
-                                                                                                            Intent intent = new Intent(Cart.this, Checkout.class);
-                                                                                                            intent.putExtra("name", name);
+                                                                                                            if (available.equals("yes")) {
+                                                                                                                Intent intent = new Intent(Cart.this, Checkout.class);
+                                                                                                                intent.putExtra("name", name);
 //                                                                                                            intent.putExtra("last_name", last_name);
-                                                                                                            intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
-                                                                                                            intent.putExtra("deliveryFee", String.valueOf(totalDeliveryFee));
-                                                                                                            intent.putExtra("restaurant", restaurant);
-                                                                                                            intent.putExtra("subTotal", tvSubTotal.getText().toString().replace("PKR", ""));
-                                                                                                            intent.putExtra("available", "yes");
+                                                                                                                intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
+                                                                                                                intent.putExtra("deliveryFee", String.valueOf(totalDeliveryFee));
+                                                                                                                intent.putExtra("restaurant", restaurant);
+                                                                                                                intent.putExtra("subTotal", tvSubTotal.getText().toString().replace("PKR", ""));
+                                                                                                                intent.putExtra("available", "yes");
+                                                                                                                intent.putExtra("percentage", percentage);
+                                                                                                                intent.putExtra("CHJPercentage", CHJPercentage);
 
-                                                                                                            startActivity(intent);
-                                                                                                        } else {
-                                                                                                            Intent intent = new Intent(Cart.this, Checkout.class);
-                                                                                                            intent.putExtra("name", name);
+                                                                                                                startActivity(intent);
+                                                                                                            } else {
+                                                                                                                Intent intent = new Intent(Cart.this, Checkout.class);
+                                                                                                                intent.putExtra("name", name);
 //                                                                                                            intent.putExtra("last_name", last_name);
-                                                                                                            intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
-                                                                                                            intent.putExtra("deliveryFee", String.valueOf(totalDeliveryFee));
-                                                                                                            intent.putExtra("restaurant", restaurant);
-                                                                                                            intent.putExtra("subTotal", tvSubTotal.getText().toString().replace("PKR", ""));
-                                                                                                            intent.putExtra("available", "no");
+                                                                                                                intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
+                                                                                                                intent.putExtra("deliveryFee", String.valueOf(totalDeliveryFee));
+                                                                                                                intent.putExtra("restaurant", restaurant);
+                                                                                                                intent.putExtra("subTotal", tvSubTotal.getText().toString().replace("PKR", ""));
+                                                                                                                intent.putExtra("available", "no");
+                                                                                                                intent.putExtra("percentage", "0");
+                                                                                                                intent.putExtra("CHJPercentage", CHJPercentage);
 
-                                                                                                            startActivity(intent);
+                                                                                                                startActivity(intent);
+                                                                                                            }
                                                                                                         }
                                                                                                     }
-                                                                                                }
 
-                                                                                                @Override
-                                                                                                public void onCancelled(@NonNull DatabaseError error) {
-                                                                                                    progressDialog.dismiss();
+                                                                                                    @Override
+                                                                                                    public void onCancelled(@NonNull DatabaseError error) {
+                                                                                                        progressDialog.dismiss();
 
-                                                                                                }
-                                                                                            });
+                                                                                                    }
+                                                                                                });
                                                                                         }
                                                                                     });
                                                                                 } else {
@@ -524,7 +556,6 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
         return true;
     }
 
-
     @Override
     public void onLocationChanged(@NonNull Location location) {
         Log.d("location", "onLocationChanged" + location);
@@ -557,9 +588,4 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
         deliveryFee();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-    }
 }

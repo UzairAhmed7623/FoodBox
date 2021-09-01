@@ -1,7 +1,9 @@
 package com.inkhornsolutions.foodbox;
 
-import android.app.ActivityOptions;
-import android.app.AlertDialog;
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -9,12 +11,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,33 +21,30 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Lifecycle;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.inkhornsolutions.foodbox.models.ItemsModelClass;
-import com.makeramen.roundedimageview.RoundedImageView;
-import com.squareup.picasso.Picasso;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
@@ -59,7 +55,7 @@ public class ShowItemDetails extends AppCompatActivity {
     private int count = 1;
     private ImageButton backArrow;
     private KenBurnsView civItemImage;
-    private TextView tvItem, tvPrice, tvDescription, tvQuantity, tvDisplay, tvFinalPrice;
+    private TextView tvItem, tvPrice, tvDescription, tvQuantity, tvDisplay, tvFinalPrice, tvResName;
     private MaterialButton btnAddtoCart;
     private String resName, itemName, itemImage, itemPrice, userName, available, percentage;
     private DocumentReference documentReference;
@@ -67,6 +63,9 @@ public class ShowItemDetails extends AppCompatActivity {
     private double price = 0;
     private double finalPrice = 0;
     private int itemCount, discountedPrice;
+    SweetAlertDialog sweetAlertDialog;
+    EventListener<DocumentSnapshot> eventListener;
+    ListenerRegistration listenerRegistration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +83,7 @@ public class ShowItemDetails extends AppCompatActivity {
         btnDecrement = (MaterialButton) findViewById(R.id.btnDecrement);
         tvDisplay = (TextView) findViewById(R.id.tvDisplay);
         tvFinalPrice = (TextView) findViewById(R.id.tvFinalPrice);
+        tvResName = (TextView) findViewById(R.id.tvResName);
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
@@ -102,7 +102,7 @@ public class ShowItemDetails extends AppCompatActivity {
             }
         });
 
-        checkRestaurantStatus(resName);
+        tvResName.setText(resName);
 
         documentReference = firebaseFirestore.collection("Restaurants").document(resName)
                 .collection("Items").document(itemName);
@@ -111,7 +111,7 @@ public class ShowItemDetails extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()){
+                        if (documentSnapshot.exists()) {
                             String itemName = documentSnapshot.getId();
                             itemImage = documentSnapshot.getString("imageUri");
                             itemPrice = documentSnapshot.getString("price");
@@ -125,17 +125,16 @@ public class ShowItemDetails extends AppCompatActivity {
                                     .apply(new RequestOptions().override(300))
                                     .into(civItemImage);
 
-                            price = Double.parseDouble(itemPrice.replace("PKR",""));
+                            price = Double.parseDouble(itemPrice.replace("PKR", ""));
 
-                            if (available.equals("yes")){
+                            if (available.equals("yes")) {
 
                                 discountedPrice = ((100 - Integer.parseInt(percentage)) * (int) price) / 100;
 
                                 tvPrice.setText("PKR" + discountedPrice);
                                 tvFinalPrice.setText(String.valueOf(discountedPrice));
 
-                            }
-                            else {
+                            } else {
                                 tvPrice.setText("PKR" + price);
                                 tvFinalPrice.setText(String.valueOf(price));
 
@@ -162,33 +161,31 @@ public class ShowItemDetails extends AppCompatActivity {
                 tvDisplay.setText(String.valueOf(count));
                 itemCount = Integer.parseInt(tvDisplay.getText().toString().trim());
 
-                if (available.equals("yes")){
+                if (available.equals("yes")) {
                     finalPrice = discountedPrice * itemCount;
-                }
-                else {
+                } else {
                     finalPrice = Integer.parseInt(itemPrice) * itemCount;
                 }
 
-                tvFinalPrice.setText(""+finalPrice);
+                tvFinalPrice.setText("" + finalPrice);
             }
         });
 
         btnDecrement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (count > 1){
+                if (count > 1) {
                     count--;
                     tvDisplay.setText(String.valueOf(count));
                     itemCount = Integer.parseInt(tvDisplay.getText().toString().trim());
 
-                    if (available.equals("yes")){
+                    if (available.equals("yes")) {
                         finalPrice = discountedPrice * itemCount;
-                    }
-                    else {
+                    } else {
                         finalPrice = Integer.parseInt(itemPrice) * itemCount;
                     }
 
-                    tvFinalPrice.setText(""+finalPrice);
+                    tvFinalPrice.setText("" + finalPrice);
                 }
             }
         });
@@ -198,10 +195,9 @@ public class ShowItemDetails extends AppCompatActivity {
             public void onClick(View v) {
                 String title = tvItem.getText().toString().trim();
                 String Price;
-                if (available.equals("yes")){
+                if (available.equals("yes")) {
                     Price = String.valueOf(discountedPrice);
-                }
-                else {
+                } else {
                     Price = String.valueOf(price);
                 }
                 finalPrice = Double.parseDouble(tvFinalPrice.getText().toString().trim());
@@ -211,42 +207,46 @@ public class ShowItemDetails extends AppCompatActivity {
                 Log.d("btnAddtoCart2", title + Price + finalPrice + itemCount);
             }
         });
+
+        checkRestaurantStatus(resName);
     }
 
+
     private void checkRestaurantStatus(String resName) {
-            firebaseFirestore.collection("Restaurants").document(resName)
-                    .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
-                            if (error == null){
-                                if (documentSnapshot != null){
-                                    String status = documentSnapshot.getString("status");
-                                    if (status != null && status.equals("offline")) {
 
-                                        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(ShowItemDetails.this, SweetAlertDialog.ERROR_TYPE);
-                                        sweetAlertDialog .setTitleText("Oops...");
-                                        sweetAlertDialog  .setContentText("Restaurants was closed!");
-                                        sweetAlertDialog.setCancelable(false);
-                                        sweetAlertDialog  .setConfirmButton("Ok!", new SweetAlertDialog.OnSweetClickListener() {
-                                            @Override
-                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                                onBackPressed();
-                                            }
-                                        });
-                                        sweetAlertDialog   .show();
+        firebaseFirestore.collection("Restaurants").document(resName).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()){
+                    String status = documentSnapshot.getString("status");
+                    if (status != null && status.equals("offline")) {
 
-                                    }
-                                }
+                        sweetAlertDialog = new SweetAlertDialog(ShowItemDetails.this, SweetAlertDialog.ERROR_TYPE);
+                        sweetAlertDialog.setTitleText("Oops...");
+                        sweetAlertDialog.setContentText("Restaurants was closed!");
+                        sweetAlertDialog.setCancelable(false);
+                        sweetAlertDialog.setConfirmButton("Ok!", new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                Intent intent = new Intent(ShowItemDetails.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
                             }
-                            else {
-                                Toasty.error(ShowItemDetails.this, error.getMessage(), Toasty.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-
+                        });
+                        sweetAlertDialog.show();
+                    }
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toasty.error(ShowItemDetails.this, e.getMessage(), Toasty.LENGTH_LONG).show();
+            }
+        });
     }
 
     private int itemId = 0;
+
     private void addToCart(String productId, String title, String imageUri, String price, String finalPrice, String itemCount) {
         itemId++;
 
@@ -262,7 +262,7 @@ public class ShowItemDetails extends AppCompatActivity {
                 .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
                 .doneTableColumn();
 
-        Log.d("btnAddtoCart3", productId +" " +imageUri+" " +title+" " + price+" " + finalPrice+" " + itemCount);
+        Log.d("btnAddtoCart3", productId + " " + imageUri + " " + title + " " + price + " " + finalPrice + " " + itemCount);
 
         boolean b = easyDB
                 .addData("Item_Id", itemId)
@@ -275,27 +275,24 @@ public class ShowItemDetails extends AppCompatActivity {
                 .addData("Item_Image_Uri", imageUri)
                 .doneDataAdding();
 
-        if (b){
-            Snackbar.make(findViewById(android.R.id.content), "Added to Cart!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
-        }
-        else {
-            Toast.makeText(this, "Error!", Toast.LENGTH_SHORT).show();
-        }
-
         Cursor cursor = easyDB.getAllData();
         while (cursor.moveToNext()) {
             String id = cursor.getString(0);
-            boolean update = easyDB.updateData(1,id).rowID(Integer.valueOf(id));
+            boolean update = easyDB.updateData(1, id).rowID(Integer.valueOf(id));
+        }
+        if (b) {
+            Snackbar.make(findViewById(android.R.id.content), "Added to Cart!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    onBackPressed();
+                }
+            }, 1000);
+        } else {
+            Toast.makeText(this, "Error!", Toast.LENGTH_SHORT).show();
         }
 
         RestaurantItems.getInstance().updateCartCount();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                onBackPressed();
-            }
-        }, 1000);
     }
 
     private String getDateTime() {
@@ -305,9 +302,35 @@ public class ShowItemDetails extends AppCompatActivity {
 
         //dd=day, MM=month, yyyy=year, hh=hour, mm=minute, ss=second.
 
-        String date = DateFormat.format("dd-MM-yyyy kk-mm",calendar).toString();
+        String date = DateFormat.format("dd-MM-yyyy kk-mm", calendar).toString();
 
         return date;
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (sweetAlertDialog != null) {
+            sweetAlertDialog.dismiss();
+            sweetAlertDialog = null;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (sweetAlertDialog != null) {
+            sweetAlertDialog.dismiss();
+            sweetAlertDialog = null;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (sweetAlertDialog != null) {
+            sweetAlertDialog.dismiss();
+            sweetAlertDialog = null;
+        }
+    }
 }

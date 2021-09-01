@@ -33,7 +33,7 @@ public class SplashScreen extends AppCompatActivity {
 
         progressBar = (CircularProgressIndicator) findViewById(R.id.progressBar);
 
-        FirebaseDatabase.getInstance().getReference("Admin").addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference("Admin").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {

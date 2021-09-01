@@ -78,5 +78,4 @@ public class Common {
             Log.d("TAG", "Intent is null");
         }
     }
-
 }

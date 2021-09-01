@@ -63,21 +63,15 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
     @Override
     public RestaurentItemsAdapter.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view;
-        ViewHolder vh = null;
 
-        switch (viewType){
-            case 0:
-                view = inflater.inflate(R.layout.restaurant_items_adapter_left, parent, false);
-                vh = new ViewHolder(view);
-
-            break;
-
-            case 1:
-                view = inflater.inflate(R.layout.restaurant_items_adapter_right, parent, false);
-            vh = new ViewHolder(view);
+        if (viewType == 0) {
+            View view = inflater.inflate(R.layout.restaurant_items_adapter_left, parent, false);
+            return new ViewHolder(view);
         }
-        return vh;
+        else {
+            View view1 = inflater.inflate(R.layout.restaurant_items_adapter_right, parent, false);
+            return new ViewHolder(view1);
+        }
     }
 
     @Override
@@ -94,10 +88,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                 .fitCenterTransform()
                 .transform(new CircleCrop())
                 .diskCacheStrategy(DiskCacheStrategy.DATA) // It will cache your image after loaded for first time
-                .override(300,300)
-                .priority(Priority.IMMEDIATE)
-                .encodeFormat(Bitmap.CompressFormat.PNG)
-                .format(DecodeFormat.DEFAULT);
+                .override(300,300);
 
 //                Glide.with(context).load(itemsModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter()
 //                        .diskCacheStrategy(DiskCacheStrategy.DATA)

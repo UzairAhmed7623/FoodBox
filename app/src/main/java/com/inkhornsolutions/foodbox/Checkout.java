@@ -90,12 +90,13 @@ public class Checkout extends AppCompatActivity {
     private TextView tvChangeAddress, tvUserName, tvAddress, tvPhone, tvTotalPrice;
     private RadioButton rbDoorDelivery;
     private Button btnCheckOut;
-    private String phone, userName, total, add, restaurant, deliveryFee, subTotal, available;
+    private String phone, userName, total, add, restaurant, deliveryFee, subTotal, available,percentage, CHJPercentage;
     private LatLng latLng;
     private ArrayList<CartItemsModelClass> cartItemsList;
     private CartItemsModelClass cartItemsModelClass;
     public double allTotalPrice = 0.00;
     private ConstraintLayout rootLayout;
+    SweetAlertDialog sweetAlertDialog;
 
     ActivityResultLauncher<Intent> launcher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -177,6 +178,8 @@ public class Checkout extends AppCompatActivity {
         deliveryFee = getIntent().getStringExtra("deliveryFee");
         subTotal = getIntent().getStringExtra("subTotal");
         available = getIntent().getStringExtra("available");
+        percentage = getIntent().getStringExtra("percentage");
+        CHJPercentage = getIntent().getStringExtra("CHJPercentage");
 
         cartItemsList = new ArrayList<>();
 
@@ -184,8 +187,6 @@ public class Checkout extends AppCompatActivity {
         tvTotalPrice.setText(total);
 
         getCurrentLocation();
-
-        checkRestaurantStatus(restaurant);
 
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
@@ -300,7 +301,8 @@ public class Checkout extends AppCompatActivity {
                                     order1.put("promotedOrder", available);
                                     order1.put("timeStamp", FieldValue.serverTimestamp());
                                     order1.put("newOrder", "1");
-
+                                    order1.put("percentage",percentage);
+                                    order1.put("CHJPercentage",CHJPercentage);
 
                                     firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
                                             .collection("Cart").document(restaurant+" "+getDateTime())
@@ -369,38 +371,56 @@ public class Checkout extends AppCompatActivity {
                     }
             }
         });
+        checkRestaurantStatus(restaurant);
+    }
+    private void checkRestaurantStatus(String restaurant) {
+        firebaseFirestore.collection("Restaurants").document(restaurant).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()){
+                    String status = documentSnapshot.getString("status");
+                    if (status != null && status.equals("offline")) {
+
+                        sweetAlertDialog = new SweetAlertDialog(Checkout.this, SweetAlertDialog.ERROR_TYPE);
+                        sweetAlertDialog.setTitleText("Oops...");
+                        sweetAlertDialog.setContentText("Restaurants was closed!");
+                        sweetAlertDialog.setCancelable(false);
+                        sweetAlertDialog.setConfirmButton("Ok!", new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                Intent intent = new Intent(Checkout.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            }
+                        });
+                        sweetAlertDialog.show();
+                    }
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toasty.error(Checkout.this, e.getMessage(), Toasty.LENGTH_LONG).show();
+            }
+        });
     }
 
-    private void checkRestaurantStatus(String restaurant) {
-        firebaseFirestore.collection("Restaurants").document(restaurant)
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
-                        if (error == null){
-                            if (documentSnapshot != null){
-                                String status = documentSnapshot.getString("status");
-                                if (status != null && status.equals("offline")) {
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (sweetAlertDialog != null){
+            sweetAlertDialog.dismiss();
+            sweetAlertDialog = null;
+        }
+    }
 
-                                    SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(Checkout.this, SweetAlertDialog.ERROR_TYPE);
-                                    sweetAlertDialog .setTitleText("Oops...");
-                                    sweetAlertDialog  .setContentText("Restaurants was closed!");
-                                    sweetAlertDialog.setCancelable(false);
-                                    sweetAlertDialog  .setConfirmButton("Ok!", new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            onBackPressed();
-                                        }
-                                    });
-                                    sweetAlertDialog   .show();
-
-                                }
-                            }
-                        }
-                        else {
-                            Toasty.error(Checkout.this, error.getMessage(), Toasty.LENGTH_LONG).show();
-                        }
-                    }
-                });
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (sweetAlertDialog != null){
+            sweetAlertDialog.dismiss();
+            sweetAlertDialog = null;
+        }
     }
 
     private String showAddress(LatLng latLng) throws IOException {

@@ -1,15 +1,20 @@
 package com.inkhornsolutions.foodbox;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.Application;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -30,16 +36,14 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.inkhornsolutions.foodbox.Common.Common;
 import com.inkhornsolutions.foodbox.adapters.RestaurentItemsAdapter;
 import com.inkhornsolutions.foodbox.models.ItemsModelClass;
 import com.karumi.dexter.Dexter;
@@ -68,7 +72,7 @@ public class RestaurantItems extends AppCompatActivity {
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-    public String name,last_name, restaurant;
+    public String name, last_name, restaurant;
     private int badgeCount;
     private NotificationBadge notificationBadge;
     private boolean status = false;
@@ -79,6 +83,9 @@ public class RestaurantItems extends AppCompatActivity {
     private RestaurentItemsAdapter adapter;
     private ItemsModelClass itemsModelClass;
     int size;
+    SweetAlertDialog sweetAlertDialog;
+    EventListener<DocumentSnapshot> eventListener;
+    ListenerRegistration listenerRegistration;
 
     public static RestaurantItems getInstance() {
         return instance;
@@ -108,6 +115,8 @@ public class RestaurantItems extends AppCompatActivity {
         restaurant = getIntent().getStringExtra("restaurant");
         name = getIntent().getStringExtra("name");
 
+        getSupportActionBar().setTitle(restaurant);
+
         rvItems = (RecyclerView) findViewById(R.id.rvItems);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         staggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
@@ -121,7 +130,6 @@ public class RestaurantItems extends AppCompatActivity {
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         getData();
-        checkRestaurantStatus(restaurant);
 
         menuView.addItem("All", R.drawable.all);
         menuView.addItem("Main Course", R.drawable.main_course);
@@ -133,43 +141,39 @@ public class RestaurantItems extends AppCompatActivity {
         menuView.setOnHSMenuClickListener(new HorizontalScrollMenuView.OnHSMenuClickListener() {
             @Override
             public void onHSMClick(com.darwindeveloper.horizontalscrollmenulibrary.extras.MenuItem menuItem, int position) {
-                if (position == 0){
-                    menuView.editItem(position,"All",R.drawable.all_color, false,0);
-                    menuView.editItem(1,"Main Course",R.drawable.main_course, false,0);
-                    menuView.editItem(2,"Drinks",R.drawable.soft_drink, false,0);
-                    menuView.editItem(3,"Frozen",R.drawable.frozen, false,0);
-                    menuView.editItem(4,"Sides",R.drawable.sides, false,0);
-                }
-                else if (position == 1){
-                    menuView.editItem(position,"Main Course",R.drawable.main_course_color, false,0);
-                    menuView.editItem(0,"All",R.drawable.all, false,0);
-                    menuView.editItem(2,"Drinks",R.drawable.soft_drink, false,0);
-                    menuView.editItem(3,"Frozen",R.drawable.frozen, false,0);
-                    menuView.editItem(4,"Sides",R.drawable.sides, false,0);
-                }
-                else if (position == 2){
-                    menuView.editItem(position,"Drinks",R.drawable.soft_drink_color, false,0);
-                    menuView.editItem(0,"All",R.drawable.all, false,0);
-                    menuView.editItem(1,"Main Course",R.drawable.main_course, false,0);
-                    menuView.editItem(3,"Frozen",R.drawable.frozen, false,0);
-                    menuView.editItem(4,"Sides",R.drawable.sides, false,0);
-                }
-                else if (position == 3){
-                    menuView.editItem(position,"Frozen",R.drawable.frozen_color, false,0);
-                    menuView.editItem(0,"All",R.drawable.all, false,0);
-                    menuView.editItem(1,"Main Course",R.drawable.main_course, false,0);
-                    menuView.editItem(2,"Drinks",R.drawable.soft_drink, false,0);
-                    menuView.editItem(4,"Sides",R.drawable.sides, false,0);
-                }
-                else if (position == 4){
-                    menuView.editItem(position,"Sides",R.drawable.sides_color, false,0);
-                    menuView.editItem(0,"All",R.drawable.all, false,0);
-                    menuView.editItem(1,"Main Course",R.drawable.main_course, false,0);
-                    menuView.editItem(2,"Drinks",R.drawable.soft_drink, false,0);
-                    menuView.editItem(3,"Frozen",R.drawable.frozen, false,0);
+                if (position == 0) {
+                    menuView.editItem(position, "All", R.drawable.all_color, false, 0);
+                    menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
+                    menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
+                    menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
+                    menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
+                } else if (position == 1) {
+                    menuView.editItem(position, "Main Course", R.drawable.main_course_color, false, 0);
+                    menuView.editItem(0, "All", R.drawable.all, false, 0);
+                    menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
+                    menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
+                    menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
+                } else if (position == 2) {
+                    menuView.editItem(position, "Drinks", R.drawable.soft_drink_color, false, 0);
+                    menuView.editItem(0, "All", R.drawable.all, false, 0);
+                    menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
+                    menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
+                    menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
+                } else if (position == 3) {
+                    menuView.editItem(position, "Frozen", R.drawable.frozen_color, false, 0);
+                    menuView.editItem(0, "All", R.drawable.all, false, 0);
+                    menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
+                    menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
+                    menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
+                } else if (position == 4) {
+                    menuView.editItem(position, "Sides", R.drawable.sides_color, false, 0);
+                    menuView.editItem(0, "All", R.drawable.all, false, 0);
+                    menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
+                    menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
+                    menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
                 }
 
-                if (position != 0){
+                if (position != 0) {
                     firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
                             .whereEqualTo("category", menuItem.getText())
                             .get()
@@ -180,8 +184,8 @@ public class RestaurantItems extends AppCompatActivity {
                                     productList.clear();
                                     adapter.notifyDataSetChanged();
 
-                                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
-                                        if (documentSnapshot.exists()){
+                                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                        if (documentSnapshot.exists()) {
                                             String name = documentSnapshot.getId();
 
                                             ItemsModelClass itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
@@ -211,41 +215,45 @@ public class RestaurantItems extends AppCompatActivity {
                 }
             }
         });
+
+        checkRestaurantStatus(restaurant);
     }
 
     private void checkRestaurantStatus(String restaurant) {
-        firebaseFirestore.collection("Restaurants").document(restaurant)
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
-                        if (error == null){
-                            if (documentSnapshot != null){
-                                String status = documentSnapshot.getString("status");
-                                if (status != null && status.equals("offline")) {
 
-                                    SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(RestaurantItems.this, SweetAlertDialog.ERROR_TYPE);
-                                    sweetAlertDialog .setTitleText("Oops...");
-                                    sweetAlertDialog  .setContentText("Restaurants was closed!");
-                                    sweetAlertDialog.setCancelable(false);
-                                    sweetAlertDialog  .setConfirmButton("Ok!", new SweetAlertDialog.OnSweetClickListener() {
-                                                @Override
-                                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                                    onBackPressed();
-                                                }
-                                            });
-                                    sweetAlertDialog   .show();
+        firebaseFirestore.collection("Restaurants").document(restaurant).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()){
+                    String status = documentSnapshot.getString("status");
 
-                                }
+                    if (status != null && status.equals("offline")) {
+
+                        sweetAlertDialog = new SweetAlertDialog(RestaurantItems.this, SweetAlertDialog.ERROR_TYPE);
+                        sweetAlertDialog.setTitleText("Oops...");
+                        sweetAlertDialog.setContentText("Restaurants was closed!");
+                        sweetAlertDialog.setCancelable(false);
+                        sweetAlertDialog.setConfirmButton("Ok!", new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                Intent intent = new Intent(RestaurantItems.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
                             }
-                        }
-                        else {
-                            Toasty.error(RestaurantItems.this, error.getMessage(), Toasty.LENGTH_LONG).show();
-                        }
+                        });
+                        sweetAlertDialog.show();
                     }
-                });
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toasty.error(RestaurantItems.this, e.getMessage(), Toasty.LENGTH_LONG).show();
+            }
+        });
     }
 
-    private void getData(){
+    private void getData() {
         firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -254,7 +262,7 @@ public class RestaurantItems extends AppCompatActivity {
                         productList.clear();
 //                        adapter.notifyDataSetChanged();
 
-                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                             if (documentSnapshot.exists()) {
                                 String name = documentSnapshot.getId();
 
@@ -297,31 +305,30 @@ public class RestaurantItems extends AppCompatActivity {
             public void onClick(View v) {
 
                 Dexter.withContext(RestaurantItems.this).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
-                        @Override
-                        public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                            if (badgeCount == 0){
-                                Snackbar.make(findViewById(android.R.id.content), "You have not added any product till now!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
-                            }
-                            else {
-                                Intent intent = new Intent(RestaurantItems.this, Cart.class);
-                                intent.putExtra("restaurant", restaurant);
-                                intent.putExtra("name", name);
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+                        if (badgeCount == 0) {
+                            Snackbar.make(findViewById(android.R.id.content), "You have not added any product till now!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                        } else {
+                            Intent intent = new Intent(RestaurantItems.this, Cart.class);
+                            intent.putExtra("restaurant", restaurant);
+                            intent.putExtra("name", name);
 //                                intent.putExtra("last_name", last_name);
-                                startActivity(intent);
-                            }
+                            startActivity(intent);
                         }
+                    }
 
-                        @Override
-                        public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                            Snackbar.make(findViewById(android.R.id.content), "Please accept the permission!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+                        Snackbar.make(findViewById(android.R.id.content), "Please accept the permission!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
 
-                        }
+                    }
 
-                        @Override
-                        public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
-                            permissionToken.continuePermissionRequest();
-                        }
-                    }).check();
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+                        permissionToken.continuePermissionRequest();
+                    }
+                }).check();
 //                }
             }
         });
@@ -335,13 +342,13 @@ public class RestaurantItems extends AppCompatActivity {
 
         //dd=day, MM=month, yyyy=year, hh=hour, mm=minute, ss=second.
 
-        String date = DateFormat.format("dd-MM-yyyy hh-mm",calendar).toString();
+        String date = DateFormat.format("dd-MM-yyyy hh-mm", calendar).toString();
 
         return date;
     }
 
     public void updateCartCount() {
-        if (notificationBadge == null){
+        if (notificationBadge == null) {
             return;
         }
         runOnUiThread(new Runnable() {
@@ -361,12 +368,11 @@ public class RestaurantItems extends AppCompatActivity {
 
                 Cursor res = easyDB.getAllData();
                 int c = res.getCount();
-                if (c == 0){
+                if (c == 0) {
                     notificationBadge.setText(String.valueOf(0));
                     notificationBadge.setVisibility(View.INVISIBLE);
                     badgeCount = c;
-                }
-                else {
+                } else {
                     badgeCount = c;
                     notificationBadge.setVisibility(View.VISIBLE);
                     notificationBadge.setText(String.valueOf(c));
@@ -402,7 +408,7 @@ public class RestaurantItems extends AppCompatActivity {
 
         Cursor data = easyDB.getAllData();
 
-        if (data.getCount() != 0){
+        if (data.getCount() != 0) {
             AlertDialog.Builder alertDialog = new Builder(RestaurantItems.this);
             alertDialog.setTitle("Cart Alert")
                     .setMessage("If you go back your cart data will be deleted. Would you want to go back?")
@@ -416,8 +422,7 @@ public class RestaurantItems extends AppCompatActivity {
                     .setNegativeButton(android.R.string.cancel, null)
                     .setCancelable(false)
                     .show();
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
     }
@@ -436,5 +441,38 @@ public class RestaurantItems extends AppCompatActivity {
                 .doneTableColumn();
 
         easyDB.deleteAllDataFromTable();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkRestaurantStatus(restaurant);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (sweetAlertDialog != null) {
+            sweetAlertDialog.dismiss();
+            sweetAlertDialog = null;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (sweetAlertDialog != null) {
+            sweetAlertDialog.dismiss();
+            sweetAlertDialog = null;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (sweetAlertDialog != null) {
+            sweetAlertDialog.dismiss();
+            sweetAlertDialog = null;
+        }
     }
 }
