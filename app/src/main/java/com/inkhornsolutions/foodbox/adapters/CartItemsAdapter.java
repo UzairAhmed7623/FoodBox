@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -59,6 +60,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
         String price = cartItemsModelClass.getPrice();
         String finalPrice = cartItemsModelClass.getFinalPrice();
         String Items_Count = cartItemsModelClass.getItems_Count();
+        String actualPrice = cartItemsModelClass.getActualFinalPrice();
 
         holder.tvItemTitle.setText(""+itemName);
         holder.tvItemPrice.setText("PKR"+finalPrice);
@@ -79,7 +81,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                     allTotalPrice = Double.parseDouble(((Cart)context).tvSubTotal.getText().toString().trim().replace("PKR",""));
                 }
 
-                EasyDB easyDB = EasyDB.init(context, "ItemsDatabase")
+                EasyDB easyDB = EasyDB.init(context, "ordersDatabase")
                         .setTableName("ITEMS_TABLE")
                         .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                         .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -87,6 +89,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                         .addColumn(new Column("Price", new String[]{"text", "not null"}))
                         .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
                         .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
+                        .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
                         .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
                         .doneTableColumn();
@@ -101,9 +104,13 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
 
                         if (updated1){
                             double finalPrice = Double.parseDouble(price) * itemsCount;
+                            double actualFinalPrice = Double.parseDouble(actualPrice) * itemsCount;
 
                             boolean updated2 = easyDB.updateData(6, String.valueOf(finalPrice)).rowID(Id);
                             cartItemsModelClass.setFinalPrice(String.valueOf(finalPrice));
+
+                            boolean updated3 = easyDB.updateData(7, String.valueOf(actualFinalPrice)).rowID(Id);
+                            cartItemsModelClass.setActualFinalPrice(String.valueOf(actualFinalPrice));
 
                             if (updated2){
                                 holder.tvItemPrice.setText("PKR"+finalPrice);
@@ -155,7 +162,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                     }
 
 
-                    EasyDB easyDB = EasyDB.init(context, "ItemsDatabase")
+                    EasyDB easyDB = EasyDB.init(context, "ordersDatabase")
                             .setTableName("ITEMS_TABLE")
                             .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                             .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -163,6 +170,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                             .addColumn(new Column("Price", new String[]{"text", "not null"}))
                             .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
                             .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
+                            .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
                             .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
                             .doneTableColumn();
@@ -177,9 +185,13 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
 
                             if (updated1){
                                 double finalPrice = Double.parseDouble(price) * itemsCount;
+                                double actualFinalPrice = Double.parseDouble(actualPrice) * itemsCount;
 
                                 boolean updated2 = easyDB.updateData(6, String.valueOf(finalPrice)).rowID(Id);
                                 cartItemsModelClass.setFinalPrice(String.valueOf(finalPrice));
+
+                                boolean updated3 = easyDB.updateData(7, String.valueOf(actualFinalPrice)).rowID(Id);
+                                cartItemsModelClass.setActualFinalPrice(String.valueOf(actualFinalPrice));
 
                                 if (updated2){
                                     holder.tvItemPrice.setText("PKR"+finalPrice);
@@ -215,7 +227,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                         allTotalPrice = Double.parseDouble(((Cart)context).tvSubTotal.getText().toString().trim().replace("PKR",""));
                     }
 
-                    EasyDB easyDB = EasyDB.init(context, "ItemsDatabase")
+                    EasyDB easyDB = EasyDB.init(context, "ordersDatabase")
                             .setTableName("ITEMS_TABLE")
                             .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                             .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -223,6 +235,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                             .addColumn(new Column("Price", new String[]{"text", "not null"}))
                             .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
                             .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
+                            .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
                             .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
 
@@ -235,12 +248,16 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                         if (id.equals(String.valueOf(Id))){
                             boolean updated1 = easyDB.updateData(5, itemsCount).rowID(Id);
                             cartItemsModelClass.setItems_Count(String.valueOf(itemsCount));
+                            double actualFinalPrice = Double.parseDouble(actualPrice) * itemsCount;
 
                             if (updated1){
                                 double finalPrice = Double.parseDouble(price) * itemsCount;
 
                                 boolean updated2 = easyDB.updateData(6, String.valueOf(finalPrice)).rowID(Id);
                                 cartItemsModelClass.setFinalPrice(String.valueOf(finalPrice));
+
+                                boolean updated3 = easyDB.updateData(7, String.valueOf(actualFinalPrice)).rowID(Id);
+                                cartItemsModelClass.setActualFinalPrice(String.valueOf(actualFinalPrice));
 
                                 if (updated2){
                                     holder.tvItemPrice.setText("PKR"+finalPrice);
@@ -266,7 +283,8 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                         }
                     }
                     easyDB.deleteRow(1, id);
-                    Snackbar.make(v, "Item deleted!", Snackbar.LENGTH_LONG).setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show();
+                    Snackbar.make(v, "Item deleted!", Snackbar.LENGTH_LONG).setBackgroundTint(Color.RED)
+                            .setTextColor(ContextCompat.getColor(context, R.color.warning_snackbar)).show();
                     cartItems.remove(position);
                     notifyItemChanged(position);
                     notifyDataSetChanged();

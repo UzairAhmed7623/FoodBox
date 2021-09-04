@@ -1,12 +1,12 @@
 package com.inkhornsolutions.foodbox.models;
 
 public class CartItemsModelClass {
-    private String id, pId, itemName, finalPrice, price,  Items_Count, imageUri;
+    private String id, pId, itemName, finalPrice, price,  Items_Count, imageUri, actualFinalPrice;
 
     public CartItemsModelClass() {
     }
 
-    public CartItemsModelClass(String id, String pId, String itemName, String finalPrice, String price, String items_Count, String imageUri) {
+    public CartItemsModelClass(String id, String pId, String itemName, String finalPrice, String price, String items_Count, String imageUri, String actualFinalPrice) {
         this.id = id;
         this.pId = pId;
         this.itemName = itemName;
@@ -14,6 +14,15 @@ public class CartItemsModelClass {
         this.price = price;
         Items_Count = items_Count;
         this.imageUri = imageUri;
+        this.actualFinalPrice = actualFinalPrice;
+    }
+
+    public String getActualFinalPrice() {
+        return actualFinalPrice;
+    }
+
+    public void setActualFinalPrice(String actualFinalPrice) {
+        this.actualFinalPrice = actualFinalPrice;
     }
 
     public String getItemImage() {

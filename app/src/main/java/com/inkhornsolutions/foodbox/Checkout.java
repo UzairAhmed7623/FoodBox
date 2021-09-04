@@ -90,11 +90,11 @@ public class Checkout extends AppCompatActivity {
     private TextView tvChangeAddress, tvUserName, tvAddress, tvPhone, tvTotalPrice;
     private RadioButton rbDoorDelivery;
     private Button btnCheckOut;
-    private String phone, userName, total, add, restaurant, deliveryFee, subTotal, available,percentage, CHJPercentage;
+    private String phone, userName, total, add, restaurant, deliveryFee, subTotal, available,percentage, CHJPercentage, actualPrice;
     private LatLng latLng;
     private ArrayList<CartItemsModelClass> cartItemsList;
     private CartItemsModelClass cartItemsModelClass;
-    public double allTotalPrice = 0.00;
+    public double allTotalPrice = 0.0, actualPrice2 = 0.0;
     private ConstraintLayout rootLayout;
     SweetAlertDialog sweetAlertDialog;
 
@@ -180,6 +180,7 @@ public class Checkout extends AppCompatActivity {
         available = getIntent().getStringExtra("available");
         percentage = getIntent().getStringExtra("percentage");
         CHJPercentage = getIntent().getStringExtra("CHJPercentage");
+        actualPrice = getIntent().getStringExtra("actualPrice");
 
         cartItemsList = new ArrayList<>();
 
@@ -230,7 +231,7 @@ public class Checkout extends AppCompatActivity {
         });
 
 
-        EasyDB easyDB = EasyDB.init(Checkout.this, "ItemsDatabase")
+        EasyDB easyDB = EasyDB.init(Checkout.this, "ordersDatabase")
                 .setTableName("ITEMS_TABLE")
                 .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                 .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -238,6 +239,7 @@ public class Checkout extends AppCompatActivity {
                 .addColumn(new Column("Price", new String[]{"text", "not null"}))
                 .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
                 .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
+                .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
                 .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
                 .doneTableColumn();
@@ -250,9 +252,11 @@ public class Checkout extends AppCompatActivity {
             String price = res.getString(4);
             String items_count = res.getString(5);
             String final_price = res.getString(6);
-            String imageUri = res.getString(7);
+            String actualFinalPrice = res.getString(7);
+            String imageUri = res.getString(8);
 
             allTotalPrice = allTotalPrice + Double.parseDouble(final_price);
+            actualPrice2 = actualPrice2 + Double.parseDouble(actualFinalPrice);
 
             cartItemsModelClass = new CartItemsModelClass(
                     ""+id,
@@ -261,7 +265,8 @@ public class Checkout extends AppCompatActivity {
                     ""+final_price,
                     ""+price,
                     ""+items_count,
-                    ""+imageUri
+                    ""+imageUri,
+                    ""+actualFinalPrice
             );
 
             cartItemsList.add(cartItemsModelClass);
@@ -301,8 +306,9 @@ public class Checkout extends AppCompatActivity {
                                     order1.put("promotedOrder", available);
                                     order1.put("timeStamp", FieldValue.serverTimestamp());
                                     order1.put("newOrder", "1");
-                                    order1.put("percentage",percentage);
+                                    order1.put("discountPercentage",percentage);
                                     order1.put("CHJPercentage",CHJPercentage);
+                                    order1.put("actualPrice",actualPrice);
 
                                     firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
                                             .collection("Cart").document(restaurant+" "+getDateTime())

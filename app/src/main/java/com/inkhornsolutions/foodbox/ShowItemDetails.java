@@ -61,7 +61,7 @@ public class ShowItemDetails extends AppCompatActivity {
     private DocumentReference documentReference;
     private FirebaseFirestore firebaseFirestore;
     private double price = 0;
-    private double finalPrice = 0;
+    private double finalPrice = 0 , actualFinalPrice = 0;
     private int itemCount, discountedPrice;
     SweetAlertDialog sweetAlertDialog;
     EventListener<DocumentSnapshot> eventListener;
@@ -126,6 +126,7 @@ public class ShowItemDetails extends AppCompatActivity {
                                     .into(civItemImage);
 
                             price = Double.parseDouble(itemPrice.replace("PKR", ""));
+                            actualFinalPrice = price;
 
                             if (available.equals("yes")) {
 
@@ -163,8 +164,11 @@ public class ShowItemDetails extends AppCompatActivity {
 
                 if (available.equals("yes")) {
                     finalPrice = discountedPrice * itemCount;
-                } else {
+                    actualFinalPrice = price * itemCount;
+                }
+                else {
                     finalPrice = Integer.parseInt(itemPrice) * itemCount;
+                    actualFinalPrice = Integer.parseInt(itemPrice) * itemCount;
                 }
 
                 tvFinalPrice.setText("" + finalPrice);
@@ -181,8 +185,11 @@ public class ShowItemDetails extends AppCompatActivity {
 
                     if (available.equals("yes")) {
                         finalPrice = discountedPrice * itemCount;
+                        actualFinalPrice = price * itemCount;
+
                     } else {
                         finalPrice = Integer.parseInt(itemPrice) * itemCount;
+                        actualFinalPrice = Integer.parseInt(itemPrice) * itemCount;
                     }
 
                     tvFinalPrice.setText("" + finalPrice);
@@ -202,7 +209,7 @@ public class ShowItemDetails extends AppCompatActivity {
                 }
                 finalPrice = Double.parseDouble(tvFinalPrice.getText().toString().trim());
 
-                addToCart(getDateTime(), title, itemImage, Price, String.valueOf(finalPrice), String.valueOf(itemCount));
+                addToCart(getDateTime(), title, itemImage, Price, String.valueOf(finalPrice), String.valueOf(itemCount), String.valueOf(actualFinalPrice));
 
                 Log.d("btnAddtoCart2", title + Price + finalPrice + itemCount);
             }
@@ -247,10 +254,10 @@ public class ShowItemDetails extends AppCompatActivity {
 
     private int itemId = 0;
 
-    private void addToCart(String productId, String title, String imageUri, String price, String finalPrice, String itemCount) {
+    private void addToCart(String productId, String title, String imageUri, String price, String finalPrice, String itemCount, String actualFinalPrice) {
         itemId++;
 
-        EasyDB easyDB = EasyDB.init(this, "ItemsDatabase")
+        EasyDB easyDB = EasyDB.init(this, "ordersDatabase")
                 .setTableName("ITEMS_TABLE")
                 .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                 .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -258,6 +265,7 @@ public class ShowItemDetails extends AppCompatActivity {
                 .addColumn(new Column("Price", new String[]{"text", "not null"}))
                 .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
                 .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
+                .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
                 .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
                 .doneTableColumn();
@@ -271,6 +279,7 @@ public class ShowItemDetails extends AppCompatActivity {
                 .addData("Price", price)
                 .addData("Items_Count", itemCount)
                 .addData("Final_Price", finalPrice)
+                .addData("actualFinalPrice", actualFinalPrice)
 //                .addData("Description", description)
                 .addData("Item_Image_Uri", imageUri)
                 .doneDataAdding();
@@ -287,7 +296,7 @@ public class ShowItemDetails extends AppCompatActivity {
                 public void run() {
                     onBackPressed();
                 }
-            }, 1000);
+            }, 650);
         } else {
             Toast.makeText(this, "Error!", Toast.LENGTH_SHORT).show();
         }

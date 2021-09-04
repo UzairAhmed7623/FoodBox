@@ -194,6 +194,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
             sweetAlertDialog = null;
         }
     }
+
     private void checkRestaurantStatus(String restaurant) {
         firebaseFirestore.collection("Restaurants").document(restaurant)
                 .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -227,12 +228,12 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
         });
     }
 
-    public double allTotalPrice = 0.00;
+    public double allTotalPrice = 0.0, actualPrice = 0.0;
     public TextView tvSubTotal, tvDeliveryFee, tvGrandTotal, tvNumberofItems;
 
     private void showCart() {
 
-        EasyDB easyDB = EasyDB.init(Cart.this, "ItemsDatabase")
+        EasyDB easyDB = EasyDB.init(Cart.this, "ordersDatabase")
                 .setTableName("ITEMS_TABLE")
                 .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                 .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -240,6 +241,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                 .addColumn(new Column("Price", new String[]{"text", "not null"}))
                 .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
                 .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
+                .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
                 .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
                 .doneTableColumn();
@@ -252,9 +254,12 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
             String price = res.getString(4);
             String items_count = res.getString(5);
             String final_price = res.getString(6);
-            String imageUri = res.getString(7);
+            String actualFinalPrice = res.getString(7);
+            String imageUri = res.getString(8);
 
             allTotalPrice = allTotalPrice + Double.parseDouble(final_price);
+            actualPrice = actualPrice + Double.parseDouble(actualFinalPrice);
+            Toast.makeText(Cart.this, ""+actualPrice, Toast.LENGTH_SHORT).show();
 
             cartItemsModelClass = new CartItemsModelClass(
                     "" + id,
@@ -263,7 +268,8 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                     "" + final_price,
                     "" + price,
                     "" + items_count,
-                    "" + imageUri
+                    "" + imageUri,
+                    "" + actualFinalPrice
             );
 
             cartItemsList.add(cartItemsModelClass);
@@ -280,8 +286,10 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
 //        deliveryFee();
 
     }
+    public double actualPrice2 = 0.0;
 
     private void deliveryFee() {
+
 
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait!");
@@ -325,7 +333,8 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                                                             intent.putExtra("subTotal", tvSubTotal.getText().toString().replace("PKR", ""));
                                                             intent.putExtra("available", "yes");
                                                             intent.putExtra("percentage", percentage);
-                                                            intent.putExtra("percentage", CHJPercentage);
+                                                            intent.putExtra("CHJPercentage", CHJPercentage);
+                                                            intent.putExtra("actualPrice", String.valueOf(actualPrice));
 
                                                             startActivity(intent);
                                                         } else {
@@ -338,7 +347,8 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                                                             intent.putExtra("subTotal", tvSubTotal.getText().toString().replace("PKR", ""));
                                                             intent.putExtra("available", "no");
                                                             intent.putExtra("percentage", "0");
-                                                            intent.putExtra("percentage", CHJPercentage);
+                                                            intent.putExtra("CHJPercentage", CHJPercentage);
+                                                            intent.putExtra("actualPrice", String.valueOf(actualPrice));
 
                                                             startActivity(intent);
                                                         }
@@ -421,6 +431,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                                                                                                                 intent.putExtra("available", "yes");
                                                                                                                 intent.putExtra("percentage", percentage);
                                                                                                                 intent.putExtra("CHJPercentage", CHJPercentage);
+                                                                                                                intent.putExtra("actualPrice", String.valueOf(actualPrice));
 
                                                                                                                 startActivity(intent);
                                                                                                             } else {
@@ -434,6 +445,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                                                                                                                 intent.putExtra("available", "no");
                                                                                                                 intent.putExtra("percentage", "0");
                                                                                                                 intent.putExtra("CHJPercentage", CHJPercentage);
+                                                                                                                intent.putExtra("actualPrice", String.valueOf(actualPrice));
 
                                                                                                                 startActivity(intent);
                                                                                                             }
@@ -521,7 +533,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                EasyDB easyDB = EasyDB.init(Cart.this, "ItemsDatabase")
+                EasyDB easyDB = EasyDB.init(Cart.this, "ordersDatabase")
                         .setTableName("ITEMS_TABLE")
                         .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                         .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -529,6 +541,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                         .addColumn(new Column("Price", new String[]{"text", "not null"}))
                         .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
                         .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
+                        .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
                         .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
                         .doneTableColumn();

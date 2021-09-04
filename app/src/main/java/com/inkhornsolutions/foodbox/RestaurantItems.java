@@ -354,7 +354,7 @@ public class RestaurantItems extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                EasyDB easyDB = EasyDB.init(RestaurantItems.this, "ItemsDatabase")
+                EasyDB easyDB = EasyDB.init(RestaurantItems.this, "ordersDatabase")
                         .setTableName("ITEMS_TABLE")
                         .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                         .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -362,6 +362,7 @@ public class RestaurantItems extends AppCompatActivity {
                         .addColumn(new Column("Price", new String[]{"text", "not null"}))
                         .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
                         .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
+                        .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
                         .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
                         .doneTableColumn();
@@ -394,7 +395,7 @@ public class RestaurantItems extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        EasyDB easyDB = EasyDB.init(RestaurantItems.this, "ItemsDatabase")
+        EasyDB easyDB = EasyDB.init(RestaurantItems.this, "ordersDatabase")
                 .setTableName("ITEMS_TABLE")
                 .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                 .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -402,6 +403,7 @@ public class RestaurantItems extends AppCompatActivity {
                 .addColumn(new Column("Price", new String[]{"text", "not null"}))
                 .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
                 .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
+                .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
                 .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
                 .doneTableColumn();
@@ -428,7 +430,7 @@ public class RestaurantItems extends AppCompatActivity {
     }
 
     private void deleteCartData() {
-        EasyDB easyDB = EasyDB.init(RestaurantItems.this, "ItemsDatabase")
+        EasyDB easyDB = EasyDB.init(RestaurantItems.this, "ordersDatabase")
                 .setTableName("ITEMS_TABLE")
                 .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                 .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -436,6 +438,7 @@ public class RestaurantItems extends AppCompatActivity {
                 .addColumn(new Column("Price", new String[]{"text", "not null"}))
                 .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
                 .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
+                .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
                 .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
                 .doneTableColumn();

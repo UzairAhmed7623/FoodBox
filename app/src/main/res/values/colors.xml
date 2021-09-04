@@ -36,4 +36,6 @@
     <color name="newColorSecond">#F9F9F9</color>
     <color name="newColorThird">#F5F5F5</color>
 
+    <color name="warning_snackbar">#E3503E</color>
+
 </resources>
