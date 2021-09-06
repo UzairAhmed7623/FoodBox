@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,6 +67,7 @@ public class ShowItemDetails extends AppCompatActivity {
     SweetAlertDialog sweetAlertDialog;
     EventListener<DocumentSnapshot> eventListener;
     ListenerRegistration listenerRegistration;
+    private RelativeLayout layout1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +86,8 @@ public class ShowItemDetails extends AppCompatActivity {
         tvDisplay = (TextView) findViewById(R.id.tvDisplay);
         tvFinalPrice = (TextView) findViewById(R.id.tvFinalPrice);
         tvResName = (TextView) findViewById(R.id.tvResName);
+        layout1 = (RelativeLayout) findViewById(R.id.layout1);
+        layout1.bringToFront();
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center_horizontal"
+    android:layout_centerHorizontal="true"
+    >
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="275dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:cardCornerRadius="10dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            >
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/warning" />
+
+            <TextView
+                android:id="@+id/tv1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageView"
+                android:layout_centerHorizontal="true"
+                android:letterSpacing="0.00"
+                android:text="Network warning!"
+                android:textColor="@color/grey_80"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv2"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="Please connect to the internet to proceed further."
+                android:textAlignment="center"
+                android:textColor="@color/grey_60"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv2"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp">
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCancel"
+                    android:layout_width="95dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="Cancel"
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/myColor"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.00"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:textAllCaps="false"
+                    android:layout_marginEnd="15dp"
+                    android:includeFontPadding="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.200"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnConfirm"
+                    android:layout_width="95dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/btnCancel"
+                    android:text="Connect"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.00"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:textAllCaps="false"
+                    android:layout_marginStart="15dp"
+                    android:includeFontPadding="false"
+                    android:backgroundTint="@color/confirm_button"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.799"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

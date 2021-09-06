@@ -37,5 +37,6 @@
     <color name="newColorThird">#F5F5F5</color>
 
     <color name="warning_snackbar">#E3503E</color>
+    <color name="confirm_button">#4CB64C</color>
 
 </resources>

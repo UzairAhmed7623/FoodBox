@@ -35,6 +35,7 @@ import com.inkhornsolutions.foodbox.models.ItemsModelClass;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -116,7 +117,6 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
             String resName = ((RestaurantItems) context).restaurant;
 
             name = itemsModelClass.getUserName();
-
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
