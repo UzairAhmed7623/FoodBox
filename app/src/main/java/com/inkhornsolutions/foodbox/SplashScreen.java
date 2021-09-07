@@ -48,21 +48,25 @@ public class SplashScreen extends AppCompatActivity {
         MaterialButton btnConfirm = (MaterialButton) view.findViewById(R.id.btnConfirm);
         MaterialButton btnCancel = (MaterialButton) view.findViewById(R.id.btnCancel);
 
-        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setTitle("Checking Connection");
-        alertDialog.setMessage("Checking...");
-        alertDialog.setCancelable(false);
-        alertDialog.show();
+//        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+//        alertDialog.setTitle("Checking Connection");
+//        alertDialog.setMessage("Checking...");
+//        alertDialog.setCancelable(false);
+//        alertDialog.show();
+
+        progressBar.setVisibility(View.VISIBLE);
 
         new Thread(new Runnable() {
             public void run() {
                 try {
+
                     URL url = new URL("https://www.google.com.pk/");
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
-                    connection.setConnectTimeout(1000);
+                    connection.setConnectTimeout(3000);
                     isConnected = connection.getResponseCode() == HttpURLConnection.HTTP_OK;
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -72,7 +76,7 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void run() {
                 if (!isConnected) {
-                    alertDialog.dismiss();
+//                    alertDialog.dismiss();
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(SplashScreen.this);
                     builder.setView(view);
@@ -96,7 +100,7 @@ public class SplashScreen extends AppCompatActivity {
                         }
                     });
                 } else {
-                    alertDialog.dismiss();
+//                    alertDialog.dismiss();
 
                     FirebaseDatabase.getInstance().getReference("Admin").addValueEventListener(new ValueEventListener() {
                         @Override
@@ -117,12 +121,11 @@ public class SplashScreen extends AppCompatActivity {
                     });
 
 
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressBar.setVisibility(View.VISIBLE);
-                        }
-                    }, 1000);
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                        }
+//                    }, 1000);
 
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -145,6 +148,6 @@ public class SplashScreen extends AppCompatActivity {
                     }, 3000);
                 }
             }
-        }, 1000);
+        }, 3000);
     }
 }
