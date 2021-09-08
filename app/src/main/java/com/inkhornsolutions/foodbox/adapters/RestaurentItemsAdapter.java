@@ -3,8 +3,9 @@ package com.inkhornsolutions.foodbox.adapters;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,20 +13,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.inkhornsolutions.foodbox.Common.Common;
 import com.inkhornsolutions.foodbox.R;
 import com.inkhornsolutions.foodbox.RestaurantItems;
@@ -34,8 +27,10 @@ import com.inkhornsolutions.foodbox.models.ItemsModelClass;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Objects;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -68,8 +63,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
         if (viewType == 0) {
             View view = inflater.inflate(R.layout.restaurant_items_adapter_left, parent, false);
             return new ViewHolder(view);
-        }
-        else {
+        } else {
             View view1 = inflater.inflate(R.layout.restaurant_items_adapter_right, parent, false);
             return new ViewHolder(view1);
         }
@@ -78,6 +72,10 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
     @Override
     public void onBindViewHolder(@NonNull @NotNull RestaurentItemsAdapter.ViewHolder holder, int position) {
         final ItemsModelClass itemsModelClass = productList.get(position);
+
+        String imageUri = itemsModelClass.getImageUri();
+        String from = itemsModelClass.getFrom();
+        String to = itemsModelClass.getTo();
 
         ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Please wait...");
@@ -88,20 +86,21 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
         RequestOptions reqOpt = RequestOptions
                 .fitCenterTransform()
                 .transform(new CircleCrop())
-                .diskCacheStrategy(DiskCacheStrategy.DATA) // It will cache your image after loaded for first time
-                .override(300,300);
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                .override(300, 300);
 
-//                Glide.with(context).load(itemsModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fitCenter()
-//                        .diskCacheStrategy(DiskCacheStrategy.DATA)
-//                        .apply(new RequestOptions().override(150).override(250, 250))
-//                        .into(holder.ivItem);
+        Glide.with(context)
+                .load(imageUri)
+                .thumbnail(0.25f)
+                .apply(reqOpt)
+                .placeholder(R.drawable.food_placeholder)
+                .into(holder.ivItem);
 
-                Glide.with(context)
-                        .load(itemsModelClass.getImageUri())
-                        .thumbnail(0.25f)
-                        .apply(reqOpt)
-                        .placeholder(R.drawable.food_placeholder)
-                        .into(holder.ivItem);
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+        String getCurrentDateTime = sdf.format(c.getTime());
+        int compareFrom = getCurrentDateTime.compareTo(from);
+        int compareTo = getCurrentDateTime.compareTo(to);
 
         if (Common.discountAvailable.get("available").toString().equals("yes")) {
             holder.discountLayout.setVisibility(View.VISIBLE);
@@ -118,20 +117,31 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
             name = itemsModelClass.getUserName();
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            if (compareFrom == 0 || compareTo == 0 || compareFrom > 0 && compareTo < 0) {
 
-                    Intent intent = new Intent(context, ShowItemDetails.class);
-                    intent.putExtra("resName", resName);
-                    intent.putExtra("itemName", itemsModelClass.getItemName());
-                    intent.putExtra("available", "yes");
-                    intent.putExtra("percentage", Common.discountAvailable.get("percentage").toString());
-                    context.startActivity(intent);
-                    ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                }
-            });
-        } else {
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent intent = new Intent(context, ShowItemDetails.class);
+                        intent.putExtra("resName", resName);
+                        intent.putExtra("itemName", itemsModelClass.getItemName());
+                        intent.putExtra("available", "yes");
+                        intent.putExtra("percentage", Common.discountAvailable.get("percentage").toString());
+                        context.startActivity(intent);
+                        ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    }
+                });
+            }
+            else {
+                holder.itemView.setEnabled(false);
+                holder.itemView.setClickable(false);
+                ColorMatrix matrix = new ColorMatrix();
+                matrix.setSaturation(0);
+                holder.ivItem.setColorFilter(new ColorMatrixColorFilter(matrix));
+            }
+        }
+        else {
             holder.discountLayout.setVisibility(View.GONE);
             progressDialog.dismiss();
 
@@ -142,21 +152,30 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
             name = itemsModelClass.getUserName();
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            if (compareFrom == 0 || compareTo == 0 || compareFrom > 0 && compareTo < 0) {
 
-                    Intent intent = new Intent(context, ShowItemDetails.class);
-                    intent.putExtra("resName", resName);
-                    intent.putExtra("itemName", itemsModelClass.getItemName());
-                    intent.putExtra("available", "no");
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-                    context.startActivity(intent);
-                    ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                }
-            });
+                        Intent intent = new Intent(context, ShowItemDetails.class);
+                        intent.putExtra("resName", resName);
+                        intent.putExtra("itemName", itemsModelClass.getItemName());
+                        intent.putExtra("available", "no");
+
+                        context.startActivity(intent);
+                        ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    }
+                });
+            }
+            else {
+                holder.itemView.setEnabled(false);
+                holder.itemView.setClickable(false);
+                ColorMatrix matrix = new ColorMatrix();
+                matrix.setSaturation(0);
+                holder.ivItem.setColorFilter(new ColorMatrixColorFilter(matrix));
+            }
         }
-
     }
 
     @Override
@@ -182,5 +201,18 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
 //            tvItemSchedule = (TextView) itemView.findViewById(R.id.tvItemSchedule);
         }
+    }
+
+    private String getDateTime() {
+        Calendar calendar = Calendar.getInstance(Locale.getDefault());
+        long time = System.currentTimeMillis();
+        calendar.setTimeInMillis(time);
+
+        //dd=day, MM=month, yyyy=year, hh=hour, mm=minute, ss=second.
+
+        String date = DateFormat.format("hh:mm aa", calendar).toString();
+
+
+        return date;
     }
 }
