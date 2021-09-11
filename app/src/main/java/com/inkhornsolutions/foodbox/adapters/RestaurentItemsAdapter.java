@@ -117,7 +117,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
             name = itemsModelClass.getUserName();
 
-            if (compareFrom == 0 || compareTo == 0 || compareFrom > 0 && compareTo < 0) {
+            if (compareFrom == 0 || compareFrom > 0 && compareTo == 0  || compareTo < 0) {
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -152,7 +152,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
             name = itemsModelClass.getUserName();
 
-            if (compareFrom == 0 || compareTo == 0 || compareFrom > 0 && compareTo < 0) {
+            if (compareFrom == 0 || compareFrom > 0 && compareTo == 0  || compareTo < 0) {
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
