@@ -12,7 +12,7 @@
         android:id="@+id/layout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white_greyish">
+        android:background="@color/back_color">
 
         <ImageButton
             android:id="@+id/backArrow"
@@ -24,7 +24,8 @@
             android:background="@android:color/transparent"
             android:padding="8dp"
             android:scaleType="fitXY"
-            android:src="@drawable/arrow_back" />
+            android:src="@drawable/arrow_back"
+            app:tint="@color/white" />
 
         <TextView
             android:id="@+id/tvResName"
@@ -38,7 +39,7 @@
             android:maxLines="1"
             android:text="Product name"
             android:textAllCaps="true"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textFontWeight="400"
             android:textSize="18sp"
             android:textStyle="bold" />

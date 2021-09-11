@@ -124,7 +124,7 @@ dependencies {
 
     implementation 'com.infideap.drawerbehavior:drawer-behavior:1.0.3'
 
-    implementation 'com.github.wsj1024:AndRatingBar:1.0.6'
+//    implementation 'com.github.wsj1024:AndRatingBar:1.0.6'
 
     implementation 'com.hbb20:ccp:2.5.3'
 

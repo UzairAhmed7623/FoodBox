@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,7 +53,6 @@ import java.util.List;
 import java.util.Objects;
 
 import es.dmoral.toasty.Toasty;
-import per.wsj.library.AndRatingBar;
 
 //import per.wsj.library.AndRatingBar;
 
@@ -267,7 +267,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         private final TextView tvRestaurant;
         private TextView tvNoOrders;
         private final LinearLayout layout;
-        private AndRatingBar ratingStar;
+        private RatingBar ratingStar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +35,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 
 public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItemsAdapter.ViewHolder> {
 
@@ -97,7 +100,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                 .into(holder.ivItem);
 
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+        SimpleDateFormat sdf = new SimpleDateFormat("kk:mm");
         String getCurrentDateTime = sdf.format(c.getTime());
         int compareFrom = getCurrentDateTime.compareTo(from);
         int compareTo = getCurrentDateTime.compareTo(to);
@@ -117,28 +120,39 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
             name = itemsModelClass.getUserName();
 
-            if (compareFrom == 0 || compareFrom > 0 && compareTo == 0  || compareTo < 0) {
+            Log.d("time1time1", ""+getCurrentDateTime +" : "+from + " : " + to);
+
+            Log.d("time1time2", ""+compareFrom +" : "+compareTo);
+
+            if (compareFrom > 0 && compareTo < 0) {
+                Log.d("time1time2", ""+compareFrom +" : "+compareTo);
+
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Intent intent = new Intent(context, ShowItemDetails.class);
+                            intent.putExtra("resName", resName);
+                            intent.putExtra("itemName", itemsModelClass.getItemName());
+                            intent.putExtra("available", "yes");
+                            intent.putExtra("percentage", Common.discountAvailable.get("percentage").toString());
+                            context.startActivity(intent);
+                            ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        }
+                    });
+
+            }
+            else {
+                ColorMatrix matrix = new ColorMatrix();
+                matrix.setSaturation(0);
+                holder.ivItem.setColorFilter(new ColorMatrixColorFilter(matrix));
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        Intent intent = new Intent(context, ShowItemDetails.class);
-                        intent.putExtra("resName", resName);
-                        intent.putExtra("itemName", itemsModelClass.getItemName());
-                        intent.putExtra("available", "yes");
-                        intent.putExtra("percentage", Common.discountAvailable.get("percentage").toString());
-                        context.startActivity(intent);
-                        ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        Toasty.error(context, "Sorry! This product is only available from " +from+" to "+to,Toasty.LENGTH_LONG).show();
                     }
                 });
-            }
-            else {
-                holder.itemView.setEnabled(false);
-                holder.itemView.setClickable(false);
-                ColorMatrix matrix = new ColorMatrix();
-                matrix.setSaturation(0);
-                holder.ivItem.setColorFilter(new ColorMatrixColorFilter(matrix));
             }
         }
         else {
@@ -152,7 +166,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
             name = itemsModelClass.getUserName();
 
-            if (compareFrom == 0 || compareFrom > 0 && compareTo == 0  || compareTo < 0) {
+            if (compareFrom > 0 || compareTo < 0) {
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -169,11 +183,16 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                 });
             }
             else {
-                holder.itemView.setEnabled(false);
-                holder.itemView.setClickable(false);
                 ColorMatrix matrix = new ColorMatrix();
                 matrix.setSaturation(0);
                 holder.ivItem.setColorFilter(new ColorMatrixColorFilter(matrix));
+
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toasty.error(context, "Sorry! This product is only available from " +from+" to "+to,Toasty.LENGTH_LONG).show();
+                    }
+                });
             }
         }
     }
