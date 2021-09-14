@@ -260,6 +260,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void loadData() {
+
         firebaseFirestore.collection("Restaurants").orderBy("resName", Query.Direction.ASCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override

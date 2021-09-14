@@ -259,7 +259,6 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
 
             allTotalPrice = allTotalPrice + Double.parseDouble(final_price);
             actualPrice = actualPrice + Double.parseDouble(actualFinalPrice);
-            Toast.makeText(Cart.this, ""+actualPrice, Toast.LENGTH_SHORT).show();
 
             cartItemsModelClass = new CartItemsModelClass(
                     "" + id,
@@ -279,7 +278,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
 
         rvCartItems.setAdapter(cartItemsAdapter);
 
-        updateNumberofItems();
+        updateNumberOfItems();
 
         tvSubTotal.setText("PKR" + String.format("%.2f", allTotalPrice));
 
@@ -528,7 +527,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
         });
     }
 
-    public void updateNumberofItems() {
+    public void updateNumberOfItems() {
 
         runOnUiThread(new Runnable() {
             @Override

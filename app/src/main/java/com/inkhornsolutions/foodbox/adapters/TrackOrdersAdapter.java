@@ -1,17 +1,22 @@
 package com.inkhornsolutions.foodbox.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.inkhornsolutions.foodbox.R;
 import com.inkhornsolutions.foodbox.models.HistoryModelClass;
@@ -23,6 +28,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.ViewHolder> {
 
@@ -67,7 +74,7 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
             @Override
             public void onClick(View v) {
                 trackOrdersClass.setExpanded(!trackOrdersClass.isExpanded());
-                notifyItemChanged(position);
+                notifyItemChanged(holder.getBindingAdapterPosition());
             }
         });
 
@@ -107,6 +114,46 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
                 }
             }
         });
+
+        holder.btnRateAndReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final AlertDialog.Builder popDialog = new AlertDialog.Builder(context);
+                final RatingBar rating = new RatingBar(context);
+                rating.setNumStars(5);
+                rating.setStepSize(0.1f);
+                rating.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                LinearLayout parent = new LinearLayout(context);
+                parent.setGravity(Gravity.CENTER);
+                parent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                parent.addView(rating);
+
+                // popDialog.setIcon(android.R.drawable.btn_star_big_on);
+                popDialog.setTitle("Please give us rating.");
+                popDialog.setView(parent);
+
+                // Button OK
+                popDialog.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                Log.d("rating", ""+rating.getRating());
+
+                                holder.btnRateAndReview.setVisibility(View.GONE);
+                                holder.tvShowRating.setVisibility(View.VISIBLE);
+                                holder.tvShowRating.setText("You give " + rating.getRating() + " / "+"5.0");
+
+                                dialog.dismiss();
+                            }
+                        }).setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                popDialog.create();
+                popDialog.show();
+            }
+        });
     }
 
     @Override
@@ -116,9 +163,10 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvStatusTrack, tvResNameTrack, tvDateTrack, tvGradTotalTrack;
+        private TextView tvStatusTrack, tvResNameTrack, tvDateTrack, tvGradTotalTrack, tvShowRating;
         private LinearLayout expandablelLayoutTrack;
         private RecyclerView rvMember;
+        private MaterialButton btnRateAndReview;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -128,8 +176,10 @@ public class TrackOrdersAdapter extends RecyclerView.Adapter<TrackOrdersAdapter.
 
             tvStatusTrack = (TextView) itemView.findViewById(R.id.tvStatusTrack);
             tvResNameTrack = (TextView) itemView.findViewById(R.id.tvResNameTrack);
+            tvShowRating = (TextView) itemView.findViewById(R.id.tvShowRating);
             tvDateTrack = (TextView) itemView.findViewById(R.id.tvDateTrack);
             tvGradTotalTrack = (TextView) itemView.findViewById(R.id.tvGradTotalTrack);
+            btnRateAndReview = (MaterialButton) itemView.findViewById(R.id.btnRateAndReview);
             expandablelLayoutTrack = (LinearLayout) itemView.findViewById(R.id.expandablelLayoutTrack);
 
             rvMember = (RecyclerView) itemView.findViewById(R.id.rvMember);

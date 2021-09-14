@@ -68,7 +68,6 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     View view;
     String first_name = "",last_name = "";
 
-    int size;
     String rating;
     float finalRating = 0f;
 
@@ -90,6 +89,9 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         RestaurantModelClass restaurantModelClass = resDetails.get(position);
 
         holder.tvRestaurant.setText(restaurantModelClass.getResName());
+
+        Log.d("size", "" + restaurantModelClass.getNoOfOrders());
+        holder.tvNoOrders.setText("(" + restaurantModelClass.getNoOfOrders() + ")");
 
         RequestOptions reqOpt = RequestOptions
                 .fitCenterTransform()
@@ -140,6 +142,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
             holder.ivRestaurant.setColorFilter(new ColorMatrixColorFilter(matrix));
 //            Toast.makeText(context, "Restaurant not approved yet", Toast.LENGTH_LONG).show();
         }
+
         SharedPreferences sharedPreferences = context.getSharedPreferences("userName", context.MODE_PRIVATE);
         String name = sharedPreferences.getString("name", "User Name");
 
@@ -184,7 +187,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                         }
             }
         });
-
+        
         firebaseFirestore.collection("Rating").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -228,32 +231,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
 //        holder.ratingStar.setRating(finalRating);
 
-        for (String id : Common.id) {
 
-            firebaseFirestore.collection("Users").document(id)
-                    .collection("Cart").whereEqualTo("restaurantName", resName).get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                if (documentSnapshot.exists()) {
-                                    size = task.getResult().size();
-
-                                    Log.d("size", "" + size);
-
-                                    holder.tvNoOrders.setText("(" + size + ")");
-                                }
-                            }
-                            size = 0;
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }
     }
 
     @Override
@@ -267,14 +245,14 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         private final TextView tvRestaurant;
         private TextView tvNoOrders;
         private final LinearLayout layout;
-        private RatingBar ratingStar;
+        private RatingBar ratingBar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             ivRestaurant = itemView.findViewById(R.id.ivRestaurant);
             tvRestaurant = itemView.findViewById(R.id.tvRestaurant);
-            ratingStar = itemView.findViewById(R.id.ratingStar);
+            ratingBar = itemView.findViewById(R.id.ratingBar);
             tvNoOrders = itemView.findViewById(R.id.tvNoOrders);
 
             layout = itemView.findViewById(R.id.layout);

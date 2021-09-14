@@ -5,22 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="5dp"
-    style="@style/Widget.MaterialComponents.Button">
+    android:foreground="@drawable/ripple">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        android:background="@drawable/history_item_shape">
+        >
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             app:cardCornerRadius="5dp"
-            app:cardElevation="100dp">
+            app:cardElevation="7dp"
+            app:cardUseCompatPadding="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -38,7 +35,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:layout_marginStart="10dp"
-                        android:layout_gravity="left|center_vertical"
+                        android:layout_gravity="start|center_vertical"
                         android:text="Restaurant Name"
                         android:textAllCaps="true"
                         android:textColor="@android:color/black"
@@ -68,7 +65,7 @@
                             android:id="@+id/tvStatusTrack"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
+                            android:layout_marginEnd="10dp"
                             android:text="In progress"
                             android:textAllCaps="true"
                             android:textColor="#00804D"
@@ -86,20 +83,59 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:layout_marginStart="10dp"
-                        android:layout_gravity="left|center_vertical"
+                        android:layout_gravity="start|center_vertical"
                         android:text="Total Price"
                         android:textAllCaps="true"
                         android:textColor="@android:color/black"
                         android:textSize="15sp"
                         android:fontFamily="@font/montserrat_medium" />
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnRateAndReview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:text="Rate &amp; Review"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            app:cornerRadius="50dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"/>
+
+                        <TextView
+                            android:id="@+id/tvShowRating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="visible"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:text="You give 4.5 / 5"
+                            android:textColor="@color/warning_snackbar"
+                            android:textSize="14sp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"/>
+
+                    </RelativeLayout>
+
                 </LinearLayout>
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:background="@color/myColor"/>
 
                 <LinearLayout
                     android:id="@+id/expandablelLayoutTrack"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:padding="7dp"
                     android:visibility="visible">
 
                     <androidx.recyclerview.widget.RecyclerView

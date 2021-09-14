@@ -289,7 +289,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                     notifyItemChanged(position);
                     notifyDataSetChanged();
 
-                    Cart.getInstance().updateNumberofItems();
+                    Cart.getInstance().updateNumberOfItems();
                     RestaurantItems.getInstance().updateCartCount();
                 }
             }

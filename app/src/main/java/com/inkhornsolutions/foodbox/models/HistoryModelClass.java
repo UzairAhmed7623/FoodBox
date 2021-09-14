@@ -1,8 +1,11 @@
 package com.inkhornsolutions.foodbox.models;
 
+import com.google.firebase.Timestamp;
+
 public class HistoryModelClass {
-    private String resId, id, pId, itemName, finalPrice, price,  Items_Count, status, resName, totalPrice, date;
+    private String resId, id, pId, itemName, finalPrice, price,  items_Count, status, resName, totalPrice, date;
     private boolean expanded;
+    private Timestamp timeStamp;
 
     public boolean isExpanded() {
         return expanded;
@@ -15,19 +18,20 @@ public class HistoryModelClass {
     public HistoryModelClass() {
     }
 
-    public HistoryModelClass(String resId, String id, String pId, String itemName, String finalPrice, String price, String items_Count, String status, String resName, String totalPrice, String date) {
+    public HistoryModelClass(String resId, String id, String pId, String itemName, String finalPrice, String price, String items_Count, String status, String resName, String totalPrice, String date, boolean expanded, Timestamp timeStamp) {
         this.resId = resId;
         this.id = id;
         this.pId = pId;
         this.itemName = itemName;
         this.finalPrice = finalPrice;
         this.price = price;
-        Items_Count = items_Count;
+        this.items_Count = items_Count;
         this.status = status;
         this.resName = resName;
         this.totalPrice = totalPrice;
         this.date = date;
-        this.expanded = false;
+        this.expanded = expanded;
+        this.timeStamp = timeStamp;
     }
 
     public String getId() {
@@ -71,11 +75,19 @@ public class HistoryModelClass {
     }
 
     public String getItems_Count() {
-        return Items_Count;
+        return items_Count;
     }
 
     public void setItems_Count(String items_Count) {
-        Items_Count = items_Count;
+        this.items_Count = items_Count;
+    }
+
+    public Timestamp getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(Timestamp timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
     public String getStatus() {

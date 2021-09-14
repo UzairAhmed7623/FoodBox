@@ -53,21 +53,17 @@
                     android:layout_height="wrap_content">
 
                     <RatingBar
-                        android:id="@+id/ratingStar"
-                        android:layout_width="110dp"
-                        android:layout_height="20dp"
-                        android:numStars="5"/>
-
-                    <!--                    <per.wsj.library.AndRatingBar-->
-                    <!--                        android:id="@+id/ratingStar"-->
-                    <!--                        android:layout_width="110dp"-->
-                    <!--                        android:layout_height="20dp"-->
-                    <!--                        android:layout_marginBottom="7dp"-->
-                    <!--                        android:isIndicator="true"-->
-                    <!--                        app:bgColor="@color/myColorthird"-->
-                    <!--                        app:keepOriginColor="true"-->
-                    <!--                        app:scaleFactor="1"-->
-                    <!--                        app:starColor="@color/myColor" />-->
+                        android:id="@+id/ratingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.AppCompat.RatingBar.Small"
+                        android:layout_marginTop="3dp"
+                        android:numStars="5"
+                        android:rating="3"
+                        android:isIndicator="true"
+                        android:progressTint="@color/myColor"
+                        android:progressBackgroundTint="@color/myColor"
+                        />
 
                     <TextView
                         android:id="@+id/tvNoOrders"
@@ -75,7 +71,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
                         android:layout_marginStart="10dp"
-                        android:layout_toEndOf="@+id/ratingStar"
+                        android:layout_toEndOf="@+id/ratingBar"
                         android:fontFamily="@font/montserrat_medium"
                         android:text="(0)"
                         android:textAllCaps="true"
