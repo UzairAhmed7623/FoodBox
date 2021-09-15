@@ -1,18 +1,27 @@
 package com.inkhornsolutions.foodbox.models;
 
 public class RestaurantModelClass {
-    private String resName, status, imageUri, approved, id, noOfOrders;
+    private String resName, status, imageUri, approved, id, noOfOrders, resRating;
 
     public RestaurantModelClass() {
     }
 
-    public RestaurantModelClass(String resName, String status, String imageUri, String approved, String id, String noOfOrders) {
+    public RestaurantModelClass(String resName, String status, String imageUri, String approved, String id, String noOfOrders, String resRating) {
         this.resName = resName;
         this.status = status;
         this.imageUri = imageUri;
         this.approved = approved;
         this.id = id;
         this.noOfOrders = noOfOrders;
+        this.resRating = resRating;
+    }
+
+    public String getResRating() {
+        return resRating;
+    }
+
+    public void setResRating(String resRating) {
+        this.resRating = resRating;
     }
 
     public String getNoOfOrders() {

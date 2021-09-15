@@ -5,22 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="5dp"
-    android:background="?attr/selectableItemBackgroundBorderless">
+    android:foreground="@drawable/ripple">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        android:background="@drawable/history_item_shape">
+        android:layout_height="wrap_content">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             app:cardCornerRadius="5dp"
-            app:cardElevation="100dp">
+            app:cardElevation="7dp"
+            app:cardUseCompatPadding="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -52,27 +48,27 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/tvResNameHistory"
-                                android:layout_marginStart="10dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginStart="10dp"                                android:fontFamily="@font/montserrat_medium"
                                 android:gravity="start"
                                 android:text="Date"
                                 android:textAllCaps="true"
                                 android:textColor="@android:color/black"
-                                android:textSize="15sp"
-                                android:fontFamily="@font/montserrat_medium"/>
+                                android:textSize="15sp" />
 
                             <TextView
                                 android:id="@+id/tvGrandTotalHistory"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/ivStatusHistory"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginStart="10dp"
                                 android:layout_gravity="left|center_vertical"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginTop="5dp"
+                                android:fontFamily="@font/montserrat_medium"
                                 android:text="Total Price"
                                 android:textAllCaps="true"
                                 android:textColor="@android:color/black"
-                                android:textSize="15sp"
-                                android:fontFamily="@font/montserrat_medium"/>
+                                android:textSize="15sp" />
 
                             <ImageView
                                 android:id="@+id/ivStatusHistory"
@@ -85,12 +81,51 @@
 
                         </RelativeLayout>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnRateAndReview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="Rate your order?"
+                        android:visibility="gone"
+                        app:cornerRadius="50dp" />
+
+                    <TextView
+                        android:id="@+id/tvShowRating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:fontFamily="@font/klavika_bold"
+                        android:letterSpacing="0.07"
+                        android:text=""
+                        android:textColor="@color/warning_snackbar"
+                        android:textSize="16sp"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/myColor"/>
 
                 <LinearLayout
-                    android:id="@+id/expandablelLayoutHistory"
+                    android:id="@+id/expandableLayoutHistory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:padding="7dp"
                     android:visibility="visible">
 
                     <androidx.recyclerview.widget.RecyclerView

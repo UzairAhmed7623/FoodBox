@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,25 +24,17 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.inkhornsolutions.foodbox.Common.Common;
-import com.inkhornsolutions.foodbox.FirstProfile;
-import com.inkhornsolutions.foodbox.MainActivity;
-import com.inkhornsolutions.foodbox.Profile;
 import com.inkhornsolutions.foodbox.R;
 import com.inkhornsolutions.foodbox.RestaurantItems;
-import com.inkhornsolutions.foodbox.models.RatingClass;
-import com.inkhornsolutions.foodbox.models.RatingsList;
 import com.inkhornsolutions.foodbox.models.RestaurantModelClass;
 
 import org.jetbrains.annotations.NotNull;
@@ -51,8 +42,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import es.dmoral.toasty.Toasty;
 
 //import per.wsj.library.AndRatingBar;
 
@@ -63,13 +52,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     private int checkedPosition = RecyclerView.NO_POSITION;
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-    private List<RatingClass> ratingsList = new ArrayList<>();
-    private List<String> resList = new ArrayList<>();
     View view;
-    String first_name = "",last_name = "";
-
-    String rating;
-    float finalRating = 0f;
 
     public MainActivityAdapter(Context context, List<RestaurantModelClass> resDetails) {
         this.context = context;
@@ -93,10 +76,14 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         Log.d("size", "" + restaurantModelClass.getNoOfOrders());
         holder.tvNoOrders.setText("(" + restaurantModelClass.getNoOfOrders() + ")");
 
+        if (restaurantModelClass.getResRating() != null){
+            holder.ratingBar.setRating(Float.parseFloat(restaurantModelClass.getResRating()));
+        }
+
         RequestOptions reqOpt = RequestOptions
                 .fitCenterTransform()
                 .transform(new RoundedCorners(8))
-                .diskCacheStrategy(DiskCacheStrategy.DATA) // It will cache your image after loaded for first time
+                .diskCacheStrategy(DiskCacheStrategy.DATA) // It will cache the image after loaded for first time
                 .override(300)
                 .priority(Priority.IMMEDIATE)
                 .encodeFormat(Bitmap.CompressFormat.PNG)
@@ -187,51 +174,6 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                         }
             }
         });
-        
-        firebaseFirestore.collection("Rating").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
-                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                            if (documentSnapshot.exists()) {
-                                ratingsList = Objects.requireNonNull(documentSnapshot.toObject(RatingsList.class)).Rating;
-                                Log.d("TAG1", ratingsList.get(0).getKitchenName());
-                            }
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        float tempRating = 0f;
-
-        resList.clear();
-
-        for (int x = 0; x < ratingsList.size(); x++) {
-
-            String kitchenName = ratingsList.get(x).getKitchenName();
-
-            if (ratingsList.get(x).getKitchenName().equals(resName)){
-                resList.add(ratingsList.get(x).getKitchenName());
-            }
-
-            if (kitchenName.equals(restaurantModelClass.getResName())){
-                String itemName = ratingsList.get(x).getItemName();
-                rating = ratingsList.get(x).getRating();
-
-                tempRating += Float.parseFloat(rating);
-            }
-        }
-
-        finalRating = tempRating/resList.size();
-
-//        holder.ratingStar.setRating(finalRating);
-
-
     }
 
     @Override

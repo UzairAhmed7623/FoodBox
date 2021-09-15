@@ -87,11 +87,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:fontFamily="@font/montserra_regular_bold"
+                    android:fontFamily="@font/klavika_bold"
                     android:text="Minimum order amount is "
                     android:textColor="@color/black"
                     android:includeFontPadding="false"
-                    android:letterSpacing="0.05"
+                    android:letterSpacing="0.07"
                     android:textSize="16dp"
                     android:textStyle="bold" />
 
@@ -99,11 +99,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:fontFamily="@font/montserra_regular_bold"
+                    android:fontFamily="@font/klavika_bold"
                     android:text="PKR50."
                     android:textColor="@color/black"
                     android:includeFontPadding="false"
-                    android:letterSpacing="0.05"
+                    android:letterSpacing="0.07"
                     android:textSize="16dp"
                     android:textStyle="bold" />
 

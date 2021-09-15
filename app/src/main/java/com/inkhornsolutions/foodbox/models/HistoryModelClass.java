@@ -3,7 +3,7 @@ package com.inkhornsolutions.foodbox.models;
 import com.google.firebase.Timestamp;
 
 public class HistoryModelClass {
-    private String resId, id, pId, itemName, finalPrice, price,  items_Count, status, resName, totalPrice, date;
+    private String resId, id, pId, itemName, finalPrice, price,  items_Count, status, resName, totalPrice, date, userRating;
     private boolean expanded;
     private Timestamp timeStamp;
 
@@ -18,7 +18,7 @@ public class HistoryModelClass {
     public HistoryModelClass() {
     }
 
-    public HistoryModelClass(String resId, String id, String pId, String itemName, String finalPrice, String price, String items_Count, String status, String resName, String totalPrice, String date, boolean expanded, Timestamp timeStamp) {
+    public HistoryModelClass(String resId, String id, String pId, String itemName, String finalPrice, String price, String items_Count, String status, String resName, String totalPrice, String date, String userRating, boolean expanded, Timestamp timeStamp) {
         this.resId = resId;
         this.id = id;
         this.pId = pId;
@@ -30,8 +30,17 @@ public class HistoryModelClass {
         this.resName = resName;
         this.totalPrice = totalPrice;
         this.date = date;
+        this.userRating = userRating;
         this.expanded = expanded;
         this.timeStamp = timeStamp;
+    }
+
+    public String getUserRating() {
+        return userRating;
+    }
+
+    public void setUserRating(String userRating) {
+        this.userRating = userRating;
     }
 
     public String getId() {

@@ -73,7 +73,7 @@
                         android:id="@+id/discountLayout"
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <com.libRG.CustomTextView
                             android:id="@+id/tvItemCuttingPrice"
@@ -94,7 +94,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_marginEnd="15dp"
                             android:fontFamily="@font/sf_pro_rounded_regular"
-                            android:text="Dis"
+                            android:text="-20%"
                             android:textAlignment="center"
                             android:textColor="@color/red"
                             android:textSize="12sp"

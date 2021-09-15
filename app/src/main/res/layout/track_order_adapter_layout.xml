@@ -90,48 +90,16 @@
                         android:textSize="15sp"
                         android:fontFamily="@font/montserrat_medium" />
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnRateAndReview"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            android:text="Rate &amp; Review"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            app:cornerRadius="50dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"/>
-
-                        <TextView
-                            android:id="@+id/tvShowRating"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:visibility="visible"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            android:fontFamily="@font/montserrat_medium"
-                            android:text="You give 4.5 / 5"
-                            android:textColor="@color/warning_snackbar"
-                            android:textSize="14sp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"/>
-
-                    </RelativeLayout>
-
                 </LinearLayout>
 
                 <View
                     android:layout_width="wrap_content"
                     android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
                     android:background="@color/myColor"/>
 
                 <LinearLayout
-                    android:id="@+id/expandablelLayoutTrack"
+                    android:id="@+id/expandableLayoutTrack"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"

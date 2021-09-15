@@ -2,6 +2,7 @@ package com.inkhornsolutions.foodbox;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.snackbar.Snackbar;
@@ -27,6 +29,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.yalantis.pulltomakesoup.PullToRefreshView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,7 +40,7 @@ public class OrderHistory extends AppCompatActivity {
     private List<HistoryModelClass> OrderHistory = new ArrayList<>();
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-    private PullToRefreshView mPullToRefreshView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressDialog progressDialog;
 
     @Override
@@ -52,10 +55,12 @@ public class OrderHistory extends AppCompatActivity {
 
         setSupportActionBar(toolbarHistory);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.arrow_back);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        mPullToRefreshView = (PullToRefreshView) findViewById(R.id.pull_to_refresh);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(OrderHistory.this, R.color.myColor));
+        swipeRefreshLayout.setColorSchemeColors(Color.WHITE, Color.WHITE);
 
         rvHistory = (RecyclerView) findViewById(R.id.rvHistory);
         rvHistory.setLayoutManager(new LinearLayoutManager(this));
@@ -68,47 +73,42 @@ public class OrderHistory extends AppCompatActivity {
 
         loadData();
 
-        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
-                mPullToRefreshView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        loadData();
-                    }
-                }, 3000);
+              loadData();
             }
         });
     }
 
     private void loadData(){
         firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
-                .collection("Cart").whereEqualTo("status", "Dispatched")
+                .collection("Cart")
+                .whereIn("status", Arrays.asList("Dispatched", "Completed"))
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 OrderHistory.clear();
                 for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
                     if (documentSnapshot.exists()){
+                        HistoryModelClass historyModelClass = new HistoryModelClass();
 
                         String resId = documentSnapshot.getId();
                         String time = documentSnapshot.getString("Time");
                         String resName = documentSnapshot.getString("restaurantName");
                         String status = documentSnapshot.getString("status");
                         String total = documentSnapshot.getString("total");
-
+                        if (documentSnapshot.getString("userRating") != null){
+                            String userRating = documentSnapshot.getString("userRating");
+                            historyModelClass.setUserRating(userRating);
+                        }
                         Log.d("asdfgh", ""+resId+time);
 
-                        HistoryModelClass historyModelClass = new HistoryModelClass();
                         historyModelClass.setResId(resId);
                         historyModelClass.setDate(time);
                         historyModelClass.setResName(resName);
                         historyModelClass.setStatus(status);
                         historyModelClass.setTotalPrice(total);
-
-
 
                         OrderHistory.add(historyModelClass);
 
@@ -119,7 +119,7 @@ public class OrderHistory extends AppCompatActivity {
                         Snackbar.make(findViewById(android.R.id.content), "Data not found!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                     }
                 }
-                mPullToRefreshView.setRefreshing(false);
+                swipeRefreshLayout.setRefreshing(false);
                 progressDialog.dismiss();
             }
         }).addOnFailureListener(new OnFailureListener() {

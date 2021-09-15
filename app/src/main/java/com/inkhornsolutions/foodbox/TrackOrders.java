@@ -1,5 +1,6 @@
 package com.inkhornsolutions.foodbox;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -11,11 +12,14 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
@@ -44,6 +48,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
+import es.dmoral.toasty.Toasty;
+
 public class TrackOrders extends AppCompatActivity {
 
     private Toolbar toolbarTrack;
@@ -55,8 +61,6 @@ public class TrackOrders extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private SwipeRefreshLayout refresh;
     private TextView txt1, txt2;
-    EventListener<QuerySnapshot> eventListener;
-    ListenerRegistration listenerRegistration;
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onTimeUp(InProgress event){
@@ -85,7 +89,7 @@ public class TrackOrders extends AppCompatActivity {
 
         setSupportActionBar(toolbarTrack);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.arrow_back);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         rvTrack = (RecyclerView) findViewById(R.id.rvTrack);
@@ -96,8 +100,6 @@ public class TrackOrders extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.setContentView(R.layout.progress_bar);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
-        loadData();
 
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -116,78 +118,70 @@ public class TrackOrders extends AppCompatActivity {
 
     private void loadData(){
 
-               eventListener= new EventListener<QuerySnapshot>() {
-                   @Override
-                   public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-
-                       trackOrders.clear();
-
-                       for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
-                           if (documentSnapshot.exists()) {
-
-                               String resId = documentSnapshot.getId();
-                               String time = documentSnapshot.getString("Time");
-                               Timestamp timeStamp = documentSnapshot.getTimestamp("timeStamp");
-                               String resName = documentSnapshot.getString("restaurantName");
-                               String status = documentSnapshot.getString("status");
-                               String total = documentSnapshot.getString("total");
-
-                               historyModelClass = new HistoryModelClass();
-
-                               historyModelClass.setResId(resId);
-                               historyModelClass.setDate(time);
-                               historyModelClass.setTimeStamp(timeStamp);
-                               historyModelClass.setResName(resName);
-                               historyModelClass.setStatus(status);
-                               historyModelClass.setTotalPrice(total);
-
-                               trackOrders.add(historyModelClass);
-
-                           } else {
-                               Snackbar.make(findViewById(android.R.id.content), "Data not found!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
-                           }
-                       }
-                       Collections.sort(trackOrders, new Comparator<HistoryModelClass>() {
-                           @Override
-                           public int compare(HistoryModelClass o1, HistoryModelClass o2) {
-                               return o2.getTimeStamp().compareTo(o1.getTimeStamp());
-                           }
-                       });
-                       if (trackOrders.size() == 0) {
-                           txt1.setVisibility(View.VISIBLE);
-                           txt2.setVisibility(View.VISIBLE);
-                       } else {
-                           txt1.setVisibility(View.GONE);
-                           txt2.setVisibility(View.GONE);
-                       }
-
-                       progressDialog.dismiss();
-                       refresh.setRefreshing(false);
-                       rvTrack.setAdapter(new TrackOrdersAdapter(TrackOrders.this, trackOrders));
-                   }
-               };
-
-        listenerRegistration = firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
+        firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
                 .collection("Cart")
                 .whereIn("status", Arrays.asList("Pending","In progress","Rejected"))
-                .addSnapshotListener(eventListener);
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot querySnapshot) {
+                        trackOrders.clear();
+
+                        for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
+                            if (documentSnapshot.exists()) {
+
+                                historyModelClass = new HistoryModelClass();
+
+                                String resId = documentSnapshot.getId();
+                                String time = documentSnapshot.getString("Time");
+                                Timestamp timeStamp = documentSnapshot.getTimestamp("timeStamp");
+                                String resName = documentSnapshot.getString("restaurantName");
+                                String status = documentSnapshot.getString("status");
+                                String total = documentSnapshot.getString("total");
+
+                                historyModelClass.setResId(resId);
+                                historyModelClass.setDate(time);
+                                historyModelClass.setTimeStamp(timeStamp);
+                                historyModelClass.setResName(resName);
+                                historyModelClass.setStatus(status);
+                                historyModelClass.setTotalPrice(total);
+
+                                trackOrders.add(historyModelClass);
+
+                            } else {
+                                Snackbar.make(findViewById(android.R.id.content), "Data not found!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                            }
+                        }
+                        Collections.sort(trackOrders, new Comparator<HistoryModelClass>() {
+                            @Override
+                            public int compare(HistoryModelClass o1, HistoryModelClass o2) {
+                                return o2.getTimeStamp().compareTo(o1.getTimeStamp());
+                            }
+                        });
+                        if (trackOrders.size() == 0) {
+                            txt1.setVisibility(View.VISIBLE);
+                            txt2.setVisibility(View.VISIBLE);
+                        } else {
+                            txt1.setVisibility(View.GONE);
+                            txt2.setVisibility(View.GONE);
+                        }
+
+                        progressDialog.dismiss();
+                        refresh.setRefreshing(false);
+                        rvTrack.setAdapter(new TrackOrdersAdapter(TrackOrders.this, trackOrders));
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toasty.error(TrackOrders.this, e.getMessage(), Toasty.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        listenerRegistration = firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
-                .collection("Cart")
-                .whereIn("status", Arrays.asList("Pending","In progress","Rejected"))
-                .addSnapshotListener(eventListener);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (listenerRegistration != null){
-
-            listenerRegistration.remove();
-        }
+        Log.d("methods", "onStart");
+        loadData();
     }
 }

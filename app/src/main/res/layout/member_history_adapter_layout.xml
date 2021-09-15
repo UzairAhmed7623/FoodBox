@@ -1,130 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:gravity="center"
-    android:padding="4dp"
-    android:background="@color/myColorthird"
-    android:foreground="?attr/selectableItemBackgroundBorderless" >
+    android:orientation="horizontal">
 
-    <View
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-        android:layout_marginStart="10dp"
-        android:backgroundTint="@color/myColor"
-        android:background="@drawable/edit_details_background"/>
-
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="?attr/selectableItemBackgroundBorderless" >
-
-        <TextView
-            android:id="@+id/tvItemNameHistory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="10dp"
-            android:layout_gravity="left|center_vertical"
-            android:text="Item name"
-            android:textAllCaps="true"
-            android:textColor="@android:color/black"
-            android:textSize="15sp"
-            android:fontFamily="@font/montserrat_medium"/>
+        app:cardCornerRadius="5dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="start|center_vertical"
-            android:layout_gravity="center_vertical">
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tvItemPriceHistory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <View
+                android:layout_width="10dp"
+                android:layout_height="10dp"
                 android:layout_marginStart="10dp"
-                android:gravity="end"
                 android:layout_gravity="center_vertical"
-                android:text="200"
-                android:textAllCaps="true"
-                android:textColor="@android:color/black"
-                android:textSize="12sp"
-                android:fontFamily="@font/montserrat_medium"
-                android:paddingEnd="5dp" />
+                android:backgroundTint="@color/myColor"
+                android:background="@drawable/edit_details_background"/>
 
-            <TextView
-                android:id="@+id/tvMultiplyLabelHistory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:layout_gravity="center_vertical"
-                android:text="x"
-                android:textAllCaps="true"
-                android:textColor="@android:color/black"
-                android:textSize="12sp"
-                android:fontFamily="@font/montserrat_medium"
-                android:paddingEnd="5dp" />
-
-            <TextView
-                android:id="@+id/tvItemCountHistory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:layout_gravity="center_vertical"
-                android:text="3"
-                android:textAllCaps="true"
-                android:textColor="@android:color/black"
-                android:textSize="12sp"
-                android:fontFamily="@font/montserrat_medium"
-                android:paddingEnd="5dp" />
-
-            <TextView
-                android:id="@+id/tvEqualToLabelHistory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:layout_gravity="center_vertical"
-                android:text="="
-                android:textAllCaps="true"
-                android:textColor="@android:color/black"
-                android:textSize="12sp"
-                android:fontFamily="@font/montserrat_medium"
-                android:paddingEnd="5dp" />
-
-            <TextView
-                android:id="@+id/tvTotalHistory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:layout_gravity="center_vertical"
-                android:text="600"
-                android:textAllCaps="true"
-                android:textColor="@android:color/black"
-                android:textSize="12sp"
-                android:fontFamily="@font/montserrat_medium"
-                android:layout_marginEnd="5dp" />
-
-            <TextView
-                android:id="@+id/tvOrderDateHistory"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_gravity="end|center_vertical"
-                android:gravity="end"
-                android:text="date: 12-02-2021"
-                android:textAllCaps="true"
-                android:textColor="@android:color/black"
-                android:textSize="12sp"
-                android:fontFamily="@font/montserrat_medium" />
+                android:orientation="vertical"
+                android:layout_marginBottom="5dp">
+
+                <TextView
+                    android:id="@+id/tvItemNameHistory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="Item name"
+                    android:textAllCaps="true"
+                    android:textColor="@android:color/black"
+                    android:textSize="15sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="start|center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvItemPriceHistory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="10dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="end"
+                        android:paddingEnd="5dp"
+                        android:text="200"
+                        android:textAllCaps="true"
+                        android:textColor="@android:color/black"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tvMultiplyLabelHistory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="start"
+                        android:paddingEnd="5dp"
+                        android:text="x"
+                        android:textAllCaps="true"
+                        android:textColor="@android:color/black"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tvItemCountHistory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="start"
+                        android:paddingEnd="5dp"
+                        android:text="3"
+                        android:textAllCaps="true"
+                        android:textColor="@android:color/black"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tvEqualToLabelHistory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="start"
+                        android:paddingEnd="5dp"
+                        android:text="="
+                        android:textAllCaps="true"
+                        android:textColor="@android:color/black"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tvTotalHistory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="5dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="start"
+                        android:text="600"
+                        android:textAllCaps="true"
+                        android:textColor="@android:color/black"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tvOrderDateHistory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|center_vertical"
+                        android:layout_marginEnd="10dp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="end"
+                        android:text="date: 12-02-2021"
+                        android:textAllCaps="true"
+                        android:textColor="@android:color/black"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
-
-
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>
