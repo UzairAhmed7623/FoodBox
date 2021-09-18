@@ -50,17 +50,19 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:background="@android:color/transparent"
+            android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/bottemSheet"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rvTags">
 
-                <androidx.recyclerview.widget.RecyclerView
+                <com.mlsdev.animatedrv.AnimatedRecyclerView
                     android:id="@+id/rvItems"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    app:animationDuration="750"
+                    app:layoutAnimation="@anim/layout_animation_from_bottom"
+                    />
 
         </LinearLayout>
 

@@ -6,6 +6,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,7 +26,10 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Lifecycle;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -124,9 +128,19 @@ public class ShowItemDetails extends AppCompatActivity {
 
                             tvItem.setText(itemName);
 
-                            Glide.with(ShowItemDetails.this).load(itemImage).placeholder(R.drawable.food_placeholder).fitCenter()
-                                    .diskCacheStrategy(DiskCacheStrategy.DATA)
-                                    .apply(new RequestOptions().override(300))
+                            RequestOptions reqOpt = RequestOptions
+                                    .fitCenterTransform()
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .override(1024, 768)
+                                    .priority(Priority.IMMEDIATE)
+                                    .encodeFormat(Bitmap.CompressFormat.PNG)
+                                    .format(DecodeFormat.DEFAULT);
+
+                            Glide.with(ShowItemDetails.this)
+                                    .load(itemImage)
+                                    .placeholder(R.drawable.food_placeholder)
+                                    .fitCenter()
+                                    .apply(reqOpt)
                                     .into(civItemImage);
 
                             price = Double.parseDouble(itemPrice.replace("PKR", ""));

@@ -43,7 +43,7 @@
                     android:text="Delivering to"
                     android:textAllCaps="true"
                     android:textColor="@android:color/black"
-                    android:textSize="16dp"
+                    android:textSize="14dp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -69,19 +69,19 @@
                 android:id="@+id/tvAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/place"
                 android:layout_centerVertical="true"
-                android:padding="10dp"
                 android:layout_gravity="start"
+                android:layout_toEndOf="@+id/place"
+                android:fontFamily="@font/sf_pro_rounded_regular"
+                android:includeFontPadding="false"
                 android:letterSpacing="0.05"
-                android:textStyle="bold"
-                android:textFontWeight="600"
+                android:padding="10dp"
                 android:text="Address"
                 android:textAllCaps="true"
                 android:textColor="@color/black"
-                android:textSize="16sp"
-                android:includeFontPadding="false"
-                android:fontFamily="@font/sf_pro_rounded_regular"/>
+                android:textFontWeight="600"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
         </RelativeLayout>
 
@@ -97,18 +97,18 @@
             android:layout_marginBottom="10dp"
             android:background="@drawable/search_back"
             android:drawableTint="@color/black"
-            android:elevation="15dp"
+            android:elevation="7dp"
             android:gravity="center_vertical"
             android:hint="   Search for the foods"
             android:paddingStart="10dp"
             android:textColorHint="@color/grey_60"
-            android:textSize="17dp"
+            android:textSize="16dp"
             android:transitionName="search"
             app:drawableStartCompat="@drawable/search_icon" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
-        android:id="@+id/pull_to_refresh"
+            android:id="@+id/pull_to_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/tvItemSearch">
@@ -116,7 +116,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvRestaurantName"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layoutAnimation="@anim/layout_slide_right"
+                android:scrollbars="vertical" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

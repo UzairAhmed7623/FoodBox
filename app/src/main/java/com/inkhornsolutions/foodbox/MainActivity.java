@@ -2,16 +2,24 @@ package com.inkhornsolutions.foodbox;
 
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.TransitionInflater;
 import android.util.Log;
+import android.util.MalformedJsonException;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +31,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -47,6 +56,7 @@ import com.infideap.drawerbehavior.AdvanceDrawerLayout;
 import com.inkhornsolutions.foodbox.Common.Common;
 import com.inkhornsolutions.foodbox.adapters.MainActivityAdapter;
 import com.inkhornsolutions.foodbox.models.RestaurantModelClass;
+import com.mlsdev.animatedrv.AnimatedRecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -75,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String imageUri;
     private TextView tvItemSearch;
     private LoginManager loginManager;
+    private MainActivityAdapter mainActivityAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+//        setupWindowAnimations();
 
         mSwipeRefreshLayout.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
         mSwipeRefreshLayout.setColorSchemeColors(Color.BLACK, Color.BLACK);
@@ -139,6 +152,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         rvRestaurant = (RecyclerView) findViewById(R.id.rvRestaurantName);
         rvRestaurant.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        rvRestaurant.setItemAnimator(new DefaultItemAnimator());
+        mainActivityAdapter = new MainActivityAdapter(MainActivity.this, resDetails);
+        rvRestaurant.setAdapter(mainActivityAdapter);
+
+//        layoutAnimation(rvRestaurant);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.show();
@@ -201,6 +219,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         deleteCartItems();
+
+    }
+
+    private void layoutAnimation(RecyclerView recyclerView) {
+        Context context = recyclerView.getContext();
+        LayoutAnimationController layoutAnimationController = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_slide_right);
+        recyclerView.setLayoutAnimation(layoutAnimationController);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
     }
 
     @Override
@@ -273,7 +300,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                                 resDetails.add(restaurantModelClass);
                             }
-                            rvRestaurant.setAdapter(new MainActivityAdapter(MainActivity.this, resDetails));
                             progressDialog.dismiss();
                             mSwipeRefreshLayout.setRefreshing(false);
                         } else {

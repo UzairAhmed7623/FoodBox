@@ -53,6 +53,10 @@ dependencies {
 
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+    implementation ("com.github.bumptech.glide:recyclerview-integration:4.11.0") {
+        // Excludes the support library because it's already included by Glide.
+        transitive = false
+    }
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.github.mohammadatif:CircularImageView:1.0.1'
@@ -153,4 +157,11 @@ dependencies {
     implementation 'com.github.f0ris.sweetalert:library:1.6.2'
 
     implementation 'com.google.android.play:core:1.10.1'
+    implementation 'eu.dkaratzas:android-inapp-update:1.0.5'
+
+    implementation "com.mlsdev.animatedrv:library:2.0.0"
+
+
+
+
 }

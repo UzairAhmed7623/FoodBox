@@ -29,13 +29,17 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.inkhornsolutions.foodbox.R;
 import com.inkhornsolutions.foodbox.RestaurantItems;
+import com.inkhornsolutions.foodbox.SignUp;
+import com.inkhornsolutions.foodbox.Welcome;
 import com.inkhornsolutions.foodbox.models.RestaurantModelClass;
+import com.tombayley.activitycircularreveal.CircularReveal;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -83,8 +87,8 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         RequestOptions reqOpt = RequestOptions
                 .fitCenterTransform()
                 .transform(new RoundedCorners(8))
-                .diskCacheStrategy(DiskCacheStrategy.DATA) // It will cache the image after loaded for first time
-                .override(300)
+                .diskCacheStrategy(DiskCacheStrategy.ALL) // It will cache the image after loaded for first time
+                .override(1024, 768)
                 .priority(Priority.IMMEDIATE)
                 .encodeFormat(Bitmap.CompressFormat.PNG)
                 .format(DecodeFormat.DEFAULT);
@@ -136,7 +140,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         String resName = restaurantModelClass.getResName().trim();
         Log.d("TAG1", resName);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ProgressDialog progressDialog = new ProgressDialog(context);
@@ -158,7 +162,9 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                                     intent.putExtra("restaurant", resName);
                                     intent.putExtra("name", name);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                                     context.startActivity(intent);
+
                                 }
                                 else {
                                     progressDialog.dismiss();
@@ -188,6 +194,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         private TextView tvNoOrders;
         private final LinearLayout layout;
         private RatingBar ratingBar;
+        MaterialCardView cardView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -196,6 +203,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
             tvRestaurant = itemView.findViewById(R.id.tvRestaurant);
             ratingBar = itemView.findViewById(R.id.ratingBar);
             tvNoOrders = itemView.findViewById(R.id.tvNoOrders);
+            cardView = itemView.findViewById(R.id.cardView);
 
             layout = itemView.findViewById(R.id.layout);
 

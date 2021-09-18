@@ -4,10 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="start"
-    android:background="@android:color/transparent"
-    android:foreground="@drawable/ripple"
     android:orientation="vertical"
-    android:weightSum="2"
     app:layout_constraintWidth_percent="0.5">
 
     <LinearLayout
@@ -22,30 +19,32 @@
             android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
                 android:layout_width="190dp"
                 android:layout_height="280dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="40dp"
-                android:background="#00000000"
+                android:background="@drawable/ripple"
                 app:cardCornerRadius="30dp"
                 app:cardElevation="10dp"
-                app:cardUseCompatPadding="true">
+                app:cardUseCompatPadding="true"
+                style="@style/Widget.MaterialComponents.Button">
 
                 <TextView
                     android:id="@+id/tvItem"
                     android:layout_width="120dp"
                     android:layout_height="55dp"
                     android:layout_gravity="center_vertical|center_horizontal"
-                    android:layout_marginTop="35dp"
+                    android:layout_marginTop="40dp"
                     android:ellipsize="end"
-                    android:fontFamily="@font/sf_pro_rounded_regular"
+                    android:fontFamily="@font/montserrat_semi_bold"
                     android:gravity="center_horizontal"
                     android:includeFontPadding="false"
                     android:maxLines="2"
                     android:text="Product name"
                     android:textColor="@color/black"
                     android:textFontWeight="600"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -60,13 +59,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:fontFamily="@font/sf_pro_rounded_regular"
+                        android:fontFamily="@font/montserra_regular_bold"
                         android:includeFontPadding="false"
                         android:text="PKR0.00"
                         android:textAlignment="center"
                         android:textColor="@color/myColor"
                         android:textFontWeight="600"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <RelativeLayout
@@ -80,12 +79,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="15dp"
-                            android:fontFamily="@font/sf_pro_rounded_regular"
+                            android:fontFamily="@font/montserra_regular"
                             android:text="PKR0.00"
                             android:textColor="@color/black"
                             android:textSize="12sp"
                             android:textStyle="bold"
-                            app:lib_setStrikeText="true"/>
+                            app:lib_setStrikeText="true" />
 
                         <com.libRG.CustomTextView
                             android:id="@+id/tvItemDiscount"
@@ -93,7 +92,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_marginEnd="15dp"
-                            android:fontFamily="@font/sf_pro_rounded_regular"
+                            android:fontFamily="@font/montserra_regular"
                             android:text="-20%"
                             android:textAlignment="center"
                             android:textColor="@color/red"

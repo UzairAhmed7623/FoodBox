@@ -40,13 +40,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import es.dmoral.toasty.Toasty;
+import eu.dkaratzas.android.inapp.update.Constants;
+import eu.dkaratzas.android.inapp.update.InAppUpdateManager;
+import eu.dkaratzas.android.inapp.update.InAppUpdateStatus;
 
-public class SplashScreen extends AppCompatActivity {
+public class SplashScreen extends AppCompatActivity implements InAppUpdateManager.InAppUpdateHandler {
 
     private CircularProgressIndicator progressBar;
-    boolean isConnected;
-    private AppUpdateManager appUpdateManager;
-    private static final int RC_APP_UPDATE = 1001;
+    InAppUpdateManager inAppUpdateManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,28 +55,6 @@ public class SplashScreen extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        appUpdateManager = AppUpdateManagerFactory.create(SplashScreen.this);
-        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(new OnSuccessListener<AppUpdateInfo>() {
-            @Override
-            public void onSuccess(AppUpdateInfo result) {
-                if (result.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                && result.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)){
-
-                    try {
-                        appUpdateManager.startUpdateFlowForResult(result, AppUpdateType.IMMEDIATE, SplashScreen.this, RC_APP_UPDATE);
-                    }
-                    catch (IntentSender.SendIntentException e) {
-                        Toasty.error(SplashScreen.this, e.getMessage(), Toasty.LENGTH_LONG).show();
-                    }
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(Exception e) {
-                Toasty.error(SplashScreen.this, e.getMessage(), Toasty.LENGTH_LONG).show();
-            }
-        });
 
         progressBar = (CircularProgressIndicator) findViewById(R.id.progressBar);
 
@@ -178,44 +157,36 @@ public class SplashScreen extends AppCompatActivity {
             }
         }).start();
 
+        inAppUpdateManager = InAppUpdateManager.Builder(SplashScreen.this, 1001)
+                .resumeUpdates(true)
+                .mode(Constants.UpdateMode.IMMEDIATE)
+                .snackBarAction("An update has just been downloaded.")
+                .snackBarAction("RESTART")
+                .handler(SplashScreen.this);
+
+        inAppUpdateManager.checkForAppUpdate();
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onInAppUpdateError(int code, Throwable error) {
+        View view = getWindow().getDecorView().findViewById(android.R.id.content);
+        Snackbar.make(view,"ERROR_CODE: " + code +" ERROR: " + error,Snackbar.LENGTH_LONG).show();
+    }
 
-        if (requestCode == RC_APP_UPDATE){
-            Toasty.warning(SplashScreen.this, "Downloading!", Toasty.LENGTH_SHORT).show();
-
-            if (resultCode != RESULT_OK){
-                Toasty.warning(SplashScreen.this, "failed!", Toasty.LENGTH_SHORT).show();
-            }
-
+    @Override
+    public void onInAppUpdateStatus(InAppUpdateStatus status) {
+        if (status.isDownloaded()){
+            View view = getWindow().getDecorView().findViewById(android.R.id.content);
+            Snackbar snackbar = Snackbar.make(view,
+                    "An update has just been downlaoded.",
+                    Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction("", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    inAppUpdateManager.completeUpdate();
+                }
+            });
+            snackbar.show();
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-//        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(new OnSuccessListener<AppUpdateInfo>() {
-//            @Override
-//            public void onSuccess(AppUpdateInfo appUpdateInfo) {
-//                if (appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS){
-//                    try {
-//                        appUpdateManager.startUpdateFlowForResult(appUpdateInfo, AppUpdateType.IMMEDIATE,
-//                                SplashScreen.this, RC_APP_UPDATE);
-//                    }
-//                    catch (IntentSender.SendIntentException e) {
-//                        Toasty.error(SplashScreen.this, e.getMessage(), Toasty.LENGTH_LONG).show();
-//                    }
-//                }
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(Exception e) {
-//                Toasty.error(SplashScreen.this, e.getMessage(), Toasty.LENGTH_LONG).show();
-//            }
-//        });
     }
 }

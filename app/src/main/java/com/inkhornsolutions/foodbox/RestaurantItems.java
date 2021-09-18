@@ -52,6 +52,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
+import com.mlsdev.animatedrv.AnimatedRecyclerView;
 import com.nex3z.notificationbadge.NotificationBadge;
 
 import java.util.ArrayList;
@@ -65,9 +66,9 @@ import es.dmoral.toasty.Toasty;
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
 
-public class RestaurantItems extends AppCompatActivity {
+public class RestaurantItems extends AppCompatActivity implements RestaurentItemsAdapter.OnImageListener {
 
-    private RecyclerView rvItems;
+    private AnimatedRecyclerView rvItems;
     private List<ItemsModelClass> productList = new ArrayList<ItemsModelClass>();
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
@@ -117,11 +118,13 @@ public class RestaurantItems extends AppCompatActivity {
 
         getSupportActionBar().setTitle(restaurant);
 
-        rvItems = (RecyclerView) findViewById(R.id.rvItems);
+        rvItems = (AnimatedRecyclerView) findViewById(R.id.rvItems);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         staggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         rvItems.setLayoutManager(staggeredGridLayoutManager);
-        adapter = new RestaurentItemsAdapter(RestaurantItems.this, productList);
+        adapter = new RestaurentItemsAdapter(RestaurantItems.this, productList, this);
+        adapter.notifyDataSetChanged();
+        rvItems.scheduleLayoutAnimation();
 
         progressDialog = new ProgressDialog(this);
         progressDialog.show();
@@ -477,5 +480,10 @@ public class RestaurantItems extends AppCompatActivity {
             sweetAlertDialog.dismiss();
             sweetAlertDialog = null;
         }
+    }
+
+    @Override
+    public void onImageClick(int position) {
+
     }
 }
