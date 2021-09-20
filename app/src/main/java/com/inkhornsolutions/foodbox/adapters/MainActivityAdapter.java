@@ -1,5 +1,6 @@
 package com.inkhornsolutions.foodbox.adapters;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -57,10 +60,13 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     View view;
+    Activity activity;
+    int lastPosition = -1;
 
-    public MainActivityAdapter(Context context, List<RestaurantModelClass> resDetails) {
+    public MainActivityAdapter(Context context, List<RestaurantModelClass> resDetails, Activity activity) {
         this.context = context;
         this.resDetails = resDetails;
+        this.activity = activity;
     }
 
     @NonNull
@@ -73,12 +79,15 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
     @Override
     public void onBindViewHolder(@NonNull MainActivityAdapter.ViewHolder holder, int position) {
+        holder.itemView.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.recycler_view_animation));
+
         RestaurantModelClass restaurantModelClass = resDetails.get(position);
 
         holder.tvRestaurant.setText(restaurantModelClass.getResName());
 
         Log.d("size", "" + restaurantModelClass.getNoOfOrders());
         holder.tvNoOrders.setText("(" + restaurantModelClass.getNoOfOrders() + ")");
+
 
         if (restaurantModelClass.getResRating() != null){
             holder.ratingBar.setRating(Float.parseFloat(restaurantModelClass.getResRating()));

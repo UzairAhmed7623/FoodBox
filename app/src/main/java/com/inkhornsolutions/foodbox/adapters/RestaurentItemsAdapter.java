@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -85,6 +86,8 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull RestaurentItemsAdapter.ViewHolder holder, int position) {
+        holder.itemView.startAnimation(AnimationUtils.loadAnimation(context, R.anim.recycler_view_animation));
+
         final ItemsModelClass itemsModelClass = productList.get(position);
 
         String imageUri = itemsModelClass.getImageUri();
@@ -226,8 +229,6 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                 .apply(reqOpt)
                 .placeholder(R.drawable.food_placeholder)
                 .into(holder.ivItem);
-
-
     }
 
     @Override

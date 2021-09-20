@@ -45,6 +45,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -101,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tvAddress = (TextView) findViewById(R.id.tvAddress);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.pull_to_refresh);
         tvItemSearch = (TextView) findViewById(R.id.tvItemSearch);
+        rvRestaurant = (RecyclerView) findViewById(R.id.rvRestaurantName);
 
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -150,13 +155,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         loadData();
 
-        rvRestaurant = (RecyclerView) findViewById(R.id.rvRestaurantName);
         rvRestaurant.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-        rvRestaurant.setItemAnimator(new DefaultItemAnimator());
-        mainActivityAdapter = new MainActivityAdapter(MainActivity.this, resDetails);
+        mainActivityAdapter = new MainActivityAdapter(MainActivity.this, resDetails, MainActivity.this);
         rvRestaurant.setAdapter(mainActivityAdapter);
-
-//        layoutAnimation(rvRestaurant);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.show();
@@ -222,19 +223,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private void layoutAnimation(RecyclerView recyclerView) {
-        Context context = recyclerView.getContext();
-        LayoutAnimationController layoutAnimationController = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_slide_right);
-        recyclerView.setLayoutAnimation(layoutAnimationController);
-        recyclerView.getAdapter().notifyDataSetChanged();
-        recyclerView.scheduleLayoutAnimation();
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
         loadAllIds();
         loadData();
+        checkForDiscount();
         firebaseFirestore.collection("Users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -267,6 +261,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                     }
                 });
+    }
+
+    private void checkForDiscount() {
+        if (Common.discountAvailable.isEmpty()){
+
+            FirebaseDatabase.getInstance().getReference("Admin").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        String percentage = snapshot.child("percentage").getValue(String.class);
+                        String available = snapshot.child("available").getValue(String.class);
+
+                        Common.discountAvailable.put("percentage", percentage);
+                        Common.discountAvailable.put("available", available);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toasty.error(MainActivity.this, error.getMessage(), Toasty.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
     private void loadAllIds() {

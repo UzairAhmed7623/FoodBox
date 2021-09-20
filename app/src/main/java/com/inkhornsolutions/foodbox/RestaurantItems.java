@@ -68,7 +68,7 @@ import p32929.androideasysql_library.EasyDB;
 
 public class RestaurantItems extends AppCompatActivity implements RestaurentItemsAdapter.OnImageListener {
 
-    private AnimatedRecyclerView rvItems;
+    private RecyclerView rvItems;
     private List<ItemsModelClass> productList = new ArrayList<ItemsModelClass>();
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
@@ -118,13 +118,11 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
 
         getSupportActionBar().setTitle(restaurant);
 
-        rvItems = (AnimatedRecyclerView) findViewById(R.id.rvItems);
+        rvItems = (RecyclerView) findViewById(R.id.rvItems);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         staggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         rvItems.setLayoutManager(staggeredGridLayoutManager);
         adapter = new RestaurentItemsAdapter(RestaurantItems.this, productList, this);
-        adapter.notifyDataSetChanged();
-        rvItems.scheduleLayoutAnimation();
 
         progressDialog = new ProgressDialog(this);
         progressDialog.show();

@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".OrderHistory">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarHistory"
         android:layout_width="match_parent"
@@ -14,27 +22,52 @@
         android:background="@color/white"
         app:titleTextColor="@android:color/black"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:layout_constraintVertical_bias="0.0"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_alignParentTop="true"
+        />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/white_greyish"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbarHistory"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarHistory" />
+        android:layout_below="@+id/toolbarHistory" />
+
+    <TextView
+        android:id="@+id/txt1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:text="Oops!"
+        android:textSize="32sp"
+        android:textColor="@color/black"
+        android:letterSpacing="0.05"
+        android:includeFontPadding="false"
+        android:fontFamily="@font/sf_pro_rounded_regular"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/txt2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt1"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:text="You have not ordered any item till now."
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        android:letterSpacing="0.05"
+        android:fontFamily="@font/sf_pro_rounded_regular"
+        android:visibility="gone"
+        />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarHistory">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbarHistory">
 
         <LinearLayout
             android:id="@+id/layout"
@@ -53,5 +86,7 @@
         </LinearLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

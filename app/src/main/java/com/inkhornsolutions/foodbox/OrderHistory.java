@@ -10,7 +10,9 @@ import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
@@ -18,6 +20,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.Timestamp;
 import com.inkhornsolutions.foodbox.adapters.HistoryAdapter;
 import com.inkhornsolutions.foodbox.models.HistoryModelClass;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,6 +33,8 @@ import com.yalantis.pulltomakesoup.PullToRefreshView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,6 +47,7 @@ public class OrderHistory extends AppCompatActivity {
     private FirebaseFirestore firebaseFirestore;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressDialog progressDialog;
+    private TextView txt1, txt2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +58,8 @@ public class OrderHistory extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         toolbarHistory = (Toolbar) findViewById(R.id.toolbarHistory);
+        txt1 = (TextView) findViewById(R.id.txt1);
+        txt2 = (TextView) findViewById(R.id.txt2);
 
         setSupportActionBar(toolbarHistory);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -95,6 +103,7 @@ public class OrderHistory extends AppCompatActivity {
 
                         String resId = documentSnapshot.getId();
                         String time = documentSnapshot.getString("Time");
+                        Timestamp timeStamp = documentSnapshot.getTimestamp("timeStamp");
                         String resName = documentSnapshot.getString("restaurantName");
                         String status = documentSnapshot.getString("status");
                         String total = documentSnapshot.getString("total");
@@ -106,21 +115,33 @@ public class OrderHistory extends AppCompatActivity {
 
                         historyModelClass.setResId(resId);
                         historyModelClass.setDate(time);
+                        historyModelClass.setTimeStamp(timeStamp);
                         historyModelClass.setResName(resName);
                         historyModelClass.setStatus(status);
                         historyModelClass.setTotalPrice(total);
 
                         OrderHistory.add(historyModelClass);
-
-                        rvHistory.setAdapter(new HistoryAdapter(OrderHistory.this, OrderHistory));
-
                     }
                     else {
                         Snackbar.make(findViewById(android.R.id.content), "Data not found!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                     }
                 }
+                Collections.sort(OrderHistory, new Comparator<HistoryModelClass>() {
+                    @Override
+                    public int compare(HistoryModelClass o1, HistoryModelClass o2) {
+                        return o2.getTimeStamp().compareTo(o1.getTimeStamp());
+                    }
+                });
+                if (OrderHistory.size() == 0) {
+                    txt1.setVisibility(View.VISIBLE);
+                    txt2.setVisibility(View.VISIBLE);
+                } else {
+                    txt1.setVisibility(View.GONE);
+                    txt2.setVisibility(View.GONE);
+                }
                 swipeRefreshLayout.setRefreshing(false);
                 progressDialog.dismiss();
+                rvHistory.setAdapter(new HistoryAdapter(OrderHistory.this, OrderHistory));
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

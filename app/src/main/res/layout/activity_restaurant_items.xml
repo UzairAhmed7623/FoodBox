@@ -56,13 +56,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rvTags">
 
-                <com.mlsdev.animatedrv.AnimatedRecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvItems"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:animationDuration="750"
-                    app:layoutAnimation="@anim/layout_animation_from_bottom"
-                    />
+                    android:scrollbars="vertical"/>
 
         </LinearLayout>
 
