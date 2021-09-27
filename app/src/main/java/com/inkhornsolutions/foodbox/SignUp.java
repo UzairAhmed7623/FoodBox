@@ -249,12 +249,12 @@ public class SignUp extends AppCompatActivity {
         btnGoogleSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestIdToken("438055928659-mv9a4btuqrgkdcp8tl3oat19kntkd4b3.apps.googleusercontent.com")
                         .requestEmail()
                         .build();
 
-                mGoogleSignInClient = GoogleSignIn.getClient(SignUp.this, gso);
+                mGoogleSignInClient = GoogleSignIn.getClient(SignUp.this, googleSignInOptions);
 
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 launcher.launch(signInIntent);

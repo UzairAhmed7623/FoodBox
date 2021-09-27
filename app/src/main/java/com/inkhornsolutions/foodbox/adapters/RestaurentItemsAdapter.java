@@ -227,7 +227,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                 .load(imageUri)
                 .thumbnail(0.5f)
                 .apply(reqOpt)
-                .placeholder(R.drawable.food_placeholder)
+                .placeholder(R.drawable.main_course)
                 .into(holder.ivItem);
     }
 

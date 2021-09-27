@@ -137,6 +137,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
         menuView.addItem("Drinks", R.drawable.soft_drink);
         menuView.addItem("Frozen", R.drawable.frozen);
         menuView.addItem("Sides", R.drawable.sides);
+        menuView.addItem("Mess", R.drawable.mess);
 //        menuView.addItem("Desserts", R.drawable.desserts);
 
         menuView.setOnHSMenuClickListener(new HorizontalScrollMenuView.OnHSMenuClickListener() {
@@ -148,30 +149,43 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
                     menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
                     menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
                     menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
+                    menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
                 } else if (position == 1) {
                     menuView.editItem(position, "Main Course", R.drawable.main_course_color, false, 0);
                     menuView.editItem(0, "All", R.drawable.all, false, 0);
                     menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
                     menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
                     menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
+                    menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
                 } else if (position == 2) {
                     menuView.editItem(position, "Drinks", R.drawable.soft_drink_color, false, 0);
                     menuView.editItem(0, "All", R.drawable.all, false, 0);
                     menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
                     menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
                     menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
+                    menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
                 } else if (position == 3) {
                     menuView.editItem(position, "Frozen", R.drawable.frozen_color, false, 0);
                     menuView.editItem(0, "All", R.drawable.all, false, 0);
                     menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
                     menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
                     menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
+                    menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
                 } else if (position == 4) {
                     menuView.editItem(position, "Sides", R.drawable.sides_color, false, 0);
                     menuView.editItem(0, "All", R.drawable.all, false, 0);
                     menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
                     menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
                     menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
+                    menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
+                }
+                else if (position == 5) {
+                    menuView.editItem(position, "Mess", R.drawable.mess_colored, false, 0);
+                    menuView.editItem(0, "All", R.drawable.all, false, 0);
+                    menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
+                    menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
+                    menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
+                    menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
                 }
 
                 if (position != 0) {
