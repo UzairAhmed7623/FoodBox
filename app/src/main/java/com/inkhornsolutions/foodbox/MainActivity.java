@@ -43,6 +43,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView tvItemSearch;
     private LoginManager loginManager;
     private MainActivityAdapter mainActivityAdapter;
-    private LinearLayout layoutDealOfTheDay;
+    private MaterialCardView cardViewDealOfTheDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.pull_to_refresh);
         tvItemSearch = (TextView) findViewById(R.id.tvItemSearch);
         rvRestaurant = (RecyclerView) findViewById(R.id.rvRestaurantName);
-        layoutDealOfTheDay = (LinearLayout) findViewById(R.id.layoutDealOfTheDay);
+        cardViewDealOfTheDay = (MaterialCardView) findViewById(R.id.cardViewDealOfTheDay);
 
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -232,8 +233,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loadAllIds();
         loadData();
         checkForDiscount();
-        dealOfTheDay();
         getAllRestaurantNames();
+        dealOfTheDay();
+        Log.d("asdfgh", "onStar");
         firebaseFirestore.collection("Users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -286,13 +288,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void dealOfTheDay() {
-        layoutDealOfTheDay.setOnClickListener(new View.OnClickListener() {
+        cardViewDealOfTheDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, RestaurantItems.class);
-                intent.putExtra("restaurant", "res");
-                intent.putExtra("name", "res");
-
                 intent.putExtra("DOD", "DOD");
                 startActivity(intent);
             }

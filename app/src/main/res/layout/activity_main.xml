@@ -12,6 +12,13 @@
     app:edPosition="1"
     tools:context=".MainActivity">
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+
+        android:id="@+id/pull_to_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tvItemSearch">
+
     <RelativeLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
@@ -105,12 +112,7 @@
             android:transitionName="search"
             app:drawableStartCompat="@drawable/search_icon" />
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
-            android:id="@+id/pull_to_refresh"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/tvItemSearch">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/coordinator_layout"
@@ -147,7 +149,7 @@
                             android:orientation="vertical">
 
                             <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/cardView"
+                                android:id="@+id/cardViewDealOfTheDay"
                                 style="@style/Widget.MaterialComponents.Button"
                                 android:layout_width="match_parent"
                                 android:layout_height="220dp"
@@ -293,9 +295,10 @@
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </RelativeLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"

@@ -44,6 +44,7 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.inkhornsolutions.foodbox.Common.Common;
+import com.inkhornsolutions.foodbox.adapters.DODProductsAdapter;
 import com.inkhornsolutions.foodbox.adapters.RestaurentItemsAdapter;
 import com.inkhornsolutions.foodbox.models.ItemsModelClass;
 import com.karumi.dexter.Dexter;
@@ -70,11 +71,11 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
 
     private RecyclerView rvItems;
     private List<ItemsModelClass> productList = new ArrayList<ItemsModelClass>();
-    private List<ItemsModelClass> DODProductList = new ArrayList<>();
+    private List<ItemsModelClass> DODProductList = new ArrayList<ItemsModelClass>();
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-    public String name, last_name, restaurant, DOD;
+    public String name, last_name, restaurant, DOD="";
     private int badgeCount;
     private NotificationBadge notificationBadge;
     private boolean status = false;
@@ -83,6 +84,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
     private ProgressDialog progressDialog;
     private HorizontalScrollMenuView menuView;
     private RestaurentItemsAdapter adapter;
+    private DODProductsAdapter dodProductsAdapter;
 
     private ItemsModelClass itemsModelClass;
     int size;
@@ -117,7 +119,6 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
 
         restaurant = getIntent().getStringExtra("restaurant");
         name = getIntent().getStringExtra("name");
-
         DOD = getIntent().getStringExtra("DOD");
 
         getSupportActionBar().setTitle(restaurant);
@@ -128,13 +129,17 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
         rvItems.setLayoutManager(staggeredGridLayoutManager);
         adapter = new RestaurentItemsAdapter(RestaurantItems.this, productList, this);
 
+        if (getIntent().getStringExtra("DOD") != null) {
+            dodProductsAdapter = new DODProductsAdapter(RestaurantItems.this, DODProductList);
+        }
+
         progressDialog = new ProgressDialog(this);
         progressDialog.show();
         progressDialog.setCancelable(false);
         progressDialog.setContentView(R.layout.progress_bar);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        if (!DOD.equals("DOD")){
+        if (getIntent().getStringExtra("DOD") == null){
             getData();
             checkRestaurantStatus(restaurant);
         }
@@ -246,13 +251,14 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
 
     private void getDODProducts() {
         for (int i=0; i<Common.res.size(); i++){
+            Log.d("asdfghj", Common.res.get(i));
             firebaseFirestore.collection("Restaurants").document(Common.res.get(i)).collection("Items")
                     .whereEqualTo("isDODAvailable", "yes")
                     .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                 @Override
                 public void onSuccess(QuerySnapshot querySnapshot) {
-                    DODProductList.clear();
-//                        adapter.notifyDataSetChanged();
+//                    DODProductList.clear();
+//                        dodProductsAdapter.notifyDataSetChanged();
 
                     for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
                         if (documentSnapshot.exists()) {
@@ -268,7 +274,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
 
                         }
                     }
-                    rvItems.setAdapter(adapter);
+                    rvItems.setAdapter(dodProductsAdapter);
                     progressDialog.dismiss();
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -511,7 +517,9 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
     @Override
     protected void onResume() {
         super.onResume();
-        checkRestaurantStatus(restaurant);
+        if (getIntent().getStringExtra("DOD") == null) {
+            checkRestaurantStatus(restaurant);
+        }
     }
 
     @Override
