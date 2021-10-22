@@ -21,6 +21,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.Adapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +62,7 @@ import com.inkhornsolutions.foodbox.Common.Common;
 import com.inkhornsolutions.foodbox.adapters.MainActivityAdapter;
 import com.inkhornsolutions.foodbox.models.RestaurantModelClass;
 import com.mlsdev.animatedrv.AnimatedRecyclerView;
+import com.podcopic.animationlib.library.linear.Linear;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -84,12 +86,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView tvUserName;
     private CircleImageView ivProfileImage;
     private TextView tvAddress;
-//    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private ProgressDialog progressDialog;
     private String imageUri;
     private TextView tvItemSearch;
     private LoginManager loginManager;
     private MainActivityAdapter mainActivityAdapter;
+    private LinearLayout layoutDealOfTheDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,17 +106,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawerLayout = (AdvanceDrawerLayout) findViewById(R.id.drawerLayout);
         tvAddress = (TextView) findViewById(R.id.tvAddress);
-//        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.pull_to_refresh);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.pull_to_refresh);
         tvItemSearch = (TextView) findViewById(R.id.tvItemSearch);
         rvRestaurant = (RecyclerView) findViewById(R.id.rvRestaurantName);
+        layoutDealOfTheDay = (LinearLayout) findViewById(R.id.layoutDealOfTheDay);
 
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
 //        setupWindowAnimations();
 
-//        mSwipeRefreshLayout.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
-//        mSwipeRefreshLayout.setColorSchemeColors(Color.BLACK, Color.BLACK);
+        mSwipeRefreshLayout.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+        mSwipeRefreshLayout.setColorSchemeColors(Color.BLACK, Color.BLACK);
 
         // Hide status bar
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -193,17 +197,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                    }
 //                });
 
-//        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                mSwipeRefreshLayout.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        loadData();
-//                    }
-//                }, 1500);
-//            }
-//        });
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mSwipeRefreshLayout.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadData();
+                    }
+                }, 1500);
+            }
+        });
 
         tvItemSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,6 +232,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loadAllIds();
         loadData();
         checkForDiscount();
+        dealOfTheDay();
+        getAllRestaurantNames();
         firebaseFirestore.collection("Users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -260,6 +266,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                     }
                 });
+    }
+
+    private void getAllRestaurantNames() {
+        firebaseFirestore.collection("Restaurants").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error == null) {
+                    for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                        if (documentSnapshot.exists()) {
+                            Common.res.add(documentSnapshot.getId());
+                        }
+                    }
+                } else {
+                    Toasty.error(getApplicationContext(), Objects.requireNonNull(error.getMessage()), Toasty.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private void dealOfTheDay() {
+        layoutDealOfTheDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, RestaurantItems.class);
+                intent.putExtra("restaurant", "res");
+                intent.putExtra("name", "res");
+
+                intent.putExtra("DOD", "DOD");
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void checkForDiscount() {
@@ -317,7 +355,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 resDetails.add(restaurantModelClass);
                             }
                             progressDialog.dismiss();
-//                            mSwipeRefreshLayout.setRefreshing(false);
+                            mSwipeRefreshLayout.setRefreshing(false);
                         } else {
                             Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                         }

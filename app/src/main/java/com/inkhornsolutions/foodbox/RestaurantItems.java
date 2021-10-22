@@ -70,10 +70,11 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
 
     private RecyclerView rvItems;
     private List<ItemsModelClass> productList = new ArrayList<ItemsModelClass>();
+    private List<ItemsModelClass> DODProductList = new ArrayList<>();
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-    public String name, last_name, restaurant;
+    public String name, last_name, restaurant, DOD;
     private int badgeCount;
     private NotificationBadge notificationBadge;
     private boolean status = false;
@@ -82,6 +83,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
     private ProgressDialog progressDialog;
     private HorizontalScrollMenuView menuView;
     private RestaurentItemsAdapter adapter;
+
     private ItemsModelClass itemsModelClass;
     int size;
     SweetAlertDialog sweetAlertDialog;
@@ -116,6 +118,8 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
         restaurant = getIntent().getStringExtra("restaurant");
         name = getIntent().getStringExtra("name");
 
+        DOD = getIntent().getStringExtra("DOD");
+
         getSupportActionBar().setTitle(restaurant);
 
         rvItems = (RecyclerView) findViewById(R.id.rvItems);
@@ -130,7 +134,14 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
         progressDialog.setContentView(R.layout.progress_bar);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        getData();
+        if (!DOD.equals("DOD")){
+            getData();
+            checkRestaurantStatus(restaurant);
+        }
+        else {
+            getDODProducts();
+        }
+
 
         menuView.addItem("All", R.drawable.all);
         menuView.addItem("Main Course", R.drawable.main_course);
@@ -231,7 +242,42 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
             }
         });
 
-        checkRestaurantStatus(restaurant);
+    }
+
+    private void getDODProducts() {
+        for (int i=0; i<Common.res.size(); i++){
+            firebaseFirestore.collection("Restaurants").document(Common.res.get(i)).collection("Items")
+                    .whereEqualTo("isDODAvailable", "yes")
+                    .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot querySnapshot) {
+                    DODProductList.clear();
+//                        adapter.notifyDataSetChanged();
+
+                    for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
+                        if (documentSnapshot.exists()) {
+                            String name = documentSnapshot.getId();
+
+                            itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
+
+                            itemsModelClass.setUserName(name);
+                            itemsModelClass.setItemName(name);
+                            itemsModelClass.setId(getDateTime());
+
+                            DODProductList.add(itemsModelClass);
+
+                        }
+                    }
+                    rvItems.setAdapter(adapter);
+                    progressDialog.dismiss();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                }
+            });
+        }
     }
 
     private void checkRestaurantStatus(String restaurant) {
