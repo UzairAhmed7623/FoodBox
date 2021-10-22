@@ -323,7 +323,8 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
                         if (badgeCount == 0) {
-                            Snackbar.make(findViewById(android.R.id.content), "You have not added any product till now!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+                            Snackbar.make(findViewById(android.R.id.content), "You have not added any product till now!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.white))
+                                    .setTextColor(ContextCompat.getColor(RestaurantItems.this, R.color.myColor)).show();
                         } else {
                             Intent intent = new Intent(RestaurantItems.this, Cart.class);
                             intent.putExtra("restaurant", restaurant);

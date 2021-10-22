@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView tvUserName;
     private CircleImageView ivProfileImage;
     private TextView tvAddress;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+//    private SwipeRefreshLayout mSwipeRefreshLayout;
     private ProgressDialog progressDialog;
     private String imageUri;
     private TextView tvItemSearch;
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawerLayout = (AdvanceDrawerLayout) findViewById(R.id.drawerLayout);
         tvAddress = (TextView) findViewById(R.id.tvAddress);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.pull_to_refresh);
+//        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.pull_to_refresh);
         tvItemSearch = (TextView) findViewById(R.id.tvItemSearch);
         rvRestaurant = (RecyclerView) findViewById(R.id.rvRestaurantName);
 
@@ -112,8 +112,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 //        setupWindowAnimations();
 
-        mSwipeRefreshLayout.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
-        mSwipeRefreshLayout.setColorSchemeColors(Color.BLACK, Color.BLACK);
+//        mSwipeRefreshLayout.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+//        mSwipeRefreshLayout.setColorSchemeColors(Color.BLACK, Color.BLACK);
 
         // Hide status bar
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -193,17 +193,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                    }
 //                });
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mSwipeRefreshLayout.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadData();
-                    }
-                }, 1500);
-            }
-        });
+//        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                mSwipeRefreshLayout.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        loadData();
+//                    }
+//                }, 1500);
+//            }
+//        });
 
         tvItemSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -317,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 resDetails.add(restaurantModelClass);
                             }
                             progressDialog.dismiss();
-                            mSwipeRefreshLayout.setRefreshing(false);
+//                            mSwipeRefreshLayout.setRefreshing(false);
                         } else {
                             Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                         }

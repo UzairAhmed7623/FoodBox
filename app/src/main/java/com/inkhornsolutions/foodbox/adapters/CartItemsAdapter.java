@@ -283,8 +283,8 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                         }
                     }
                     easyDB.deleteRow(1, id);
-                    Snackbar.make(v, "Item deleted!", Snackbar.LENGTH_LONG).setBackgroundTint(Color.RED)
-                            .setTextColor(ContextCompat.getColor(context, R.color.warning_snackbar)).show();
+                    Snackbar.make(v, "Item deleted!", Snackbar.LENGTH_LONG).setBackgroundTint(Color.WHITE)
+                            .setTextColor(ContextCompat.getColor(context, R.color.myColor)).show();
                     cartItems.remove(position);
                     notifyItemChanged(position);
                     notifyDataSetChanged();

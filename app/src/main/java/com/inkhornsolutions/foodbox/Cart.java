@@ -83,7 +83,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
 
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-    private String delivery = "45";
+    private String delivery = "59";
     private String restaurant;
 
     private ArrayList<CartItemsModelClass> cartItemsList;
@@ -401,9 +401,9 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
 
                                                                                     totalDeliveryFee = (Double.parseDouble(distance) * 3) + Double.parseDouble(delivery);
 
-                                                                                    tvDeliveryFee.setText("PKR " + totalDeliveryFee);
+                                                                                    tvDeliveryFee.setText("PKR " + delivery);
 
-                                                                                    tvGrandTotal.setText("PKR" + (allTotalPrice + totalDeliveryFee));
+                                                                                    tvGrandTotal.setText("PKR" + (allTotalPrice + Double.parseDouble(delivery)));
 
                                                                                     progressDialog.dismiss();
 
@@ -424,7 +424,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                                                                                                                 intent.putExtra("name", name);
 //                                                                                                            intent.putExtra("last_name", last_name);
                                                                                                                 intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
-                                                                                                                intent.putExtra("deliveryFee", String.valueOf(totalDeliveryFee));
+                                                                                                                intent.putExtra("deliveryFee", String.valueOf(delivery));
                                                                                                                 intent.putExtra("restaurant", restaurant);
                                                                                                                 intent.putExtra("subTotal", tvSubTotal.getText().toString().replace("PKR", ""));
                                                                                                                 intent.putExtra("available", "yes");
@@ -438,7 +438,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                                                                                                                 intent.putExtra("name", name);
 //                                                                                                            intent.putExtra("last_name", last_name);
                                                                                                                 intent.putExtra("total", tvGrandTotal.getText().toString().trim().replace("PKR", ""));
-                                                                                                                intent.putExtra("deliveryFee", String.valueOf(totalDeliveryFee));
+                                                                                                                intent.putExtra("deliveryFee", String.valueOf(delivery));
                                                                                                                 intent.putExtra("restaurant", restaurant);
                                                                                                                 intent.putExtra("subTotal", tvSubTotal.getText().toString().replace("PKR", ""));
                                                                                                                 intent.putExtra("available", "no");

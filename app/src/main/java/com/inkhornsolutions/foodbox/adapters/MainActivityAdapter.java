@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -83,112 +84,119 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
         RestaurantModelClass restaurantModelClass = resDetails.get(position);
 
-        holder.tvRestaurant.setText(restaurantModelClass.getResName());
+            holder.tvRestaurant.setText(restaurantModelClass.getResName());
 
-        Log.d("size", "" + restaurantModelClass.getNoOfOrders());
-        holder.tvNoOrders.setText("(" + restaurantModelClass.getNoOfOrders() + ")");
+            Log.d("size", "" + restaurantModelClass.getNoOfOrders());
+            if (restaurantModelClass.getNoOfOrders() != null){
+                holder.tvNoOrders.setText("(" + restaurantModelClass.getNoOfOrders() + ")");
+            }
+            else {
+                holder.tvNoOrders.setText(""+0);
+            }
 
+            if (restaurantModelClass.getResRating() != null){
+                holder.ratingBar.setRating(Float.parseFloat(restaurantModelClass.getResRating()));
+            }
+            else {
+                holder.ratingBar.setRating(0);
+            }
 
-        if (restaurantModelClass.getResRating() != null){
-            holder.ratingBar.setRating(Float.parseFloat(restaurantModelClass.getResRating()));
-        }
+            RequestOptions reqOpt = RequestOptions
+                    .fitCenterTransform()
+                    .transform(new RoundedCorners(8))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL) // It will cache the image after loaded for first time
+                    .override(1024, 768)
+                    .priority(Priority.IMMEDIATE)
+                    .encodeFormat(Bitmap.CompressFormat.PNG)
+                    .format(DecodeFormat.DEFAULT);
 
-        RequestOptions reqOpt = RequestOptions
-                .fitCenterTransform()
-                .transform(new RoundedCorners(8))
-                .diskCacheStrategy(DiskCacheStrategy.ALL) // It will cache the image after loaded for first time
-                .override(1024, 768)
-                .priority(Priority.IMMEDIATE)
-                .encodeFormat(Bitmap.CompressFormat.PNG)
-                .format(DecodeFormat.DEFAULT);
-
-        Glide.with(context)
-                .load(restaurantModelClass.getImageUri())
-                .thumbnail(0.25f)
-                .apply(reqOpt)
-                .placeholder(R.drawable.food_placeholder)
-                .into(holder.ivRestaurant);
+            Glide.with(context)
+                    .load(restaurantModelClass.getImageUri())
+                    .thumbnail(0.25f)
+                    .apply(reqOpt)
+                    .placeholder(R.drawable.food_placeholder)
+                    .into(holder.ivRestaurant);
 
 //        Glide.with(context).load(restaurantModelClass.getImageUri()).placeholder(R.drawable.food_placeholder)
 //                .fitCenter().into(holder.ivRestaurant);
 //        Picasso.get().load(restaurantModelClass.getImageUri()).placeholder(R.drawable.food_placeholder).fit().centerCrop().into(holder.ivRestaurant);
 
-        holder.itemView.setSelected(checkedPosition == position);
+            holder.itemView.setSelected(checkedPosition == position);
 
-        String status = restaurantModelClass.getStatus();
-        String approved = restaurantModelClass.getApproved();
+            String status = restaurantModelClass.getStatus();
+            String approved = restaurantModelClass.getApproved();
 
-        if (approved.equals("yes")){
-            if (status.equals("online")){
-                holder.layout.setEnabled(true);
+            if (approved.equals("yes")){
+                if (status.equals("online")){
+                    holder.layout.setEnabled(true);
+                }
+                else {
+                    holder.layout.setEnabled(false);
+                    holder.layout.setClickable(false);
+                    holder.itemView.setEnabled(false);
+                    holder.itemView.setClickable(false);
+                    ColorMatrix matrix = new ColorMatrix();
+                    matrix.setSaturation(0);
+                    holder.ivRestaurant.setColorFilter(new ColorMatrixColorFilter(matrix));
+//                Toast.makeText(context, "Restaurant is offline for now, Please try later.", Toast.LENGTH_LONG).show();
+                }
             }
             else {
+                Log.d("approval", "restaurant not approved yet");
                 holder.layout.setEnabled(false);
                 holder.layout.setClickable(false);
-                holder.itemView.setEnabled(false);
-                holder.itemView.setClickable(false);
                 ColorMatrix matrix = new ColorMatrix();
                 matrix.setSaturation(0);
                 holder.ivRestaurant.setColorFilter(new ColorMatrixColorFilter(matrix));
-//                Toast.makeText(context, "Restaurant is offline for now, Please try later.", Toast.LENGTH_LONG).show();
-            }
-        }
-        else {
-            Log.d("approval", "restaurant not approved yet");
-            holder.layout.setEnabled(false);
-            holder.layout.setClickable(false);
-            ColorMatrix matrix = new ColorMatrix();
-            matrix.setSaturation(0);
-            holder.ivRestaurant.setColorFilter(new ColorMatrixColorFilter(matrix));
 //            Toast.makeText(context, "Restaurant not approved yet", Toast.LENGTH_LONG).show();
-        }
+            }
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences("userName", context.MODE_PRIVATE);
-        String name = sharedPreferences.getString("name", "User Name");
+            SharedPreferences sharedPreferences = context.getSharedPreferences("userName", context.MODE_PRIVATE);
+            String name = sharedPreferences.getString("name", "User Name");
 
-        String resName = restaurantModelClass.getResName().trim();
-        Log.d("TAG1", resName);
+            String resName = restaurantModelClass.getResName().trim();
+            Log.d("TAG1", resName);
 
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ProgressDialog progressDialog = new ProgressDialog(context);
-                progressDialog.setMessage("Loading");
-                progressDialog.setCancelable(false);
-                progressDialog.show();
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ProgressDialog progressDialog = new ProgressDialog(context);
+                    progressDialog.setMessage("Loading");
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
 
-                        if (name.equals("")) {
-                            progressDialog.dismiss();
+                    if (name.equals("")) {
+                        progressDialog.dismiss();
 
-                            Toast.makeText(context, "Please complete your profile first.", Toast.LENGTH_LONG).show();
-                        }
-                        else {
-                            if (approved.equals("yes")) {
-                                if (status.equals("online")) {
-                                    progressDialog.dismiss();
+                        Toast.makeText(context, "Please complete your profile first.", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        if (approved.equals("yes")) {
+                            if (status.equals("online")) {
+                                progressDialog.dismiss();
 
-                                    Intent intent = new Intent(context, RestaurantItems.class);
-                                    intent.putExtra("restaurant", resName);
-                                    intent.putExtra("name", name);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                Intent intent = new Intent(context, RestaurantItems.class);
+                                intent.putExtra("restaurant", resName);
+                                intent.putExtra("name", name);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-                                    context.startActivity(intent);
+                                context.startActivity(intent);
 
-                                }
-                                else {
-                                    progressDialog.dismiss();
-
-                                    Toast.makeText(context, "Restaurant is offline for now, Please try again later.", Toast.LENGTH_LONG).show();
-                                }
                             }
                             else {
                                 progressDialog.dismiss();
 
-                                Toast.makeText(context, "This restaurant is not approved yet", Toast.LENGTH_LONG).show();
+                                Toast.makeText(context, "Restaurant is offline for now, Please try again later.", Toast.LENGTH_LONG).show();
                             }
                         }
-            }
-        });
+                        else {
+                            progressDialog.dismiss();
+
+                            Toast.makeText(context, "This restaurant is not approved yet", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+            });
     }
 
     @Override
