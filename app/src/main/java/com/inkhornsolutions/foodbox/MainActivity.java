@@ -271,20 +271,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void getAllRestaurantNames() {
-        firebaseFirestore.collection("Restaurants").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error == null) {
-                    for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
-                        if (documentSnapshot.exists()) {
-                            Common.res.add(documentSnapshot.getId());
+        if (Common.res.size() <= 0) {
+
+            firebaseFirestore.collection("Restaurants").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                    if (error == null) {
+                        for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                            if (documentSnapshot.exists()) {
+                                Common.res.add(documentSnapshot.getId());
+                            }
                         }
+                    } else {
+                        Toasty.error(getApplicationContext(), Objects.requireNonNull(error.getMessage()), Toasty.LENGTH_LONG).show();
                     }
-                } else {
-                    Toasty.error(getApplicationContext(), Objects.requireNonNull(error.getMessage()), Toasty.LENGTH_LONG).show();
                 }
-            }
-        });
+            });
+        }
     }
 
     private void dealOfTheDay() {
@@ -323,20 +326,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void loadAllIds() {
-        firebaseFirestore.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error == null) {
-                    for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
-                        if (documentSnapshot.exists()) {
-                            Common.id.add(documentSnapshot.getId());
+        if (Common.id.size() <= 0) {
+
+            firebaseFirestore.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                    if (error == null) {
+                        for (DocumentSnapshot documentSnapshot : value.getDocuments()) {
+                            if (documentSnapshot.exists()) {
+                                Common.id.add(documentSnapshot.getId());
+                            }
                         }
+                    } else {
+                        Toasty.error(getApplicationContext(), Objects.requireNonNull(error.getMessage()), Toasty.LENGTH_LONG).show();
                     }
-                } else {
-                    Toasty.error(getApplicationContext(), Objects.requireNonNull(error.getMessage()), Toasty.LENGTH_LONG).show();
                 }
-            }
-        });
+            });
+        }
     }
 
     private void loadData() {

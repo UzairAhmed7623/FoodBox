@@ -3,6 +3,7 @@ package com.inkhornsolutions.foodbox.adapters;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
@@ -81,6 +82,7 @@ public class DODProductsAdapter extends RecyclerView.Adapter<DODProductsAdapter.
         String from = itemsModelClass.getFrom();
         String to = itemsModelClass.getTo();
         String available = itemsModelClass.getAvailable();
+        String resName = itemsModelClass.getResName();
 
         ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Please wait...");
@@ -106,8 +108,6 @@ public class DODProductsAdapter extends RecyclerView.Adapter<DODProductsAdapter.
                 holder.tvItemPrice.setText("PKR" + discountedPrice);
                 holder.tvItemCuttingPrice.setText("PKR" + itemsModelClass.getPrice());
 
-                String resName = ((RestaurantItems) context).restaurant;
-
                 name = itemsModelClass.getUserName();
 
                 Log.d("time1time1", "" + getCurrentDateTime + " : " + from + " : " + to);
@@ -121,13 +121,20 @@ public class DODProductsAdapter extends RecyclerView.Adapter<DODProductsAdapter.
                         @Override
                         public void onClick(View v) {
 
-                            Intent intent = new Intent(context, ShowItemDetails.class);
-                            intent.putExtra("resName", resName);
-                            intent.putExtra("itemName", itemsModelClass.getItemName());
-                            intent.putExtra("available", "yes");
-                            intent.putExtra("percentage", Common.discountAvailable.get("percentage").toString());
-                            context.startActivity(intent);
+
+
+                            if (isResNameSame(resName)){
+                                Intent intent = new Intent(context, ShowItemDetails.class);
+                                intent.putExtra("resName", resName);
+                                intent.putExtra("itemName", itemsModelClass.getItemName());
+                                intent.putExtra("available", "yes");
+                                intent.putExtra("percentage", Common.discountAvailable.get("percentage").toString());
+                                context.startActivity(intent);
 //                            ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                            }
+                            else {
+                                Toasty.error(context, "You can order only 1 restaurant's products at a same time.", Toasty.LENGTH_LONG).show();
+                            }
                         }
                     });
 
@@ -152,8 +159,6 @@ public class DODProductsAdapter extends RecyclerView.Adapter<DODProductsAdapter.
                 holder.tvItemPrice.setText("PKR" + itemsModelClass.getPrice());
                 holder.tvItemCuttingPrice.setText("PKR" + itemsModelClass.getPrice());
 
-                String resName = ((RestaurantItems) context).restaurant;
-
                 name = itemsModelClass.getUserName();
 
                 if (compareFrom > 0 || compareTo < 0) {
@@ -162,13 +167,34 @@ public class DODProductsAdapter extends RecyclerView.Adapter<DODProductsAdapter.
                         @Override
                         public void onClick(View v) {
 
-                            Intent intent = new Intent(context, ShowItemDetails.class);
-                            intent.putExtra("resName", resName);
-                            intent.putExtra("itemName", itemsModelClass.getItemName());
-                            intent.putExtra("available", "no");
+                            Log.d("resName", ""+isResNameSame(resName));
 
-                            context.startActivity(intent);
+                            SharedPreferences sharedPreferences = context.getSharedPreferences("resName", Context.MODE_PRIVATE);
+                            String restaurant = sharedPreferences.getString("restName","");
+                            boolean added = sharedPreferences.getBoolean("added", false);
+                            Log.d("resName", resName+" : "+restaurant);
+
+                            if (added){
+                                if (restaurant.equals(resName)){
+                                    Intent intent = new Intent(context, ShowItemDetails.class);
+                                    intent.putExtra("resName", resName);
+                                    intent.putExtra("itemName", itemsModelClass.getItemName());
+                                    intent.putExtra("available", "no");
+                                    context.startActivity(intent);
 //                            ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                }
+                                else {
+                                    Toasty.error(context, "You can order only 1 restaurant's products at the same time.", Toasty.LENGTH_LONG).show();
+                                }
+                            }
+                            else {
+                                Intent intent = new Intent(context, ShowItemDetails.class);
+                                intent.putExtra("resName", resName);
+                                intent.putExtra("itemName", itemsModelClass.getItemName());
+                                intent.putExtra("available", "no");
+                                context.startActivity(intent);
+//                            ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                            }
                         }
                     });
                 }
@@ -216,6 +242,18 @@ public class DODProductsAdapter extends RecyclerView.Adapter<DODProductsAdapter.
                 .apply(reqOpt)
                 .placeholder(R.drawable.main_course)
                 .into(holder.ivItem);
+    }
+
+    private boolean isResNameSame(String resName) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("resName", Context.MODE_PRIVATE);
+        String restaurant = sharedPreferences.getString("restName","");
+        Log.d("resName", resName+" : "+restaurant);
+        if (!restaurant.equals(resName)){
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
     @Override

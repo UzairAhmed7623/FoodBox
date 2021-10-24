@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -72,6 +73,8 @@ public class ShowItemDetails extends AppCompatActivity {
     EventListener<DocumentSnapshot> eventListener;
     ListenerRegistration listenerRegistration;
     private RelativeLayout layout1;
+    SharedPreferences resNamePref;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +112,10 @@ public class ShowItemDetails extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        resNamePref = getSharedPreferences("resName", MODE_PRIVATE);
+        editor = resNamePref.edit();
+        editor.putString("restName",resName);
 
         tvResName.setText(resName);
 
@@ -309,6 +316,10 @@ public class ShowItemDetails extends AppCompatActivity {
         }
         if (b) {
             Snackbar.make(findViewById(android.R.id.content), "Added to Cart!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+
+            editor.putBoolean("added",true);
+            editor.apply();
+
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {

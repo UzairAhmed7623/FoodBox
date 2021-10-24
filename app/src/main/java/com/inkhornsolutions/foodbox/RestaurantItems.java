@@ -10,6 +10,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -139,12 +141,18 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
         progressDialog.setContentView(R.layout.progress_bar);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
+
+
         if (getIntent().getStringExtra("DOD") == null){
             getData();
             checkRestaurantStatus(restaurant);
+            menuView.setVisibility(View.VISIBLE);
         }
         else {
             getDODProducts();
+            menuView.setVisibility(View.GONE);
+            SharedPreferences sharedPreferences = getSharedPreferences("resName", MODE_PRIVATE);
+            sharedPreferences.edit().clear().apply();
         }
 
 
@@ -246,44 +254,61 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
                 }
             }
         });
-
     }
 
     private void getDODProducts() {
-        for (int i=0; i<Common.res.size(); i++){
-            Log.d("asdfghj", Common.res.get(i));
-            firebaseFirestore.collection("Restaurants").document(Common.res.get(i)).collection("Items")
-                    .whereEqualTo("isDODAvailable", "yes")
-                    .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                @Override
-                public void onSuccess(QuerySnapshot querySnapshot) {
+//        for (int i=0; i<Common.res.size(); i++){
+            firebaseFirestore.collection("Restaurants").get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot querySnapshot) {
+                            for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
+                                if (documentSnapshot.exists()) {
+                                    String resName = documentSnapshot.getId();
+
+                                    firebaseFirestore.collection("Restaurants").document(resName).collection("Items")
+                                            .whereEqualTo("isDODAvailable", "yes")
+                                            .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onSuccess(QuerySnapshot querySnapshot) {
 //                    DODProductList.clear();
 //                        dodProductsAdapter.notifyDataSetChanged();
 
-                    for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
-                        if (documentSnapshot.exists()) {
-                            String name = documentSnapshot.getId();
+                                            for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
+                                                if (documentSnapshot.exists()) {
+                                                    String name = documentSnapshot.getId();
 
-                            itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
+                                                    itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
 
-                            itemsModelClass.setUserName(name);
-                            itemsModelClass.setItemName(name);
-                            itemsModelClass.setId(getDateTime());
+                                                    itemsModelClass.setUserName(name);
+                                                    itemsModelClass.setItemName(name);
+                                                    itemsModelClass.setId(getDateTime());
+                                                    itemsModelClass.setResName(resName);
 
-                            DODProductList.add(itemsModelClass);
+                                                    DODProductList.add(itemsModelClass);
 
+                                                }
+                                            }
+                                            rvItems.setAdapter(dodProductsAdapter);
+                                            progressDialog.dismiss();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+
+                                        }
+                                    });
+                                }
+                            }
                         }
-                    }
-                    rvItems.setAdapter(dodProductsAdapter);
-                    progressDialog.dismiss();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
+                    }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
 
                 }
             });
-        }
+
+//        }
     }
 
     private void checkRestaurantStatus(String restaurant) {
@@ -378,10 +403,16 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
                             Snackbar.make(findViewById(android.R.id.content), "You have not added any product till now!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.white))
                                     .setTextColor(ContextCompat.getColor(RestaurantItems.this, R.color.myColor)).show();
                         } else {
+                            SharedPreferences sharedPreferences = getSharedPreferences("resName", MODE_PRIVATE);
+                            String restaurant = sharedPreferences.getString("restName","");
+
+                            SharedPreferences sharedPreferencesName = getSharedPreferences("userName", MODE_PRIVATE);
+                            String name = sharedPreferencesName.getString("name", "User Name");
+                            Log.d("resName", restaurant);
+
                             Intent intent = new Intent(RestaurantItems.this, Cart.class);
                             intent.putExtra("restaurant", restaurant);
                             intent.putExtra("name", name);
-//                                intent.putExtra("last_name", last_name);
                             startActivity(intent);
                         }
                     }
@@ -486,6 +517,9 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             deleteCartData();
+                            SharedPreferences sharedPreferences = getSharedPreferences("resName", MODE_PRIVATE);
+                            sharedPreferences.edit().clear().apply();
+
                             RestaurantItems.super.onBackPressed();
                         }
                     })
