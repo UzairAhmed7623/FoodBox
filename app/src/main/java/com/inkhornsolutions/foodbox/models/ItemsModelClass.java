@@ -3,7 +3,7 @@ package com.inkhornsolutions.foodbox.models;
 import java.io.Serializable;
 
 public class ItemsModelClass implements Serializable {
-    private String UserName, id, itemName, price, imageUri, itemDescription, timestamp, availability, from, to, available, discountPercentage, resName;
+    private String UserName, id, itemName, price, imageUri, itemDescription, timestamp, availability, from, to, available, discountPercentage, resName, UFG;
 
     public ItemsModelClass() {
     }
@@ -24,9 +24,21 @@ public class ItemsModelClass implements Serializable {
         this.resName = resName;
     }
 
+    public ItemsModelClass(String UFG) {
+        this.UFG = UFG;
+    }
+
     public ItemsModelClass(String available, String discountPercentage) {
         this.available = available;
         this.discountPercentage = discountPercentage;
+    }
+
+    public String getUFG() {
+        return UFG;
+    }
+
+    public void setUFG(String UFG) {
+        this.UFG = UFG;
     }
 
     public String getResName() {

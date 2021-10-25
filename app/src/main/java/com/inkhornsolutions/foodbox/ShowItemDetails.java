@@ -63,7 +63,7 @@ public class ShowItemDetails extends AppCompatActivity {
     private KenBurnsView civItemImage;
     private TextView tvItem, tvPrice, tvDescription, tvQuantity, tvDisplay, tvFinalPrice, tvResName;
     private MaterialButton btnAddtoCart;
-    private String resName, itemName, itemImage, itemPrice, userName, available, percentage;
+    private String resName, itemName, itemImage, itemPrice, userName, available, percentage, UFG;
     private DocumentReference documentReference;
     private FirebaseFirestore firebaseFirestore;
     private double price = 0;
@@ -104,6 +104,7 @@ public class ShowItemDetails extends AppCompatActivity {
         itemName = getIntent().getStringExtra("itemName");
         available = getIntent().getStringExtra("available");
         percentage = getIntent().getStringExtra("percentage");
+        UFG = getIntent().getStringExtra("UFG");
 
         backArrow.bringToFront();
         backArrow.setOnClickListener(new View.OnClickListener() {
@@ -222,23 +223,54 @@ public class ShowItemDetails extends AppCompatActivity {
             }
         });
 
-        btnAddtoCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String title = tvItem.getText().toString().trim();
-                String Price;
-                if (available.equals("yes")) {
-                    Price = String.valueOf(discountedPrice);
-                } else {
-                    Price = String.valueOf(price);
+        if (UFG != null && UFG.equals("yes")){
+            btnAddtoCart.setText("Schedule");
+            btnAddtoCart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+
+
+
+
+
+                    String title = tvItem.getText().toString().trim();
+                    String Price;
+                    if (available.equals("yes")) {
+                        Price = String.valueOf(discountedPrice);
+                    } else {
+                        Price = String.valueOf(price);
+                    }
+                    finalPrice = Double.parseDouble(tvFinalPrice.getText().toString().trim());
+
+                    addToCart(getDateTime(), title, itemImage, Price, String.valueOf(finalPrice), String.valueOf(itemCount), String.valueOf(actualFinalPrice));
+
+                    Log.d("btnAddtoCart2", title + Price + finalPrice + itemCount);
                 }
-                finalPrice = Double.parseDouble(tvFinalPrice.getText().toString().trim());
+            });
+        }
+        else {
+            btnAddtoCart.setText("Add to cart");
+            btnAddtoCart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String title = tvItem.getText().toString().trim();
+                    String Price;
+                    if (available.equals("yes")) {
+                        Price = String.valueOf(discountedPrice);
+                    } else {
+                        Price = String.valueOf(price);
+                    }
+                    finalPrice = Double.parseDouble(tvFinalPrice.getText().toString().trim());
 
-                addToCart(getDateTime(), title, itemImage, Price, String.valueOf(finalPrice), String.valueOf(itemCount), String.valueOf(actualFinalPrice));
+                    addToCart(getDateTime(), title, itemImage, Price, String.valueOf(finalPrice), String.valueOf(itemCount), String.valueOf(actualFinalPrice));
 
-                Log.d("btnAddtoCart2", title + Price + finalPrice + itemCount);
-            }
-        });
+                    Log.d("btnAddtoCart2", title + Price + finalPrice + itemCount);
+                }
+            });
+        }
+
 
         checkRestaurantStatus(resName);
     }

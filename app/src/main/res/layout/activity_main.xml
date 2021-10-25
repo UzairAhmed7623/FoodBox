@@ -36,85 +36,112 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="30dp"
-                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:layout_marginTop="7dp"
+                    android:fontFamily="@font/montserra_regular_bold"
                     android:includeFontPadding="false"
                     android:text="Delivering to"
                     android:textAllCaps="true"
                     android:textColor="@android:color/black"
-                    android:textSize="14dp"
+                    android:textSize="13dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:layout_centerVertical="true"
+                    android:lines="1"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_toEndOf="@+id/place"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:includeFontPadding="false"
+                    android:letterSpacing="0.05"
+                    android:padding="5dp"
+                    android:text="Address"
+                    android:textAllCaps="true"
+                    android:textColor="@color/black"
+                    android:textFontWeight="600"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
 
         </androidx.appcompat.widget.Toolbar>
 
-        <RelativeLayout
-            android:id="@+id/layout1"
+        <View
+            android:id="@+id/view"
+            android:layout_below="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar">
+            android:layout_height="0.5dp"
+            android:background="@color/white_greyish"/>
 
-            <ImageView
-                android:id="@+id/place"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_centerVertical="true"
-                android:padding="10dp"
-                android:src="@drawable/location"
-                app:tint="@color/black" />
+<!--        <RelativeLayout-->
+<!--            android:id="@+id/layout1"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_below="@+id/toolbar">-->
 
-            <TextView
-                android:id="@+id/tvAddress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_gravity="start"
-                android:layout_toEndOf="@+id/place"
-                android:fontFamily="@font/montserrat_semi_bold"
-                android:includeFontPadding="false"
-                android:letterSpacing="0.05"
-                android:padding="10dp"
-                android:text="Address"
-                android:textAllCaps="true"
-                android:textColor="@color/black"
-                android:textFontWeight="600"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+<!--            <ImageView-->
+<!--                android:id="@+id/place"-->
+<!--                android:layout_width="40dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_centerVertical="true"-->
+<!--                android:padding="10dp"-->
+<!--                android:src="@drawable/location"-->
+<!--                app:tint="@color/black" />-->
 
-        </RelativeLayout>
+<!--            <TextView-->
+<!--                android:id="@+id/tvAddress1"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_centerVertical="true"-->
+<!--                android:layout_gravity="start"-->
+<!--                android:layout_toEndOf="@+id/place"-->
+<!--                android:fontFamily="@font/montserrat_semi_bold"-->
+<!--                android:includeFontPadding="false"-->
+<!--                android:letterSpacing="0.05"-->
+<!--                android:padding="10dp"-->
+<!--                android:text="Address"-->
+<!--                android:textAllCaps="true"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textFontWeight="600"-->
+<!--                android:textSize="12sp"-->
+<!--                android:textStyle="bold" />-->
 
-        <TextView
-            android:id="@+id/tvItemSearch"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_below="@+id/layout1"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/search_back"
-            android:drawableTint="@color/black"
-            android:elevation="7dp"
-            android:gravity="center_vertical"
-            android:hint="   Search for the foods"
-            android:paddingStart="10dp"
-            android:textColorHint="@color/grey_60"
-            android:textSize="16dp"
-            android:transitionName="search"
-            app:drawableStartCompat="@drawable/search_icon" />
+<!--        </RelativeLayout>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvItemSearch"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:layout_below="@+id/toolbar"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:layout_marginStart="30dp"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:layout_marginEnd="30dp"-->
+<!--            android:layout_marginBottom="10dp"-->
+<!--            android:background="@drawable/search_back"-->
+<!--            android:drawableTint="@color/black"-->
+<!--            android:elevation="7dp"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:hint="   Search for the foods"-->
+<!--            android:paddingStart="10dp"-->
+<!--            android:textColorHint="@color/grey_60"-->
+<!--            android:textSize="16dp"-->
+<!--            android:transitionName="search"-->
+<!--            app:drawableStartCompat="@drawable/search_icon" />-->
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/coordinator_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/tvItemSearch">
+            android:layout_below="@id/view">
 
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/app_bar"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
+                android:layout_height="300dp"
                 android:fitsSystemWindows="true">
 
                 <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -123,17 +150,15 @@
                     android:background="@color/white"
                     android:fitsSystemWindows="true"
                     app:contentScrim="@color/white"
-                    android:paddingStart="15dp"
-                    android:paddingTop="10dp"
-                    android:paddingEnd="15dp"
                     app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
 
-                    <!--                    <RelativeLayout-->
-                    <!--                        android:layout_width="match_parent"-->
-                    <!--                        android:layout_height="match_parent"-->
-                    <!--                        android:paddingStart="15dp"-->
-                    <!--                        android:paddingTop="10dp"-->
-                    <!--                        android:paddingEnd="15dp">-->
+                    <RelativeLayout
+                        android:id="@+id/collapseLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingStart="15dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="15dp">
 
                     <LinearLayout
                         android:id="@+id/layoutDealOfTheDay"
@@ -203,73 +228,75 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!--                        <LinearLayout-->
-                    <!--                            android:id="@+id/layout6"-->
-                    <!--                            android:layout_width="match_parent"-->
-                    <!--                            android:layout_height="wrap_content"-->
-                    <!--                            android:background="@color/white"-->
-                    <!--                            android:orientation="vertical"-->
-                    <!--                            android:layout_below="@+id/layoutDealOfTheDay">-->
+                        <LinearLayout
+                            android:id="@+id/layout6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/layoutDealOfTheDay"
+                            android:background="@color/white"
+                            android:orientation="vertical">
 
-                    <!--                            <com.google.android.material.card.MaterialCardView-->
-                    <!--                                android:id="@+id/cardView2"-->
-                    <!--                                style="@style/Widget.MaterialComponents.Button"-->
-                    <!--                                android:layout_width="match_parent"-->
-                    <!--                                android:layout_height="220dp"-->
-                    <!--                                android:background="@drawable/ripple"-->
-                    <!--                                app:cardCornerRadius="0dp"-->
-                    <!--                                app:cardElevation="5dp">-->
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/cardViewUpForTheGrab"
+                                style="@style/Widget.MaterialComponents.Button"
+                                android:layout_width="match_parent"
+                                android:layout_height="150dp"
+                                android:background="@drawable/ripple"
+                                app:cardCornerRadius="0dp"
+                                app:cardElevation="5dp">
 
-                    <!--                                <LinearLayout-->
-                    <!--                                    android:layout_width="match_parent"-->
-                    <!--                                    android:layout_height="wrap_content"-->
-                    <!--                                    android:layout_gravity="bottom"-->
-                    <!--                                    android:layout_marginBottom="5dp"-->
-                    <!--                                    android:background="@color/white"-->
-                    <!--                                    android:orientation="vertical">-->
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="bottom"
+                                    android:layout_marginBottom="5dp"
+                                    android:background="@color/white"
+                                    android:orientation="vertical">
 
-                    <!--                                    <TextView-->
-                    <!--                                        android:id="@+id/tvUpForGrab"-->
-                    <!--                                        android:layout_width="wrap_content"-->
-                    <!--                                        android:layout_height="wrap_content"-->
-                    <!--                                        android:layout_gravity="start"-->
-                    <!--                                        android:layout_marginStart="2dp"-->
-                    <!--                                        android:fontFamily="@font/montserra_regular_bold"-->
-                    <!--                                        android:includeFontPadding="false"-->
-                    <!--                                        android:letterSpacing="0.05"-->
-                    <!--                                        android:text="Restaurant Name"-->
-                    <!--                                        android:textAllCaps="true"-->
-                    <!--                                        android:textColor="@color/grey_90"-->
-                    <!--                                        android:textFontWeight="600"-->
-                    <!--                                        android:textSize="14sp"-->
-                    <!--                                        android:textStyle="bold" />-->
+                                    <TextView
+                                        android:id="@+id/tvUpForGrab"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="start"
+                                        android:layout_marginStart="2dp"
+                                        android:fontFamily="@font/montserra_regular_bold"
+                                        android:gravity="center_horizontal"
+                                        android:includeFontPadding="false"
+                                        android:letterSpacing="0.05"
+                                        android:text="Up for the grab"
+                                        android:textAllCaps="true"
+                                        android:textColor="@color/grey_90"
+                                        android:textFontWeight="600"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
 
-                    <!--                                </LinearLayout>-->
+                                </LinearLayout>
 
-                    <!--                            </com.google.android.material.card.MaterialCardView>-->
+                            </com.google.android.material.card.MaterialCardView>
 
-                    <!--                        </LinearLayout>-->
+                        </LinearLayout>
 
-                    <!--                        <com.google.android.material.card.MaterialCardView-->
+                        <com.google.android.material.card.MaterialCardView
 
-                    <!--                            android:layout_width="match_parent"-->
-                    <!--                            android:layout_height="180dp"-->
-                    <!--                            android:layout_marginTop="230dp"-->
-                    <!--                            android:padding="10dp"-->
-                    <!--                            app:cardBackgroundColor="@color/black"-->
-                    <!--                            app:cardCornerRadius="8dp">-->
+                            android:layout_width="match_parent"
+                            android:layout_height="110dp"
+                            android:layout_marginTop="150dp"
+                            android:padding="10dp"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="8dp">
 
-                    <!--                            <ImageView-->
-                    <!--                                android:id="@+id/ivUpForTheGrab"-->
-                    <!--                                android:layout_width="match_parent"-->
-                    <!--                                android:layout_height="match_parent"-->
-                    <!--                                android:adjustViewBounds="true"-->
-                    <!--                                android:scaleType="fitXY"-->
-                    <!--                                android:src="@drawable/food_placeholder" />-->
+                            <ImageView
+                                android:id="@+id/ivUpForTheGrab"
+                                android:layout_width="200dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_horizontal"
+                                android:adjustViewBounds="true"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/deal_of_the_day" />
 
-                    <!--                        </com.google.android.material.card.MaterialCardView>-->
+                        </com.google.android.material.card.MaterialCardView>
 
-                    <!--                    </RelativeLayout>-->
+                    </RelativeLayout>
 
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
 

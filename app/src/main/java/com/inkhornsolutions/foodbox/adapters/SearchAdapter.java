@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -76,7 +77,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         holder.tvItemPrice.setText("PKR"+price);
         Glide.with(context).load(imageUri).placeholder(R.drawable.food_placeholder).fitCenter().into(holder.ivItem);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 firebaseFirestore.collection("Restaurants").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -128,6 +129,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
         private CircleImageView ivItem;
         private TextView tvItem, tvItemPrice;
+        private CardView cardView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -138,6 +140,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             ivItem = (CircleImageView) itemView.findViewById(R.id.ivItem);
             tvItem = (TextView) itemView.findViewById(R.id.tvItem);
             tvItemPrice = (TextView) itemView.findViewById(R.id.tvItemPrice);
+            cardView = (CardView) itemView.findViewById(R.id.cardView);
         }
     }
 }

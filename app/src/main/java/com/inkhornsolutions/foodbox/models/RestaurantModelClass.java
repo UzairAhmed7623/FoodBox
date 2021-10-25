@@ -1,12 +1,12 @@
 package com.inkhornsolutions.foodbox.models;
 
 public class RestaurantModelClass {
-    private String resName, status, imageUri, approved, id, noOfOrders, resRating;
+    private String resName, status, imageUri, approved, id, noOfOrders, resRating, UFG;
 
     public RestaurantModelClass() {
     }
 
-    public RestaurantModelClass(String resName, String status, String imageUri, String approved, String id, String noOfOrders, String resRating) {
+    public RestaurantModelClass(String resName, String status, String imageUri, String approved, String id, String noOfOrders, String resRating, String UFG) {
         this.resName = resName;
         this.status = status;
         this.imageUri = imageUri;
@@ -14,6 +14,15 @@ public class RestaurantModelClass {
         this.id = id;
         this.noOfOrders = noOfOrders;
         this.resRating = resRating;
+        this.UFG = UFG;
+    }
+
+    public String getUFG() {
+        return UFG;
+    }
+
+    public void setUFG(String UFG) {
+        this.UFG = UFG;
     }
 
     public String getResRating() {

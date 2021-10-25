@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -30,30 +28,17 @@ import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.inkhornsolutions.foodbox.R;
 import com.inkhornsolutions.foodbox.RestaurantItems;
-import com.inkhornsolutions.foodbox.SignUp;
-import com.inkhornsolutions.foodbox.Welcome;
 import com.inkhornsolutions.foodbox.models.RestaurantModelClass;
-import com.tombayley.activitycircularreveal.CircularReveal;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-//import per.wsj.library.AndRatingBar;
-
-public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapter.ViewHolder> {
+public class UpForTheGrabAdapter extends RecyclerView.Adapter<UpForTheGrabAdapter.ViewHolder> {
 
     private Context context;
     private List<RestaurantModelClass> resDetails = new ArrayList<>();
@@ -62,9 +47,8 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     View view;
     Activity activity;
-    int lastPosition = -1;
 
-    public MainActivityAdapter(Context context, List<RestaurantModelClass> resDetails, Activity activity) {
+    public UpForTheGrabAdapter(Context context, List<RestaurantModelClass> resDetails, Activity activity) {
         this.context = context;
         this.resDetails = resDetails;
         this.activity = activity;
@@ -72,18 +56,18 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
     @NonNull
     @Override
-    public MainActivityAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public UpForTheGrabAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater =LayoutInflater.from(parent.getContext());
         view =inflater.inflate(R.layout.main_activity_adapter_layout, parent, false);
-        return new ViewHolder(view);
-    }
+        return new UpForTheGrabAdapter.ViewHolder(view);    }
 
     @Override
-    public void onBindViewHolder(@NonNull MainActivityAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull UpForTheGrabAdapter.ViewHolder holder, int position) {
         holder.itemView.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.recycler_view_animation));
 
         RestaurantModelClass restaurantModelClass = resDetails.get(position);
 
+        String UFG = restaurantModelClass.getUFG();
 
             holder.tvRestaurant.setText(restaurantModelClass.getResName());
 
@@ -179,6 +163,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                                 Intent intent = new Intent(context, RestaurantItems.class);
                                 intent.putExtra("restaurant", resName);
                                 intent.putExtra("name", name);
+                                intent.putExtra("UFG", "yes");
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                                 context.startActivity(intent);

@@ -94,6 +94,7 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
         String from = itemsModelClass.getFrom();
         String to = itemsModelClass.getTo();
         String available = itemsModelClass.getAvailable();
+        String ufg = itemsModelClass.getUFG();
 
         ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Please wait...");
@@ -139,6 +140,12 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                             intent.putExtra("itemName", itemsModelClass.getItemName());
                             intent.putExtra("available", "yes");
                             intent.putExtra("percentage", Common.discountAvailable.get("percentage").toString());
+                            if (ufg != null && ufg.equals("yes")){
+                                intent.putExtra("UFG", "yes");
+                            }
+                            else {
+                                intent.putExtra("UFG", "no");
+                            }
                             context.startActivity(intent);
 //                            ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         }
@@ -179,7 +186,12 @@ public class RestaurentItemsAdapter extends RecyclerView.Adapter<RestaurentItems
                             intent.putExtra("resName", resName);
                             intent.putExtra("itemName", itemsModelClass.getItemName());
                             intent.putExtra("available", "no");
-
+                            if (ufg != null && ufg.equals("yes")){
+                                intent.putExtra("UFG", "yes");
+                            }
+                            else {
+                                intent.putExtra("UFG", "no");
+                            }
                             context.startActivity(intent);
 //                            ((RestaurantItems) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         }

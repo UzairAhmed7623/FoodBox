@@ -10,11 +10,10 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/toolbar_profile_Image"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_gravity="center_vertical"
-        android:background="?attr/selectableItemBackground"
         android:foreground="@drawable/ripple"
-        android:src="@drawable/account_circle_black"/>
+        android:src="@drawable/search"/>
 
 </FrameLayout>

@@ -346,39 +346,79 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
     }
 
     private void getData() {
-        firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        productList.clear();
+        if (getIntent().getStringExtra("UFG") != null && getIntent().getStringExtra("UFG").equals("yes")){
+            firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
+                    .whereEqualTo("scheduled", "1")
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            productList.clear();
 //                        adapter.notifyDataSetChanged();
 
-                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                            if (documentSnapshot.exists()) {
-                                String name = documentSnapshot.getId();
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                if (documentSnapshot.exists()) {
+                                    String name = documentSnapshot.getId();
 
-                                itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
+                                    itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
 
-                                itemsModelClass.setUserName(name);
-                                itemsModelClass.setItemName(name);
-                                itemsModelClass.setId(getDateTime());
+                                    itemsModelClass.setUFG("yes");
+                                    itemsModelClass.setUserName(name);
+                                    itemsModelClass.setItemName(name);
+                                    itemsModelClass.setId(getDateTime());
 
-                                productList.add(itemsModelClass);
+                                    productList.add(itemsModelClass);
 
+                                }
                             }
+                            rvItems.setAdapter(adapter);
+                            progressDialog.dismiss();
                         }
-                        rvItems.setAdapter(adapter);
-                        progressDialog.dismiss();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        progressDialog.dismiss();
-                        Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(getApplicationContext(), R.color.myColor)).show();
-                    }
-                });
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(getApplicationContext(), R.color.myColor)).show();
+                        }
+                    });
+        }
+        else {
+            firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            productList.clear();
+//                        adapter.notifyDataSetChanged();
+
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                if (documentSnapshot.exists()) {
+                                    String name = documentSnapshot.getId();
+
+                                    itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
+
+                                    itemsModelClass.setUFG("no");
+                                    itemsModelClass.setUserName(name);
+                                    itemsModelClass.setItemName(name);
+                                    itemsModelClass.setId(getDateTime());
+
+                                    productList.add(itemsModelClass);
+
+                                }
+                            }
+                            rvItems.setAdapter(adapter);
+                            progressDialog.dismiss();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(getApplicationContext(), R.color.myColor)).show();
+                        }
+                    });
+        }
     }
 
     @Override
