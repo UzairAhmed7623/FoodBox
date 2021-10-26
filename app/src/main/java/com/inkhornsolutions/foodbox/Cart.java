@@ -118,6 +118,8 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
+        tvSchedule = (TextView) findViewById(R.id.tvSchedule);
+        tvSchedulePlace = (TextView) findViewById(R.id.tvSchedulePlace);
         tvSubTotal = (TextView) findViewById(R.id.tvSubTotal);
         tvDeliveryFee = (TextView) findViewById(R.id.tvDeliveryFee);
         tvGrandTotal = (TextView) findViewById(R.id.tvGrandTotal);
@@ -229,11 +231,12 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
     }
 
     public double allTotalPrice = 0.0, actualPrice = 0.0;
-    public TextView tvSubTotal, tvDeliveryFee, tvGrandTotal, tvNumberofItems;
+    public String schedule = "";
+    public TextView tvSubTotal, tvDeliveryFee, tvGrandTotal, tvNumberofItems, tvSchedule, tvSchedulePlace;
 
     private void showCart() {
 
-        EasyDB easyDB = EasyDB.init(Cart.this, "ordersDatabase")
+        EasyDB easyDB = EasyDB.init(Cart.this, "scheduledOrdersDatabase")
                 .setTableName("ITEMS_TABLE")
                 .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                 .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -244,6 +247,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                 .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
                 .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
+                .addColumn(new Column("orderTime", new String[]{"text", "not null"}))
                 .doneTableColumn();
 
         Cursor res = easyDB.getAllData();
@@ -256,7 +260,9 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
             String final_price = res.getString(6);
             String actualFinalPrice = res.getString(7);
             String imageUri = res.getString(8);
+            String dateAndTime = res.getString(9);
 
+            schedule = dateAndTime;
             allTotalPrice = allTotalPrice + Double.parseDouble(final_price);
             actualPrice = actualPrice + Double.parseDouble(actualFinalPrice);
 
@@ -268,7 +274,8 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                     "" + price,
                     "" + items_count,
                     "" + imageUri,
-                    "" + actualFinalPrice
+                    "" + actualFinalPrice,
+                    "" + dateAndTime
             );
 
             cartItemsList.add(cartItemsModelClass);
@@ -281,6 +288,13 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
         updateNumberOfItems();
 
         tvSubTotal.setText("PKR" + String.format("%.2f", allTotalPrice));
+        if (!schedule.equals("0")){
+            tvSchedule.setText(schedule.replace(":00 GMT+05:00", ""));
+        }
+        else {
+            tvSchedule.setVisibility(View.GONE);
+            tvSchedulePlace.setVisibility(View.GONE);
+        }
 
 //        deliveryFee();
 
@@ -532,7 +546,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                EasyDB easyDB = EasyDB.init(Cart.this, "ordersDatabase")
+                EasyDB easyDB = EasyDB.init(Cart.this, "scheduledOrdersDatabase")
                         .setTableName("ITEMS_TABLE")
                         .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                         .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -543,6 +557,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
                         .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
                         .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
+                        .addColumn(new Column("orderTime", new String[]{"text", "not null"}))
                         .doneTableColumn();
 
                 Cursor res = easyDB.getAllData();

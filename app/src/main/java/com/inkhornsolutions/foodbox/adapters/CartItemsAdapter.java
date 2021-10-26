@@ -2,6 +2,7 @@ package com.inkhornsolutions.foodbox.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
@@ -81,7 +82,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                     allTotalPrice = Double.parseDouble(((Cart)context).tvSubTotal.getText().toString().trim().replace("PKR",""));
                 }
 
-                EasyDB easyDB = EasyDB.init(context, "ordersDatabase")
+                EasyDB easyDB = EasyDB.init(context, "scheduledOrdersDatabase")
                         .setTableName("ITEMS_TABLE")
                         .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                         .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -92,6 +93,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                         .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
                         .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
+                        .addColumn(new Column("orderTime", new String[]{"text", "not null"}))
                         .doneTableColumn();
 
                 Cursor cursor = easyDB.getAllData();
@@ -162,7 +164,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                     }
 
 
-                    EasyDB easyDB = EasyDB.init(context, "ordersDatabase")
+                    EasyDB easyDB = EasyDB.init(context, "scheduledOrdersDatabase")
                             .setTableName("ITEMS_TABLE")
                             .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                             .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -173,6 +175,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                             .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
                             .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
+                            .addColumn(new Column("orderTime", new String[]{"text", "not null"}))
                             .doneTableColumn();
 
                     Cursor cursor = easyDB.getAllData();
@@ -227,7 +230,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                         allTotalPrice = Double.parseDouble(((Cart)context).tvSubTotal.getText().toString().trim().replace("PKR",""));
                     }
 
-                    EasyDB easyDB = EasyDB.init(context, "ordersDatabase")
+                    EasyDB easyDB = EasyDB.init(context, "scheduledOrdersDatabase")
                             .setTableName("ITEMS_TABLE")
                             .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                             .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -238,6 +241,7 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                             .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
                             .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
+                            .addColumn(new Column("orderTime", new String[]{"text", "not null"}))
 
                             .doneTableColumn();
 
@@ -288,6 +292,9 @@ public class CartItemsAdapter extends RecyclerView.Adapter<CartItemsAdapter.Hold
                     cartItems.remove(position);
                     notifyItemChanged(position);
                     notifyDataSetChanged();
+
+                    SharedPreferences sharedPreferences = context.getSharedPreferences("resName", Context.MODE_PRIVATE);
+                    sharedPreferences.edit().clear().apply();
 
                     Cart.getInstance().updateNumberOfItems();
                     RestaurantItems.getInstance().updateCartCount();

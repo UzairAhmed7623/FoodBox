@@ -231,7 +231,7 @@ public class Checkout extends AppCompatActivity {
         });
 
 
-        EasyDB easyDB = EasyDB.init(Checkout.this, "ordersDatabase")
+        EasyDB easyDB = EasyDB.init(Checkout.this, "scheduledOrdersDatabase")
                 .setTableName("ITEMS_TABLE")
                 .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                 .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -242,6 +242,7 @@ public class Checkout extends AppCompatActivity {
                 .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
                 .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
+                .addColumn(new Column("orderTime", new String[]{"text", "not null"}))
                 .doneTableColumn();
 
         Cursor res = easyDB.getAllData();
@@ -254,6 +255,7 @@ public class Checkout extends AppCompatActivity {
             String final_price = res.getString(6);
             String actualFinalPrice = res.getString(7);
             String imageUri = res.getString(8);
+            String dateAndTime = res.getString(9);
 
             allTotalPrice = allTotalPrice + Double.parseDouble(final_price);
             actualPrice2 = actualPrice2 + Double.parseDouble(actualFinalPrice);
@@ -266,7 +268,8 @@ public class Checkout extends AppCompatActivity {
                     ""+price,
                     ""+items_count,
                     ""+imageUri,
-                    ""+actualFinalPrice
+                    ""+actualFinalPrice,
+                    "" + dateAndTime
             );
 
             cartItemsList.add(cartItemsModelClass);
@@ -309,6 +312,7 @@ public class Checkout extends AppCompatActivity {
                                     order1.put("discountPercentage",percentage);
                                     order1.put("CHJPercentage",CHJPercentage);
                                     order1.put("actualPrice",actualPrice);
+                                    order1.put("schedule", cartItemsList.get(0).getDateAndTime());
 
                                     firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid())
                                             .collection("Cart").document(restaurant+" "+getDateTime())

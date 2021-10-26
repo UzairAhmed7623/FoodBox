@@ -1,20 +1,37 @@
 package com.inkhornsolutions.foodbox.models;
 
 public class CartItemsModelClass {
-    private String id, pId, itemName, finalPrice, price,  Items_Count, imageUri, actualFinalPrice;
+    private String id, pId, itemName, finalPrice, price,  items_Count, imageUri, actualFinalPrice, dateAndTime;
 
     public CartItemsModelClass() {
     }
 
-    public CartItemsModelClass(String id, String pId, String itemName, String finalPrice, String price, String items_Count, String imageUri, String actualFinalPrice) {
+    public CartItemsModelClass(String id, String pId, String itemName, String finalPrice, String price, String items_Count, String imageUri, String actualFinalPrice, String dateAndTime) {
         this.id = id;
         this.pId = pId;
         this.itemName = itemName;
         this.finalPrice = finalPrice;
         this.price = price;
-        Items_Count = items_Count;
+        this.items_Count = items_Count;
         this.imageUri = imageUri;
         this.actualFinalPrice = actualFinalPrice;
+        this.dateAndTime = dateAndTime;
+    }
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
+
+    public String getDateAndTime() {
+        return dateAndTime;
+    }
+
+    public void setDateAndTime(String dateAndTime) {
+        this.dateAndTime = dateAndTime;
     }
 
     public String getActualFinalPrice() {
@@ -74,10 +91,10 @@ public class CartItemsModelClass {
     }
 
     public String getItems_Count() {
-        return Items_Count;
+        return items_Count;
     }
 
     public void setItems_Count(String items_Count) {
-        Items_Count = items_Count;
+        this.items_Count = items_Count;
     }
 }

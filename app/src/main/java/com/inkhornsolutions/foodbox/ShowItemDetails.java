@@ -1,9 +1,5 @@
 package com.inkhornsolutions.foodbox;
 
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -21,18 +17,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.Lifecycle;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.flaviofaria.kenburnsview.KenBurnsView;
+import com.github.florent37.singledateandtimepicker.SingleDateAndTimePicker;
+import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
@@ -41,13 +36,13 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import org.jetbrains.annotations.NotNull;
+import org.joda.time.DateTime;
 
 import java.util.Calendar;
-import java.util.List;
+import java.util.Date;
 import java.util.Locale;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -63,7 +58,7 @@ public class ShowItemDetails extends AppCompatActivity {
     private KenBurnsView civItemImage;
     private TextView tvItem, tvPrice, tvDescription, tvQuantity, tvDisplay, tvFinalPrice, tvResName;
     private MaterialButton btnAddtoCart;
-    private String resName, itemName, itemImage, itemPrice, userName, available, percentage, UFG;
+    private String resName, itemName, itemImage, itemPrice, userName, available, percentage, UFG, itemCookingTime;
     private DocumentReference documentReference;
     private FirebaseFirestore firebaseFirestore;
     private double price = 0;
@@ -133,6 +128,12 @@ public class ShowItemDetails extends AppCompatActivity {
                             itemPrice = documentSnapshot.getString("price");
                             String quantity = documentSnapshot.getString("quantity");
                             String itemDescription = documentSnapshot.getString("description");
+                            if (documentSnapshot.getString("itemCookingTime") != null){
+                                itemCookingTime = documentSnapshot.getString("itemCookingTime");
+                            }
+                            else {
+                                itemCookingTime = "8";
+                            }
 
                             tvItem.setText(itemName);
 
@@ -225,28 +226,51 @@ public class ShowItemDetails extends AppCompatActivity {
 
         if (UFG != null && UFG.equals("yes")){
             btnAddtoCart.setText("Schedule");
+
             btnAddtoCart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
+                    DateTime dateTime = DateTime.now().plusHours(Integer.parseInt(itemCookingTime));
+                    Date date = dateTime.toDate();
 
+                    new SingleDateAndTimePickerDialog.Builder(ShowItemDetails.this)
+                            .bottomSheet()
+                            .curved()
+                            .bottomSheetHeight(600)
+                            .defaultDate(date)
+                            .minDateRange(date)
+                            .mustBeOnFuture()
+                            .backgroundColor(Color.WHITE)
+                            .mainColor(ContextCompat.getColor(ShowItemDetails.this, R.color.myColor))
+                            .titleTextColor(ContextCompat.getColor(ShowItemDetails.this, R.color.myColor))
+                            .displayListener(new SingleDateAndTimePickerDialog.DisplayListener() {
+                                @Override
+                                public void onDisplayed(SingleDateAndTimePicker picker) {
+//                                    Toast.makeText(ShowItemDetails.this, picker.getDate().toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .title("Choose your order time")
+                            .listener(new SingleDateAndTimePickerDialog.Listener() {
+                                @Override
+                                public void onDateSelected(Date date) {
+                                    String title = tvItem.getText().toString().trim();
+                                    String dateAndTime = date.toString();
+                                    String Price;
 
+                                    if (available.equals("yes")) {
+                                        Price = String.valueOf(discountedPrice);
+                                    } else {
+                                        Price = String.valueOf(price);
+                                    }
+                                    finalPrice = Double.parseDouble(tvFinalPrice.getText().toString().trim());
 
+                                    addToCartScheduled(getDateTime(), title, itemImage, Price, String.valueOf(finalPrice), String.valueOf(itemCount), String.valueOf(actualFinalPrice), dateAndTime);
 
+                                    Log.d("btnAddtoCart2", title + Price + finalPrice + itemCount + date.toString());
+                                }
+                            }).display();
 
-
-                    String title = tvItem.getText().toString().trim();
-                    String Price;
-                    if (available.equals("yes")) {
-                        Price = String.valueOf(discountedPrice);
-                    } else {
-                        Price = String.valueOf(price);
-                    }
-                    finalPrice = Double.parseDouble(tvFinalPrice.getText().toString().trim());
-
-                    addToCart(getDateTime(), title, itemImage, Price, String.valueOf(finalPrice), String.valueOf(itemCount), String.valueOf(actualFinalPrice));
-
-                    Log.d("btnAddtoCart2", title + Price + finalPrice + itemCount);
                 }
             });
         }
@@ -264,7 +288,7 @@ public class ShowItemDetails extends AppCompatActivity {
                     }
                     finalPrice = Double.parseDouble(tvFinalPrice.getText().toString().trim());
 
-                    addToCart(getDateTime(), title, itemImage, Price, String.valueOf(finalPrice), String.valueOf(itemCount), String.valueOf(actualFinalPrice));
+                    addToCartScheduled(getDateTime(), title, itemImage, Price, String.valueOf(finalPrice), String.valueOf(itemCount), String.valueOf(actualFinalPrice), "0");
 
                     Log.d("btnAddtoCart2", title + Price + finalPrice + itemCount);
                 }
@@ -273,6 +297,63 @@ public class ShowItemDetails extends AppCompatActivity {
 
 
         checkRestaurantStatus(resName);
+    }
+    private int itemId = 0;
+
+    private void addToCartScheduled(String dateTime, String title, String itemImage, String price, String finalPrice, String itemCount, String actualFinalPrice, String dateAndTime) {
+        itemId++;
+
+        EasyDB easyDB = EasyDB.init(this, "scheduledOrdersDatabase")
+                .setTableName("ITEMS_TABLE")
+                .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
+                .addColumn(new Column("pId", new String[]{"text", "not null"}))
+                .addColumn(new Column("Title", new String[]{"text", "not null"}))
+                .addColumn(new Column("Price", new String[]{"text", "not null"}))
+                .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
+                .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
+                .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
+//                .addColumn(new Column("Description", new String[]{"text", "not null"}))
+                .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
+                .addColumn(new Column("orderTime", new String[]{"text", "not null"}))
+                .doneTableColumn();
+
+        Log.d("btnAddtoCart3", dateTime + " " + itemImage + " " + title + " " + price + " " + finalPrice + " " + itemCount);
+
+        boolean b = easyDB
+                .addData("Item_Id", itemId)
+                .addData("pId", dateTime)
+                .addData("Title", title)
+                .addData("Price", price)
+                .addData("Items_Count", itemCount)
+                .addData("Final_Price", finalPrice)
+                .addData("actualFinalPrice", actualFinalPrice)
+//                .addData("Description", description)
+                .addData("Item_Image_Uri", itemImage)
+                .addData("orderTime", dateAndTime)
+                .doneDataAdding();
+
+        Cursor cursor = easyDB.getAllData();
+        while (cursor.moveToNext()) {
+            String id = cursor.getString(0);
+            boolean update = easyDB.updateData(1, id).rowID(Integer.valueOf(id));
+        }
+        if (b) {
+            Snackbar.make(findViewById(android.R.id.content), "Added to Cart!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+
+            editor.putBoolean("added",true);
+            editor.apply();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    onBackPressed();
+                }
+            }, 650);
+        } else {
+            Toast.makeText(this, "Error!", Toast.LENGTH_SHORT).show();
+        }
+
+        RestaurantItems.getInstance().updateCartCount();
     }
 
 
@@ -309,61 +390,59 @@ public class ShowItemDetails extends AppCompatActivity {
         });
     }
 
-    private int itemId = 0;
-
-    private void addToCart(String productId, String title, String imageUri, String price, String finalPrice, String itemCount, String actualFinalPrice) {
-        itemId++;
-
-        EasyDB easyDB = EasyDB.init(this, "ordersDatabase")
-                .setTableName("ITEMS_TABLE")
-                .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
-                .addColumn(new Column("pId", new String[]{"text", "not null"}))
-                .addColumn(new Column("Title", new String[]{"text", "not null"}))
-                .addColumn(new Column("Price", new String[]{"text", "not null"}))
-                .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
-                .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
-                .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
-//                .addColumn(new Column("Description", new String[]{"text", "not null"}))
-                .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
-                .doneTableColumn();
-
-        Log.d("btnAddtoCart3", productId + " " + imageUri + " " + title + " " + price + " " + finalPrice + " " + itemCount);
-
-        boolean b = easyDB
-                .addData("Item_Id", itemId)
-                .addData("pId", productId)
-                .addData("Title", title)
-                .addData("Price", price)
-                .addData("Items_Count", itemCount)
-                .addData("Final_Price", finalPrice)
-                .addData("actualFinalPrice", actualFinalPrice)
-//                .addData("Description", description)
-                .addData("Item_Image_Uri", imageUri)
-                .doneDataAdding();
-
-        Cursor cursor = easyDB.getAllData();
-        while (cursor.moveToNext()) {
-            String id = cursor.getString(0);
-            boolean update = easyDB.updateData(1, id).rowID(Integer.valueOf(id));
-        }
-        if (b) {
-            Snackbar.make(findViewById(android.R.id.content), "Added to Cart!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
-
-            editor.putBoolean("added",true);
-            editor.apply();
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    onBackPressed();
-                }
-            }, 650);
-        } else {
-            Toast.makeText(this, "Error!", Toast.LENGTH_SHORT).show();
-        }
-
-        RestaurantItems.getInstance().updateCartCount();
-    }
+//    private void addToCart(String productId, String title, String imageUri, String price, String finalPrice, String itemCount, String actualFinalPrice) {
+//        itemId++;
+//
+//        EasyDB easyDB = EasyDB.init(this, "ordersDatabase")
+//                .setTableName("ITEMS_TABLE")
+//                .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
+//                .addColumn(new Column("pId", new String[]{"text", "not null"}))
+//                .addColumn(new Column("Title", new String[]{"text", "not null"}))
+//                .addColumn(new Column("Price", new String[]{"text", "not null"}))
+//                .addColumn(new Column("Items_Count", new String[]{"text", "not null"}))
+//                .addColumn(new Column("Final_Price", new String[]{"text", "not null"}))
+//                .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
+////                .addColumn(new Column("Description", new String[]{"text", "not null"}))
+//                .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
+//                .doneTableColumn();
+//
+//        Log.d("btnAddtoCart3", productId + " " + imageUri + " " + title + " " + price + " " + finalPrice + " " + itemCount);
+//
+//        boolean b = easyDB
+//                .addData("Item_Id", itemId)
+//                .addData("pId", productId)
+//                .addData("Title", title)
+//                .addData("Price", price)
+//                .addData("Items_Count", itemCount)
+//                .addData("Final_Price", finalPrice)
+//                .addData("actualFinalPrice", actualFinalPrice)
+////                .addData("Description", description)
+//                .addData("Item_Image_Uri", imageUri)
+//                .doneDataAdding();
+//
+//        Cursor cursor = easyDB.getAllData();
+//        while (cursor.moveToNext()) {
+//            String id = cursor.getString(0);
+//            boolean update = easyDB.updateData(1, id).rowID(Integer.valueOf(id));
+//        }
+//        if (b) {
+//            Snackbar.make(findViewById(android.R.id.content), "Added to Cart!", Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
+//
+//            editor.putBoolean("added",true);
+//            editor.apply();
+//
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    onBackPressed();
+//                }
+//            }, 650);
+//        } else {
+//            Toast.makeText(this, "Error!", Toast.LENGTH_SHORT).show();
+//        }
+//
+//        RestaurantItems.getInstance().updateCartCount();
+//    }
 
     private String getDateTime() {
         Calendar calendar = Calendar.getInstance(Locale.getDefault());

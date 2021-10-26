@@ -219,7 +219,7 @@
 
                         <ImageView
                             android:id="@+id/ivDealOfDay"
-                            android:layout_width="200dp"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_horizontal"
                             android:adjustViewBounds="true"
@@ -287,12 +287,12 @@
 
                             <ImageView
                                 android:id="@+id/ivUpForTheGrab"
-                                android:layout_width="200dp"
+                                android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="center_horizontal"
                                 android:adjustViewBounds="true"
                                 android:scaleType="fitXY"
-                                android:src="@drawable/deal_of_the_day" />
+                                android:src="@drawable/up_for_grab" />
 
                         </com.google.android.material.card.MaterialCardView>
 

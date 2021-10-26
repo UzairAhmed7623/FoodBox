@@ -77,7 +77,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-    public String name, last_name, restaurant, DOD="";
+    public String name, last_name, restaurant, DOD="", UFG = "";
     private int badgeCount;
     private NotificationBadge notificationBadge;
     private boolean status = false;
@@ -122,6 +122,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
         restaurant = getIntent().getStringExtra("restaurant");
         name = getIntent().getStringExtra("name");
         DOD = getIntent().getStringExtra("DOD");
+        UFG = getIntent().getStringExtra("UFG");
 
         getSupportActionBar().setTitle(restaurant);
 
@@ -133,6 +134,9 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
 
         if (getIntent().getStringExtra("DOD") != null) {
             dodProductsAdapter = new DODProductsAdapter(RestaurantItems.this, DODProductList);
+        }
+        if (getIntent().getStringExtra("name") != null){
+            deleteCartData();
         }
 
         progressDialog = new ProgressDialog(this);
@@ -212,7 +216,94 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
                     menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
                 }
 
-                if (position != 0) {
+                if (getIntent().getStringExtra("DOD") != null) {
+                    if (position != 0) {
+                        firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
+                                .whereEqualTo("category", menuItem.getText())
+                                .whereEqualTo("isDODAvailable", "yes")
+                                .get()
+                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                                        productList.clear();
+                                        adapter.notifyDataSetChanged();
+
+                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                            if (documentSnapshot.exists()) {
+                                                String name = documentSnapshot.getId();
+
+                                                ItemsModelClass itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
+
+                                                itemsModelClass.setUserName(name);
+                                                itemsModelClass.setItemName(name);
+                                                itemsModelClass.setId(getDateTime());
+
+                                                productList.add(itemsModelClass);
+
+                                                rvItems.setAdapter(adapter);
+                                            }
+                                        }
+                                        progressDialog.dismiss();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        progressDialog.dismiss();
+                                        Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(getApplicationContext(), R.color.myColor)).show();
+                                    }
+                                });
+                    }
+                    else {
+                        getData();
+                    }
+                }
+                else if (getIntent().getStringExtra("UFG") != null){
+                    if (position != 0) {
+                        firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
+                                .whereEqualTo("category", menuItem.getText())
+                                .whereEqualTo("scheduled", "1")
+                                .get()
+                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                                        productList.clear();
+                                        adapter.notifyDataSetChanged();
+
+                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                            if (documentSnapshot.exists()) {
+                                                String name = documentSnapshot.getId();
+
+                                                ItemsModelClass itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
+
+                                                itemsModelClass.setUserName(name);
+                                                itemsModelClass.setItemName(name);
+                                                itemsModelClass.setId(getDateTime());
+
+                                                productList.add(itemsModelClass);
+
+                                                rvItems.setAdapter(adapter);
+                                            }
+                                        }
+                                        progressDialog.dismiss();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        progressDialog.dismiss();
+                                        Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(getApplicationContext(), R.color.myColor)).show();
+                                    }
+                                });
+                    }
+                    else {
+                        getData();
+                    }
+                }
+                else {
+                    if (position != 0) {
                     firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
                             .whereEqualTo("category", menuItem.getText())
                             .get()
@@ -252,6 +343,8 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
                 else {
                     getData();
                 }
+                }
+
             }
         });
     }
@@ -348,7 +441,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
     private void getData() {
         if (getIntent().getStringExtra("UFG") != null && getIntent().getStringExtra("UFG").equals("yes")){
             firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
-                    .whereEqualTo("scheduled", "1")
+                    .whereNotEqualTo("scheduled", "0")
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
@@ -493,7 +586,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                EasyDB easyDB = EasyDB.init(RestaurantItems.this, "ordersDatabase")
+                EasyDB easyDB = EasyDB.init(RestaurantItems.this, "scheduledOrdersDatabase")
                         .setTableName("ITEMS_TABLE")
                         .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                         .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -504,6 +597,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
                         .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
                         .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
+                        .addColumn(new Column("orderTime", new String[]{"text", "not null"}))
                         .doneTableColumn();
 
                 Cursor res = easyDB.getAllData();
@@ -534,7 +628,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
 
     @Override
     public void onBackPressed() {
-        EasyDB easyDB = EasyDB.init(RestaurantItems.this, "ordersDatabase")
+        EasyDB easyDB = EasyDB.init(RestaurantItems.this, "scheduledOrdersDatabase")
                 .setTableName("ITEMS_TABLE")
                 .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                 .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -545,6 +639,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
                 .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
                 .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
+                .addColumn(new Column("orderTime", new String[]{"text", "not null"}))
                 .doneTableColumn();
 
         Cursor data = easyDB.getAllData();
@@ -572,7 +667,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
     }
 
     private void deleteCartData() {
-        EasyDB easyDB = EasyDB.init(RestaurantItems.this, "ordersDatabase")
+        EasyDB easyDB = EasyDB.init(RestaurantItems.this, "scheduledOrdersDatabase")
                 .setTableName("ITEMS_TABLE")
                 .addColumn(new Column("Item_Id", new String[]{"text", "unique"}))
                 .addColumn(new Column("pId", new String[]{"text", "not null"}))
@@ -583,6 +678,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
                 .addColumn(new Column("actualFinalPrice", new String[]{"text", "not null"}))
 //                .addColumn(new Column("Description", new String[]{"text", "not null"}))
                 .addColumn(new Column("Item_Image_Uri", new String[]{"text", "not null"}))
+                .addColumn(new Column("orderTime", new String[]{"text", "not null"}))
                 .doneTableColumn();
 
         easyDB.deleteAllDataFromTable();

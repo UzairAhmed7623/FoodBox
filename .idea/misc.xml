@@ -8,6 +8,7 @@
         <entry key="..\:/Users/hafiz/AndroidStudioProjects/FoodBox/app/src/main/res/drawable/history_item_shape.xml" value="0.24027777777777778" />
         <entry key="..\:/Users/hafiz/AndroidStudioProjects/FoodBox/app/src/main/res/drawable/ripple.xml" value="0.24027777777777778" />
         <entry key="..\:/Users/hafiz/AndroidStudioProjects/FoodBox/app/src/main/res/drawable/search_icon.xml" value="0.32546296296296295" />
+        <entry key="..\:/Users/hafiz/AndroidStudioProjects/FoodBox/app/src/main/res/layout/activity_cart.xml" value="0.3111111111111111" />
         <entry key="..\:/Users/hafiz/AndroidStudioProjects/FoodBox/app/src/main/res/layout/activity_main.xml" value="0.4" />
         <entry key="..\:/Users/hafiz/AndroidStudioProjects/FoodBox/app/src/main/res/layout/activity_order_history.xml" value="0.4" />
         <entry key="..\:/Users/hafiz/AndroidStudioProjects/FoodBox/app/src/main/res/layout/activity_restaurant_items.xml" value="0.264" />
@@ -24,6 +25,7 @@
         <entry key="..\:/Users/hafiz/AndroidStudioProjects/FoodBox/app/src/main/res/layout/order_history_adapter_layout.xml" value="0.4" />
         <entry key="..\:/Users/hafiz/AndroidStudioProjects/FoodBox/app/src/main/res/layout/restaurant_items_adapter_left.xml" value="0.4" />
         <entry key="..\:/Users/hafiz/AndroidStudioProjects/FoodBox/app/src/main/res/layout/restaurant_items_adapter_right.xml" value="0.4" />
+        <entry key="..\:/Users/hafiz/AndroidStudioProjects/FoodBox/app/src/main/res/layout/row_cart_items.xml" value="0.5" />
         <entry key="..\:/Users/hafiz/AndroidStudioProjects/FoodBox/app/src/main/res/layout/toobar_profile_image.xml" value="0.3111111111111111" />
         <entry key="..\:/Users/hafiz/AndroidStudioProjects/FoodBox/app/src/main/res/layout/track_order_adapter_layout.xml" value="0.4" />
         <entry key="..\:/Users/hafiz/AndroidStudioProjects/FoodBox/app/src/main/res/menu/cart_toobar.xml" value="0.31574074074074077" />
