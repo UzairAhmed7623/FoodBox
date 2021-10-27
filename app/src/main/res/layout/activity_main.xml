@@ -141,79 +141,81 @@
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/app_bar"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="wrap_content"
                 android:fitsSystemWindows="true">
 
                 <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:fitsSystemWindows="true"
                     app:contentScrim="@color/white"
                     app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:id="@+id/collapseLayout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingStart="15dp"
-                        android:paddingTop="5dp"
-                        android:paddingEnd="15dp">
+                        android:orientation="horizontal"
+                        android:weightSum="2">
 
-                    <LinearLayout
-                        android:id="@+id/layoutDealOfTheDay"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:orientation="vertical"
-                        >
+<!--                    <LinearLayout-->
+<!--                        android:id="@+id/layoutDealOfTheDay"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:background="@color/white"-->
+<!--                        android:orientation="vertical"-->
+<!--                        >-->
 
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/cardViewDealOfTheDay"
-                            style="@style/Widget.MaterialComponents.Button"
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:background="@drawable/ripple"
-                            app:cardCornerRadius="0dp"
-                            app:cardElevation="5dp">
+<!--                        <com.google.android.material.card.MaterialCardView-->
+<!--                            android:id="@+id/cardViewDealOfTheDay"-->
+<!--                            style="@style/Widget.MaterialComponents.Button"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="150dp"-->
+<!--                            android:background="@drawable/ripple"-->
+<!--                            app:cardCornerRadius="0dp"-->
+<!--                            app:cardElevation="5dp">-->
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="bottom"
-                                android:layout_marginBottom="5dp"
-                                android:background="@color/white"
-                                android:orientation="vertical">
+<!--&lt;!&ndash;                            <LinearLayout&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:layout_gravity="bottom"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:layout_marginBottom="5dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:background="@color/white"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:orientation="vertical">&ndash;&gt;-->
 
-                                <TextView
-                                    android:id="@+id/tvRestaurant"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="start"
-                                    android:layout_marginStart="2dp"
-                                    android:fontFamily="@font/montserra_regular_bold"
-                                    android:gravity="center_horizontal"
-                                    android:includeFontPadding="false"
-                                    android:letterSpacing="0.05"
-                                    android:text="Deal of the day"
-                                    android:textAllCaps="true"
-                                    android:textColor="@color/grey_90"
-                                    android:textFontWeight="600"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
+<!--&lt;!&ndash;                                <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:id="@+id/tvRestaurant"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_gravity="start"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_marginStart="2dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:fontFamily="@font/montserra_regular_bold"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:gravity="center_horizontal"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:includeFontPadding="false"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:letterSpacing="0.05"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:text="Deal of the day"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:textAllCaps="true"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:textColor="@color/grey_90"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:textFontWeight="600"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:textSize="14sp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:textStyle="bold" />&ndash;&gt;-->
 
-                            </LinearLayout>
+<!--&lt;!&ndash;                            </LinearLayout>&ndash;&gt;-->
 
-                        </com.google.android.material.card.MaterialCardView>
+<!--                        </com.google.android.material.card.MaterialCardView>-->
 
-                    </LinearLayout>
+<!--                    </LinearLayout>-->
 
                     <com.google.android.material.card.MaterialCardView
-
+                        android:id="@+id/cardViewDealOfTheDay"
                         android:layout_width="match_parent"
                         android:layout_height="110dp"
                         android:layout_marginTop="10dp"
-                        android:padding="10dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="10dp"
                         app:cardBackgroundColor="@color/white"
                         app:cardCornerRadius="8dp">
 
@@ -228,60 +230,63 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
-                        <LinearLayout
-                            android:id="@+id/layout6"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/layoutDealOfTheDay"
-                            android:background="@color/white"
-                            android:orientation="vertical">
+<!--                        <LinearLayout-->
+<!--                            android:id="@+id/layout6"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_below="@+id/layoutDealOfTheDay"-->
+<!--                            android:background="@color/white"-->
+<!--                            android:orientation="vertical">-->
 
-                            <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/cardViewUpForTheGrab"
-                                style="@style/Widget.MaterialComponents.Button"
-                                android:layout_width="match_parent"
-                                android:layout_height="150dp"
-                                android:background="@drawable/ripple"
-                                app:cardCornerRadius="0dp"
-                                app:cardElevation="5dp">
+<!--                            <com.google.android.material.card.MaterialCardView-->
+<!--                                android:id="@+id/cardViewUpForTheGrab"-->
+<!--                                style="@style/Widget.MaterialComponents.Button"-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="150dp"-->
+<!--                                android:background="@drawable/ripple"-->
+<!--                                app:cardCornerRadius="0dp"-->
+<!--                                app:cardElevation="5dp">-->
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="bottom"
-                                    android:layout_marginBottom="5dp"
-                                    android:background="@color/white"
-                                    android:orientation="vertical">
+<!--&lt;!&ndash;                                <LinearLayout&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_gravity="bottom"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_marginBottom="5dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:background="@color/white"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:orientation="vertical">&ndash;&gt;-->
 
-                                    <TextView
-                                        android:id="@+id/tvUpForGrab"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="start"
-                                        android:layout_marginStart="2dp"
-                                        android:fontFamily="@font/montserra_regular_bold"
-                                        android:gravity="center_horizontal"
-                                        android:includeFontPadding="false"
-                                        android:letterSpacing="0.05"
-                                        android:text="Up for the grab"
-                                        android:textAllCaps="true"
-                                        android:textColor="@color/grey_90"
-                                        android:textFontWeight="600"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold" />
+<!--&lt;!&ndash;                                    <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;                                        android:id="@+id/tvUpForGrab"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        android:layout_gravity="start"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        android:layout_marginStart="2dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        android:fontFamily="@font/montserra_regular_bold"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        android:gravity="center_horizontal"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        android:includeFontPadding="false"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        android:letterSpacing="0.05"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        android:text="Pre order"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        android:textAllCaps="true"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        android:textColor="@color/grey_90"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        android:textFontWeight="600"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        android:textSize="14sp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        android:textStyle="bold" />&ndash;&gt;-->
 
-                                </LinearLayout>
+<!--&lt;!&ndash;                                </LinearLayout>&ndash;&gt;-->
 
-                            </com.google.android.material.card.MaterialCardView>
+<!--                            </com.google.android.material.card.MaterialCardView>-->
 
-                        </LinearLayout>
+<!--                        </LinearLayout>-->
 
                         <com.google.android.material.card.MaterialCardView
-
+                            android:id="@+id/cardViewUpForTheGrab"
                             android:layout_width="match_parent"
                             android:layout_height="110dp"
-                            android:layout_marginTop="150dp"
-                            android:padding="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="10dp"
                             app:cardBackgroundColor="@color/white"
                             app:cardCornerRadius="8dp">
 
@@ -292,11 +297,11 @@
                                 android:layout_gravity="center_horizontal"
                                 android:adjustViewBounds="true"
                                 android:scaleType="fitXY"
-                                android:src="@drawable/up_for_grab" />
+                                android:src="@drawable/pre_order" />
 
                         </com.google.android.material.card.MaterialCardView>
 
-                    </RelativeLayout>
+                    </LinearLayout>
 
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
 

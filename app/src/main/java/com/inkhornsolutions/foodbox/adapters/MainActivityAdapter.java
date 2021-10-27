@@ -130,6 +130,8 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
             if (approved.equals("yes")){
                 if (status.equals("online")){
                     holder.layout.setEnabled(true);
+                    holder.tvOpenClose.setText("Open");
+                    holder.tvOpenClose.setTextColor(ContextCompat.getColor(context, R.color.open));
                 }
                 else {
                     holder.layout.setEnabled(false);
@@ -139,6 +141,8 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                     ColorMatrix matrix = new ColorMatrix();
                     matrix.setSaturation(0);
                     holder.ivRestaurant.setColorFilter(new ColorMatrixColorFilter(matrix));
+                    holder.tvOpenClose.setText("Closed");
+                    holder.tvOpenClose.setTextColor(ContextCompat.getColor(context, R.color.closed));
 //                Toast.makeText(context, "Restaurant is offline for now, Please try later.", Toast.LENGTH_LONG).show();
                 }
             }
@@ -149,6 +153,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                 ColorMatrix matrix = new ColorMatrix();
                 matrix.setSaturation(0);
                 holder.ivRestaurant.setColorFilter(new ColorMatrixColorFilter(matrix));
+
 //            Toast.makeText(context, "Restaurant not approved yet", Toast.LENGTH_LONG).show();
             }
 
@@ -208,7 +213,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private final ImageView ivRestaurant;
-        private final TextView tvRestaurant;
+        private final TextView tvRestaurant, tvOpenClose;
         private TextView tvNoOrders;
         private final LinearLayout layout;
         private RatingBar ratingBar;
@@ -222,6 +227,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
             ratingBar = itemView.findViewById(R.id.ratingBar);
             tvNoOrders = itemView.findViewById(R.id.tvNoOrders);
             cardView = itemView.findViewById(R.id.cardView);
+            tvOpenClose = itemView.findViewById(R.id.tvOpenClose);
 
             layout = itemView.findViewById(R.id.layout);
 

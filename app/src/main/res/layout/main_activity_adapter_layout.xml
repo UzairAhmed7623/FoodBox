@@ -32,51 +32,71 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvRestaurant"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginTop="7dp"
-                    android:fontFamily="@font/montserra_regular_bold"
-                    android:includeFontPadding="false"
-                    android:letterSpacing="0.05"
-                    android:text="Restaurant Name"
-                    android:textAllCaps="true"
-                    android:textColor="@color/grey_90"
-                    android:textFontWeight="600"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <RatingBar
-                        android:id="@+id/ratingBar"
-                        style="@style/Widget.AppCompat.RatingBar.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
-                        android:isIndicator="true"
-                        android:numStars="5"
-                        android:progressBackgroundTint="@color/myColor"
-                        android:progressTint="@color/myColor"
-                        android:rating="0" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp">
 
                     <TextView
-                        android:id="@+id/tvNoOrders"
+                        android:id="@+id/tvOpenClose"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:text="Open"
+                        android:textSize="16sp"
+                        android:textColor="@color/open"
+                        android:fontFamily="@font/klavika_bold"
+                        android:padding="7dp"
+                        android:letterSpacing="0.05"/>
+
+                    <TextView
+                        android:id="@+id/tvRestaurant"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
-                        android:layout_marginStart="10dp"
-                        android:layout_toEndOf="@+id/ratingBar"
-                        android:fontFamily="@font/montserrat_medium"
-                        android:text="(0)"
+                        android:layout_marginTop="7dp"
+                        android:fontFamily="@font/montserra_regular_bold"
+                        android:includeFontPadding="false"
+                        android:letterSpacing="0.05"
+                        android:text="Restaurant Name"
                         android:textAllCaps="true"
                         android:textColor="@color/grey_90"
-                        android:textSize="14sp" />
+                        android:textFontWeight="600"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tvRestaurant">
+
+                        <RatingBar
+                            android:id="@+id/ratingBar"
+                            style="@style/Widget.AppCompat.RatingBar.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:isIndicator="true"
+                            android:numStars="5"
+                            android:progressBackgroundTint="@color/myColor"
+                            android:progressTint="@color/myColor"
+                            android:rating="0" />
+
+                        <TextView
+                            android:id="@+id/tvNoOrders"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:layout_marginStart="10dp"
+                            android:layout_toEndOf="@+id/ratingBar"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:text="(0)"
+                            android:textAllCaps="true"
+                            android:textColor="@color/grey_90"
+                            android:textSize="14sp" />
+
+                    </RelativeLayout>
 
                 </RelativeLayout>
 

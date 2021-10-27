@@ -32,6 +32,8 @@
     <color name="white_greyish">#37000000</color>
     <color name="button_selectorcolor">#9E9E9E</color>
     <color name="back_color">#57000000</color>
+    <color name="closed">#FF0000</color>
+    <color name="open">#08B608</color>
 
     <color name="newColor">#F2F2F2</color>
     <color name="newColorSecond">#F9F9F9</color>
