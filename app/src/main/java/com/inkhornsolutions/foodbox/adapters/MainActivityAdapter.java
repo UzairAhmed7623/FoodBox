@@ -51,6 +51,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import es.dmoral.toasty.Toasty;
+
 //import per.wsj.library.AndRatingBar;
 
 public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapter.ViewHolder> {
@@ -138,9 +140,9 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                     holder.layout.setClickable(false);
                     holder.itemView.setEnabled(false);
                     holder.itemView.setClickable(false);
-                    ColorMatrix matrix = new ColorMatrix();
-                    matrix.setSaturation(0);
-                    holder.ivRestaurant.setColorFilter(new ColorMatrixColorFilter(matrix));
+//                    ColorMatrix matrix = new ColorMatrix();
+//                    matrix.setSaturation(0);
+//                    holder.ivRestaurant.setColorFilter(new ColorMatrixColorFilter(matrix));
                     holder.tvOpenClose.setText("Closed");
                     holder.tvOpenClose.setTextColor(ContextCompat.getColor(context, R.color.closed));
 //                Toast.makeText(context, "Restaurant is offline for now, Please try later.", Toast.LENGTH_LONG).show();
@@ -192,13 +194,13 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                             else {
                                 progressDialog.dismiss();
 
-                                Toast.makeText(context, "Restaurant is offline for now, Please try again later.", Toast.LENGTH_LONG).show();
+                                Toasty.error(context, "Restaurant is offline for now, Please try again later.", Toasty.LENGTH_LONG).show();
                             }
                         }
                         else {
                             progressDialog.dismiss();
 
-                            Toast.makeText(context, "This restaurant is not approved yet", Toast.LENGTH_LONG).show();
+                            Toasty.error(context, "This restaurant is not approved yet", Toasty.LENGTH_LONG).show();
                         }
                     }
                 }

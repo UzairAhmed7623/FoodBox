@@ -43,12 +43,12 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:text="Open"
-                        android:textSize="16sp"
-                        android:textColor="@color/open"
                         android:fontFamily="@font/klavika_bold"
+                        android:letterSpacing="0.05"
                         android:padding="7dp"
-                        android:letterSpacing="0.05"/>
+                        android:text="Open"
+                        android:textColor="@color/open"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tvRestaurant"

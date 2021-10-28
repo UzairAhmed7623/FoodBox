@@ -10,6 +10,7 @@
     android:gravity="start"
     app:edMenuBackground="@color/white"
     app:edPosition="1"
+    android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
     <RelativeLayout
@@ -74,63 +75,8 @@
             android:layout_below="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
+            android:elevation="100dp"
             android:background="@color/white_greyish"/>
-
-<!--        <RelativeLayout-->
-<!--            android:id="@+id/layout1"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@+id/toolbar">-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/place"-->
-<!--                android:layout_width="40dp"-->
-<!--                android:layout_height="40dp"-->
-<!--                android:layout_centerVertical="true"-->
-<!--                android:padding="10dp"-->
-<!--                android:src="@drawable/location"-->
-<!--                app:tint="@color/black" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/tvAddress1"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_centerVertical="true"-->
-<!--                android:layout_gravity="start"-->
-<!--                android:layout_toEndOf="@+id/place"-->
-<!--                android:fontFamily="@font/montserrat_semi_bold"-->
-<!--                android:includeFontPadding="false"-->
-<!--                android:letterSpacing="0.05"-->
-<!--                android:padding="10dp"-->
-<!--                android:text="Address"-->
-<!--                android:textAllCaps="true"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textFontWeight="600"-->
-<!--                android:textSize="12sp"-->
-<!--                android:textStyle="bold" />-->
-
-<!--        </RelativeLayout>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tvItemSearch"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="40dp"-->
-<!--            android:layout_below="@+id/toolbar"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginStart="30dp"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            android:layout_marginEnd="30dp"-->
-<!--            android:layout_marginBottom="10dp"-->
-<!--            android:background="@drawable/search_back"-->
-<!--            android:drawableTint="@color/black"-->
-<!--            android:elevation="7dp"-->
-<!--            android:gravity="center_vertical"-->
-<!--            android:hint="   Search for the foods"-->
-<!--            android:paddingStart="10dp"-->
-<!--            android:textColorHint="@color/grey_60"-->
-<!--            android:textSize="16dp"-->
-<!--            android:transitionName="search"-->
-<!--            app:drawableStartCompat="@drawable/search_icon" />-->
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/coordinator_layout"
@@ -159,62 +105,14 @@
                         android:orientation="horizontal"
                         android:weightSum="2">
 
-<!--                    <LinearLayout-->
-<!--                        android:id="@+id/layoutDealOfTheDay"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:background="@color/white"-->
-<!--                        android:orientation="vertical"-->
-<!--                        >-->
-
-<!--                        <com.google.android.material.card.MaterialCardView-->
-<!--                            android:id="@+id/cardViewDealOfTheDay"-->
-<!--                            style="@style/Widget.MaterialComponents.Button"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="150dp"-->
-<!--                            android:background="@drawable/ripple"-->
-<!--                            app:cardCornerRadius="0dp"-->
-<!--                            app:cardElevation="5dp">-->
-
-<!--&lt;!&ndash;                            <LinearLayout&ndash;&gt;-->
-<!--&lt;!&ndash;                                android:layout_width="match_parent"&ndash;&gt;-->
-<!--&lt;!&ndash;                                android:layout_height="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;                                android:layout_gravity="bottom"&ndash;&gt;-->
-<!--&lt;!&ndash;                                android:layout_marginBottom="5dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                                android:background="@color/white"&ndash;&gt;-->
-<!--&lt;!&ndash;                                android:orientation="vertical">&ndash;&gt;-->
-
-<!--&lt;!&ndash;                                <TextView&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:id="@+id/tvRestaurant"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:layout_width="match_parent"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:layout_height="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:layout_gravity="start"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:layout_marginStart="2dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:fontFamily="@font/montserra_regular_bold"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:gravity="center_horizontal"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:includeFontPadding="false"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:letterSpacing="0.05"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:text="Deal of the day"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:textAllCaps="true"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:textColor="@color/grey_90"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:textFontWeight="600"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:textSize="14sp"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:textStyle="bold" />&ndash;&gt;-->
-
-<!--&lt;!&ndash;                            </LinearLayout>&ndash;&gt;-->
-
-<!--                        </com.google.android.material.card.MaterialCardView>-->
-
-<!--                    </LinearLayout>-->
-
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardViewDealOfTheDay"
                         android:layout_width="match_parent"
                         android:layout_height="110dp"
                         android:layout_marginTop="10dp"
                         android:layout_weight="1"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="5dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="7.5dp"
                         android:layout_marginBottom="10dp"
                         app:cardBackgroundColor="@color/white"
                         app:cardCornerRadius="8dp">
@@ -230,62 +128,14 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
-<!--                        <LinearLayout-->
-<!--                            android:id="@+id/layout6"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_below="@+id/layoutDealOfTheDay"-->
-<!--                            android:background="@color/white"-->
-<!--                            android:orientation="vertical">-->
-
-<!--                            <com.google.android.material.card.MaterialCardView-->
-<!--                                android:id="@+id/cardViewUpForTheGrab"-->
-<!--                                style="@style/Widget.MaterialComponents.Button"-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="150dp"-->
-<!--                                android:background="@drawable/ripple"-->
-<!--                                app:cardCornerRadius="0dp"-->
-<!--                                app:cardElevation="5dp">-->
-
-<!--&lt;!&ndash;                                <LinearLayout&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:layout_width="match_parent"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:layout_height="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:layout_gravity="bottom"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:layout_marginBottom="5dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:background="@color/white"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:orientation="vertical">&ndash;&gt;-->
-
-<!--&lt;!&ndash;                                    <TextView&ndash;&gt;-->
-<!--&lt;!&ndash;                                        android:id="@+id/tvUpForGrab"&ndash;&gt;-->
-<!--&lt;!&ndash;                                        android:layout_width="match_parent"&ndash;&gt;-->
-<!--&lt;!&ndash;                                        android:layout_height="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;                                        android:layout_gravity="start"&ndash;&gt;-->
-<!--&lt;!&ndash;                                        android:layout_marginStart="2dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                                        android:fontFamily="@font/montserra_regular_bold"&ndash;&gt;-->
-<!--&lt;!&ndash;                                        android:gravity="center_horizontal"&ndash;&gt;-->
-<!--&lt;!&ndash;                                        android:includeFontPadding="false"&ndash;&gt;-->
-<!--&lt;!&ndash;                                        android:letterSpacing="0.05"&ndash;&gt;-->
-<!--&lt;!&ndash;                                        android:text="Pre order"&ndash;&gt;-->
-<!--&lt;!&ndash;                                        android:textAllCaps="true"&ndash;&gt;-->
-<!--&lt;!&ndash;                                        android:textColor="@color/grey_90"&ndash;&gt;-->
-<!--&lt;!&ndash;                                        android:textFontWeight="600"&ndash;&gt;-->
-<!--&lt;!&ndash;                                        android:textSize="14sp"&ndash;&gt;-->
-<!--&lt;!&ndash;                                        android:textStyle="bold" />&ndash;&gt;-->
-
-<!--&lt;!&ndash;                                </LinearLayout>&ndash;&gt;-->
-
-<!--                            </com.google.android.material.card.MaterialCardView>-->
-
-<!--                        </LinearLayout>-->
-
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/cardViewUpForTheGrab"
                             android:layout_width="match_parent"
                             android:layout_height="110dp"
                             android:layout_marginTop="10dp"
                             android:layout_weight="1"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginEnd="10dp"
+                            android:layout_marginStart="7.5dp"
+                            android:layout_marginEnd="15dp"
                             android:layout_marginBottom="10dp"
                             app:cardBackgroundColor="@color/white"
                             app:cardCornerRadius="8dp">
@@ -312,12 +162,16 @@
                 android:id="@+id/pull_to_refresh"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvRestaurantName"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:fitsSystemWindows="true"
+
                     android:scrollbars="vertical" />
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

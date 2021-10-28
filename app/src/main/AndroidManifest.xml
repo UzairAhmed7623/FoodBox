@@ -24,8 +24,9 @@
         android:theme="@style/Theme.FoodBox"
         tools:replace="android:theme,android:icon">
         <activity
-            android:name=".UpForTheGrab"
-            android:exported="false" />
+            android:name=".PreOrder"
+            android:exported="false"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".onBoardingScreens"
             android:exported="true" />

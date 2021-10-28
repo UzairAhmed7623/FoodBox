@@ -64,7 +64,7 @@ public class OrderHistory extends AppCompatActivity {
         setSupportActionBar(toolbarHistory);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.arrow_back);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(OrderHistory.this, R.color.myColor));

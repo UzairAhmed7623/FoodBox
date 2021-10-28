@@ -117,7 +117,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
 //        getSupportActionBar().setHomeAsUpIndicator(R.drawable.arrow_back);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         restaurant = getIntent().getStringExtra("restaurant");
         name = getIntent().getStringExtra("name");
@@ -478,6 +478,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
         }
         else {
             firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
+                    .whereEqualTo("scheduled", "0")
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override

@@ -137,7 +137,7 @@ public class Checkout extends AppCompatActivity {
         btnCheckOut = (Button) findViewById(R.id.btnCheckOut);
         rootLayout = (ConstraintLayout) findViewById(R.id.rootLayout);
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -130,7 +130,7 @@ public class Cart extends AppCompatActivity implements LocationListener, OnLocat
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.arrow_back);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         rvCartItems.setLayoutManager(new LinearLayoutManager(Cart.this));
 

@@ -90,7 +90,7 @@ public class TrackOrders extends AppCompatActivity {
         setSupportActionBar(toolbarTrack);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.arrow_back);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         rvTrack = (RecyclerView) findViewById(R.id.rvTrack);
         rvTrack.setLayoutManager(new LinearLayoutManager(this));

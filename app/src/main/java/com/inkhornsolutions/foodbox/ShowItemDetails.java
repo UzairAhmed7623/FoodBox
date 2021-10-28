@@ -93,7 +93,7 @@ public class ShowItemDetails extends AppCompatActivity {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         resName = getIntent().getStringExtra("resName");
         itemName = getIntent().getStringExtra("itemName");
