@@ -65,8 +65,6 @@ import p32929.androideasysql_library.EasyDB;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private RecyclerView rvRestaurant;
-    private final List<RestaurantModelClass> resDetails = new ArrayList<>();
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
@@ -74,13 +72,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView tvUserName;
     private CircleImageView ivProfileImage;
     private TextView tvAddress;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private ProgressDialog progressDialog;
     private String imageUri;
     private TextView tvItemSearch;
     private LoginManager loginManager;
-    private MainActivityAdapter mainActivityAdapter;
-    private MaterialCardView cardViewDealOfTheDay, cardViewUpForTheGrab;
+    private MaterialCardView cardViewDealOfTheDay, cardViewUpForTheGrab, cardViewLiveKitchens, cardViewGrocery;
     private AppBarLayout app_bar;
 
     @Override
@@ -95,11 +90,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawerLayout = (AdvanceDrawerLayout) findViewById(R.id.drawerLayout);
         tvAddress = (TextView) findViewById(R.id.tvAddress);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.pull_to_refresh);
 //        tvItemSearch = (TextView) findViewById(R.id.tvItemSearch);
-        rvRestaurant = (RecyclerView) findViewById(R.id.rvRestaurantName);
         cardViewDealOfTheDay = (MaterialCardView) findViewById(R.id.cardViewDealOfTheDay);
         cardViewUpForTheGrab = (MaterialCardView) findViewById(R.id.cardViewUpForTheGrab);
+        cardViewLiveKitchens = (MaterialCardView) findViewById(R.id.cardViewLiveKitchens);
+        cardViewGrocery = (MaterialCardView) findViewById(R.id.cardViewGrocery);
         app_bar = (AppBarLayout) findViewById(R.id.app_bar);
 
         setSupportActionBar(toolbar);
@@ -107,8 +102,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 //        setupWindowAnimations();
 
-        mSwipeRefreshLayout.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
-        mSwipeRefreshLayout.setColorSchemeColors(Color.BLACK, Color.BLACK);
 
         // Hide status bar
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -148,18 +141,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        loadData();
-
-        rvRestaurant.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-        mainActivityAdapter = new MainActivityAdapter(MainActivity.this, resDetails, MainActivity.this);
-        rvRestaurant.setAdapter(mainActivityAdapter);
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.show();
-        progressDialog.setCancelable(false);
-        progressDialog.setContentView(R.layout.progress_bar);
-        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
 //        GeofenceModel cavalry_Ground = new GeofenceModel.Builder("cavalry_Ground")
 //                .setTransition(Geofence.GEOFENCE_TRANSITION_ENTER)
 //                .setLatitude(31.500668557055956)
@@ -188,17 +169,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                    }
 //                });
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mSwipeRefreshLayout.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadData();
-                    }
-                }, 1500);
-            }
-        });
+
 
 //        tvItemSearch.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -220,11 +191,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart() {
         super.onStart();
         loadAllIds();
-        loadData();
         checkForDiscount();
         getAllRestaurantNames();
         dealOfTheDay();
         upForTheGrab();
+        liveKitchens();
+        OrganicShop();
         firebaseFirestore.collection("Users").document(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -232,7 +204,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         if (documentSnapshot.exists()) {
                             String address = documentSnapshot.getString("address");
 
-                            progressDialog.dismiss();
                             if (address != null) {
 
                                 tvAddress.setText(address);
@@ -257,6 +228,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_SHORT).setBackgroundTint(getColor(R.color.myColor)).setTextColor(Color.WHITE).show();
                     }
                 });
+    }
+
+    private void OrganicShop() {
+        cardViewGrocery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, RestaurantItems.class);
+                intent.putExtra("items", "organic");
+                intent.putExtra("restaurant", "Organic Shop");
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void liveKitchens() {
+        cardViewLiveKitchens.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, LiveKitchens.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void upForTheGrab() {
@@ -344,29 +337,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void loadData() {
-
-        firebaseFirestore.collection("Restaurants").whereEqualTo("approved", "yes")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot querySnapshot, @Nullable FirebaseFirestoreException error) {
-                        resDetails.clear();
-
-                        if (error == null) {
-                            for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
-                                RestaurantModelClass restaurantModelClass = documentSnapshot.toObject(RestaurantModelClass.class);
-
-                                resDetails.add(restaurantModelClass);
-                            }
-                            progressDialog.dismiss();
-                            mSwipeRefreshLayout.setRefreshing(false);
-                        } else {
-                            Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
-
     public void headerTextView() {
         if (firebaseAuth != null) {
             DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getCurrentUser().getUid());
@@ -452,9 +422,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.profile_image, menu);
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.profile_image, menu);
 
 //        MenuItem menuItem = menu.findItem(R.id.image);
 //        menuItem.setActionView(R.layout.toobar_profile_image);
@@ -498,8 +468,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //            }
 //        });
 
-        return true;
-    }
+//        return true;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -507,11 +477,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             onBackPressed();
         }
-        else if (item.getItemId() == R.id.image){
-            Intent intent = new Intent(MainActivity.this, Search.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
+//        else if (item.getItemId() == R.id.image){
+//            Intent intent = new Intent(MainActivity.this, Search.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            startActivity(intent);
+//        }
         return true;
     }
 

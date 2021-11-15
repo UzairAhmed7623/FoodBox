@@ -7,113 +7,124 @@
     android:layout_height="match_parent"
     android:clipChildren="false"
     android:clipToPadding="false"
+    android:fitsSystemWindows="true"
     android:gravity="start"
     app:edMenuBackground="@color/white"
     app:edPosition="1"
-    android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
-    <RelativeLayout
-        android:id="@+id/layout"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white">
+        android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
-
-            <LinearLayout
-                android:id="@+id/addressLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tvTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="7dp"
-                    android:fontFamily="@font/montserra_regular_bold"
-                    android:includeFontPadding="false"
-                    android:text="Delivering to"
-                    android:textAllCaps="true"
-                    android:textColor="@android:color/black"
-                    android:textSize="13dp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvAddress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:layout_centerVertical="true"
-                    android:lines="1"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_toEndOf="@+id/place"
-                    android:fontFamily="@font/montserrat_semi_bold"
-                    android:includeFontPadding="false"
-                    android:letterSpacing="0.05"
-                    android:padding="5dp"
-                    android:text="Address"
-                    android:textAllCaps="true"
-                    android:textColor="@color/black"
-                    android:textFontWeight="600"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-        </androidx.appcompat.widget.Toolbar>
-
-        <View
-            android:id="@+id/view"
-            android:layout_below="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:elevation="100dp"
-            android:background="@color/white_greyish"/>
-
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/coordinator_layout"
+        <RelativeLayout
+            android:id="@+id/layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/view">
+            android:background="@color/white">
 
-            <com.google.android.material.appbar.AppBarLayout
-                android:id="@+id/app_bar"
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fitsSystemWindows="true">
+                android:background="@color/white">
 
-                <com.google.android.material.appbar.CollapsingToolbarLayout
+                <LinearLayout
+                    android:id="@+id/addressLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:fitsSystemWindows="true"
-                    app:contentScrim="@color/white"
-                    app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
+                    android:layout_marginEnd="16dp"
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/collapseLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
+                    <TextView
+                        android:id="@+id/tvTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="7dp"
+                        android:fontFamily="@font/montserra_regular_bold"
+                        android:includeFontPadding="false"
+                        android:text="Delivering to"
+                        android:textAllCaps="true"
+                        android:textColor="@android:color/black"
+                        android:textSize="13dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="7dp"
+                        android:layout_toEndOf="@+id/place"
+                        android:fontFamily="@font/montserrat_semi_bold"
+                        android:includeFontPadding="false"
+                        android:letterSpacing="0.05"
+                        android:lines="1"
+                        android:padding="5dp"
+                        android:text="Address"
+                        android:textAllCaps="true"
+                        android:textColor="@color/black"
+                        android:textFontWeight="600"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </androidx.appcompat.widget.Toolbar>
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_below="@+id/toolbar"
+                android:background="@color/white_greyish"
+                android:elevation="100dp" />
+
+            <!--        <androidx.coordinatorlayout.widget.CoordinatorLayout-->
+            <!--            android:id="@+id/coordinator_layout"-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="match_parent"-->
+            <!--            android:layout_below="@id/view">-->
+
+            <!--            <com.google.android.material.appbar.AppBarLayout-->
+            <!--                android:id="@+id/app_bar"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:fitsSystemWindows="true">-->
+
+            <!--                <com.google.android.material.appbar.CollapsingToolbarLayout-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:background="@color/white"-->
+            <!--                    android:fitsSystemWindows="true"-->
+            <!--                    app:contentScrim="@color/white"-->
+            <!--                    app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">-->
+
+            <LinearLayout
+                android:id="@+id/collapseLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/view"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/collapseLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardViewDealOfTheDay"
                         android:layout_width="match_parent"
                         android:layout_height="110dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
                         android:layout_marginStart="15dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginEnd="7.5dp"
                         android:layout_marginBottom="10dp"
+                        android:layout_weight="1"
                         app:cardBackgroundColor="@color/white"
                         app:cardCornerRadius="8dp">
 
@@ -128,57 +139,90 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/cardViewUpForTheGrab"
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardViewUpForTheGrab"
+                        android:layout_width="match_parent"
+                        android:layout_height="110dp"
+                        android:layout_marginStart="7.5dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="8dp">
+
+                        <ImageView
+                            android:id="@+id/ivUpForTheGrab"
                             android:layout_width="match_parent"
-                            android:layout_height="110dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_weight="1"
-                            android:layout_marginStart="7.5dp"
-                            android:layout_marginEnd="15dp"
-                            android:layout_marginBottom="10dp"
-                            app:cardBackgroundColor="@color/white"
-                            app:cardCornerRadius="8dp">
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/pre_order" />
 
-                            <ImageView
-                                android:id="@+id/ivUpForTheGrab"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="center_horizontal"
-                                android:adjustViewBounds="true"
-                                android:scaleType="fitXY"
-                                android:src="@drawable/pre_order" />
+                    </com.google.android.material.card.MaterialCardView>
 
-                        </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
 
-                    </LinearLayout>
-
-                </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-            </com.google.android.material.appbar.AppBarLayout>
-
-            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-
-                android:id="@+id/pull_to_refresh"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-
-                app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvRestaurantName"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardViewLiveKitchens"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fitsSystemWindows="true"
+                    android:layout_height="180dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="10dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="8dp">
 
-                    android:scrollbars="vertical" />
+                    <ImageView
+                        android:id="@+id/ivLiveKitchens"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/live_kitchens" />
 
-            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardViewGrocery"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="10dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="8dp">
 
-    </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/ivGrocery"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/organic" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!--                </com.google.android.material.appbar.CollapsingToolbarLayout>-->
+
+            <!--            </com.google.android.material.appbar.AppBarLayout>-->
+
+            <!--&lt;!&ndash;            app:layout_behavior="@string/appbar_scrolling_view_behavior"&ndash;&gt;-->
+
+
+            <!--        </androidx.coordinatorlayout.widget.CoordinatorLayout>-->
+
+        </RelativeLayout>
+
+    </ScrollView>
+
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"

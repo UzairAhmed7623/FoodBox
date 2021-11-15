@@ -1,13 +1,9 @@
 package com.inkhornsolutions.foodbox;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.app.Application;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,16 +15,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -41,11 +33,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.inkhornsolutions.foodbox.Common.Common;
 import com.inkhornsolutions.foodbox.adapters.DODProductsAdapter;
 import com.inkhornsolutions.foodbox.adapters.RestaurentItemsAdapter;
 import com.inkhornsolutions.foodbox.models.ItemsModelClass;
@@ -55,7 +45,6 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
-import com.mlsdev.animatedrv.AnimatedRecyclerView;
 import com.nex3z.notificationbadge.NotificationBadge;
 
 import java.util.ArrayList;
@@ -77,7 +66,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-    public String name, last_name, restaurant, DOD="", UFG = "";
+    public String name, last_name, restaurant, DOD = "", UFG = "", items = "";
     private int badgeCount;
     private NotificationBadge notificationBadge;
     private boolean status = false;
@@ -123,6 +112,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
         name = getIntent().getStringExtra("name");
         DOD = getIntent().getStringExtra("DOD");
         UFG = getIntent().getStringExtra("UFG");
+        items = getIntent().getStringExtra("items");
 
         getSupportActionBar().setTitle(restaurant);
 
@@ -135,7 +125,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
         if (getIntent().getStringExtra("DOD") != null) {
             dodProductsAdapter = new DODProductsAdapter(RestaurantItems.this, DODProductList);
         }
-        if (getIntent().getStringExtra("name") != null){
+        if (getIntent().getStringExtra("name") != null) {
             deleteCartData();
         }
 
@@ -145,18 +135,17 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
         progressDialog.setContentView(R.layout.progress_bar);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-
-
-        if (getIntent().getStringExtra("DOD") == null){
-            getData();
-            checkRestaurantStatus(restaurant);
-            menuView.setVisibility(View.VISIBLE);
-        }
-        else {
+        if (getIntent().getStringExtra("DOD") != null) {
             getDODProducts();
             menuView.setVisibility(View.GONE);
             SharedPreferences sharedPreferences = getSharedPreferences("resName", MODE_PRIVATE);
             sharedPreferences.edit().clear().apply();
+        } else if (getIntent().getStringExtra("items") != null) {
+            getOrganicData();
+        } else {
+            getData();
+            checkRestaurantStatus(restaurant);
+            menuView.setVisibility(View.VISIBLE);
         }
 
 
@@ -206,8 +195,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
                     menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
                     menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
                     menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
-                }
-                else if (position == 5) {
+                } else if (position == 5) {
                     menuView.editItem(position, "Mess", R.drawable.mess_colored, false, 0);
                     menuView.editItem(0, "All", R.drawable.all, false, 0);
                     menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
@@ -254,12 +242,10 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
                                         Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(getApplicationContext(), R.color.myColor)).show();
                                     }
                                 });
-                    }
-                    else {
+                    } else {
                         getData();
                     }
-                }
-                else if (getIntent().getStringExtra("UFG") != null){
+                } else if (getIntent().getStringExtra("UFG") != null) {
                     if (position != 0) {
                         firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
                                 .whereEqualTo("category", menuItem.getText())
@@ -297,149 +283,220 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
                                         Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(getApplicationContext(), R.color.myColor)).show();
                                     }
                                 });
-                    }
-                    else {
+                    } else {
                         getData();
                     }
-                }
-                else {
+                } else {
                     if (position != 0) {
-                    firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
-                            .whereEqualTo("category", menuItem.getText())
-                            .get()
-                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                @Override
-                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
+                                .whereEqualTo("category", menuItem.getText())
+                                .get()
+                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
-                                    productList.clear();
-                                    adapter.notifyDataSetChanged();
+                                        productList.clear();
+                                        adapter.notifyDataSetChanged();
 
-                                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                        if (documentSnapshot.exists()) {
-                                            String name = documentSnapshot.getId();
+                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                            if (documentSnapshot.exists()) {
+                                                String name = documentSnapshot.getId();
 
-                                            ItemsModelClass itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
+                                                ItemsModelClass itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
 
-                                            itemsModelClass.setUserName(name);
-                                            itemsModelClass.setItemName(name);
-                                            itemsModelClass.setId(getDateTime());
+                                                itemsModelClass.setUserName(name);
+                                                itemsModelClass.setItemName(name);
+                                                itemsModelClass.setId(getDateTime());
 
-                                            productList.add(itemsModelClass);
+                                                productList.add(itemsModelClass);
 
-                                            rvItems.setAdapter(adapter);
+                                                rvItems.setAdapter(adapter);
+                                            }
                                         }
+                                        progressDialog.dismiss();
                                     }
-                                    progressDialog.dismiss();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    progressDialog.dismiss();
-                                    Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(getApplicationContext(), R.color.myColor)).show();
-                                }
-                            });
-                }
-                else {
-                    getData();
-                }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        progressDialog.dismiss();
+                                        Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(getApplicationContext(), R.color.myColor)).show();
+                                    }
+                                });
+                    } else {
+//                        getData();
+                    }
                 }
 
             }
         });
     }
 
+    private void getOrganicData() {
+        firebaseFirestore.collection("Restaurants").document("Organic Shop").collection("Items")
+                .whereEqualTo("scheduled", "0")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        productList.clear();
+//                        adapter.notifyDataSetChanged();
+
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            if (documentSnapshot.exists()) {
+                                String name = documentSnapshot.getId();
+
+                                itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
+
+                                itemsModelClass.setUFG("no");
+                                itemsModelClass.setUserName(name);
+                                itemsModelClass.setItemName(name);
+                                itemsModelClass.setId(getDateTime());
+                                itemsModelClass.setResName("Organic Shop");
+
+                                productList.add(itemsModelClass);
+
+                            }
+                        }
+                        rvItems.setAdapter(adapter);
+                        progressDialog.dismiss();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+                        Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(getApplicationContext(), R.color.myColor)).show();
+                    }
+                });
+    }
+
     private void getDODProducts() {
 //        for (int i=0; i<Common.res.size(); i++){
-            firebaseFirestore.collection("Restaurants").get()
-                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot querySnapshot) {
-                            for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
-                                if (documentSnapshot.exists()) {
-                                    String resName = documentSnapshot.getId();
+        firebaseFirestore.collection("Restaurants").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot querySnapshot) {
+                        for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
+                            if (documentSnapshot.exists()) {
+                                String resName = documentSnapshot.getId();
 
-                                    firebaseFirestore.collection("Restaurants").document(resName).collection("Items")
-                                            .whereEqualTo("isDODAvailable", "yes")
-                                            .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onSuccess(QuerySnapshot querySnapshot) {
+                                firebaseFirestore.collection("Restaurants").document(resName).collection("Items")
+                                        .whereEqualTo("isDODAvailable", "yes")
+                                        .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onSuccess(QuerySnapshot querySnapshot) {
 //                    DODProductList.clear();
 //                        dodProductsAdapter.notifyDataSetChanged();
 
-                                            for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
-                                                if (documentSnapshot.exists()) {
-                                                    String name = documentSnapshot.getId();
+                                        for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
+                                            if (documentSnapshot.exists()) {
+                                                String name = documentSnapshot.getId();
 
-                                                    itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
+                                                itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
 
-                                                    itemsModelClass.setUserName(name);
-                                                    itemsModelClass.setItemName(name);
-                                                    itemsModelClass.setId(getDateTime());
-                                                    itemsModelClass.setResName(resName);
+                                                itemsModelClass.setUserName(name);
+                                                itemsModelClass.setItemName(name);
+                                                itemsModelClass.setId(getDateTime());
+                                                itemsModelClass.setResName(resName);
 
-                                                    DODProductList.add(itemsModelClass);
+                                                DODProductList.add(itemsModelClass);
 
-                                                }
                                             }
-                                            rvItems.setAdapter(dodProductsAdapter);
-                                            progressDialog.dismiss();
                                         }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
+                                        rvItems.setAdapter(dodProductsAdapter);
+                                        progressDialog.dismiss();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
 
-                                        }
-                                    });
-                                }
+                                    }
+                                });
                             }
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
 
-                }
-            });
+            }
+        });
 
 //        }
     }
 
     private void checkRestaurantStatus(String restaurant) {
 
-        firebaseFirestore.collection("Restaurants").document(restaurant).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()){
-                    String status = documentSnapshot.getString("status");
+        if (getIntent().getStringExtra("items") != null) {
+            firebaseFirestore.collection("Restaurants").document("Organic Shop").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.exists()) {
+                        String status = documentSnapshot.getString("status");
 
-                    if (status != null && status.equals("offline")) {
+                        if (status != null && status.equals("offline")) {
 
-                        sweetAlertDialog = new SweetAlertDialog(RestaurantItems.this, SweetAlertDialog.ERROR_TYPE);
-                        sweetAlertDialog.setTitleText("Oops...");
-                        sweetAlertDialog.setContentText("Restaurants was closed!");
-                        sweetAlertDialog.setCancelable(false);
-                        sweetAlertDialog.setConfirmButton("Ok!", new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                Intent intent = new Intent(RestaurantItems.this, MainActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                            }
-                        });
-                        sweetAlertDialog.show();
+                            sweetAlertDialog = new SweetAlertDialog(RestaurantItems.this, SweetAlertDialog.ERROR_TYPE);
+                            sweetAlertDialog.setTitleText("Oops...");
+                            sweetAlertDialog.setContentText("Restaurants was closed!");
+                            sweetAlertDialog.setCancelable(false);
+                            sweetAlertDialog.setConfirmButton("Ok!", new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    Intent intent = new Intent(RestaurantItems.this, MainActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                }
+                            });
+                            sweetAlertDialog.show();
+                        }
                     }
                 }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toasty.error(RestaurantItems.this, e.getMessage(), Toasty.LENGTH_LONG).show();
-            }
-        });
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toasty.error(RestaurantItems.this, e.getMessage(), Toasty.LENGTH_LONG).show();
+                }
+            });
+        } else {
+            firebaseFirestore.collection("Restaurants").document(restaurant).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.exists()) {
+                        String status = documentSnapshot.getString("status");
+
+                        if (status != null && status.equals("offline")) {
+
+                            sweetAlertDialog = new SweetAlertDialog(RestaurantItems.this, SweetAlertDialog.ERROR_TYPE);
+                            sweetAlertDialog.setTitleText("Oops...");
+                            sweetAlertDialog.setContentText("Restaurants was closed!");
+                            sweetAlertDialog.setCancelable(false);
+                            sweetAlertDialog.setConfirmButton("Ok!", new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    Intent intent = new Intent(RestaurantItems.this, MainActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                }
+                            });
+                            sweetAlertDialog.show();
+                        }
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toasty.error(RestaurantItems.this, e.getMessage(), Toasty.LENGTH_LONG).show();
+                }
+            });
+        }
+
+
     }
 
     private void getData() {
-        if (getIntent().getStringExtra("UFG") != null && getIntent().getStringExtra("UFG").equals("yes")){
+        if (getIntent().getStringExtra("UFG") != null && getIntent().getStringExtra("UFG").equals("yes")) {
             firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
                     .whereNotEqualTo("scheduled", "0")
                     .get()
@@ -475,8 +532,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
                             Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(getApplicationContext(), R.color.myColor)).show();
                         }
                     });
-        }
-        else {
+        } else {
             firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
                     .whereEqualTo("scheduled", "0")
                     .get()
@@ -538,7 +594,7 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
                                     .setTextColor(ContextCompat.getColor(RestaurantItems.this, R.color.myColor)).show();
                         } else {
                             SharedPreferences sharedPreferences = getSharedPreferences("resName", MODE_PRIVATE);
-                            String restaurant = sharedPreferences.getString("restName","");
+                            String restaurant = sharedPreferences.getString("restName", "");
 
                             SharedPreferences sharedPreferencesName = getSharedPreferences("userName", MODE_PRIVATE);
                             String name = sharedPreferencesName.getString("name", "User Name");

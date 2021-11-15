@@ -6,5 +6,7 @@
     <string name="title_activity_maps">Map</string>
     <string name="facebook_app_id">240847301121916</string>
     <string name="fb_login_protocol_scheme">fb240847301121916</string>
+    <string name="title_activity_live_kitchens">LiveKitchens</string>
+    <!-- Strings used for fragments for navigation -->
 
 </resources>

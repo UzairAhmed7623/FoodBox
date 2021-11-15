@@ -152,5 +152,11 @@
     <style name="SlidingDialogAnimation">
         <item name="android:windowEnterAnimation">@anim/shake</item>
     </style>
+    <style name="Theme.FoodBox.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.FoodBox.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.FoodBox.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>
