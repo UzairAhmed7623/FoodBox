@@ -148,188 +148,296 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
             menuView.setVisibility(View.VISIBLE);
         }
 
+        if (getIntent().getStringExtra("items") != null) {
 
-        menuView.addItem("All", R.drawable.all);
-        menuView.addItem("Main Course", R.drawable.main_course);
-        menuView.addItem("Drinks", R.drawable.soft_drink);
-        menuView.addItem("Frozen", R.drawable.frozen);
-        menuView.addItem("Sides", R.drawable.sides);
-        menuView.addItem("Mess", R.drawable.mess);
+            menuView.addItem("All", R.drawable.all);
+            menuView.addItem("Vegetables", R.drawable.main_course);
+            menuView.addItem("Fruits", R.drawable.soft_drink);
+            menuView.addItem("Flour", R.drawable.frozen);
+            menuView.addItem("Grains", R.drawable.sides);
+            menuView.addItem("Super Foods", R.drawable.mess);
+            menuView.addItem("Meat", R.drawable.all);
+            menuView.addItem("Seafood", R.drawable.main_course);
+            menuView.addItem("Eggs", R.drawable.soft_drink);
+            menuView.addItem("Dairy", R.drawable.frozen);
+            menuView.addItem("Drinks", R.drawable.sides);
+            menuView.addItem("Ghee", R.drawable.mess);
+            menuView.addItem("Oil", R.drawable.mess);
+
+            menuView.setOnHSMenuClickListener(new HorizontalScrollMenuView.OnHSMenuClickListener() {
+                @Override
+                public void onHSMClick(com.darwindeveloper.horizontalscrollmenulibrary.extras.MenuItem menuItem, int position) {
+                    if (position == 0) {
+                        menuView.editItem(position, "All", R.drawable.all_color, false, 0);
+                        menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
+                        menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
+                        menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
+                        menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
+                        menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
+                    } else if (position == 1) {
+                        menuView.editItem(position, "Main Course", R.drawable.main_course_color, false, 0);
+                        menuView.editItem(0, "All", R.drawable.all, false, 0);
+                        menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
+                        menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
+                        menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
+                        menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
+                    } else if (position == 2) {
+                        menuView.editItem(position, "Drinks", R.drawable.soft_drink_color, false, 0);
+                        menuView.editItem(0, "All", R.drawable.all, false, 0);
+                        menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
+                        menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
+                        menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
+                        menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
+                    } else if (position == 3) {
+                        menuView.editItem(position, "Frozen", R.drawable.frozen_color, false, 0);
+                        menuView.editItem(0, "All", R.drawable.all, false, 0);
+                        menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
+                        menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
+                        menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
+                        menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
+                    } else if (position == 4) {
+                        menuView.editItem(position, "Sides", R.drawable.sides_color, false, 0);
+                        menuView.editItem(0, "All", R.drawable.all, false, 0);
+                        menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
+                        menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
+                        menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
+                        menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
+                    } else if (position == 5) {
+                        menuView.editItem(position, "Mess", R.drawable.mess_colored, false, 0);
+                        menuView.editItem(0, "All", R.drawable.all, false, 0);
+                        menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
+                        menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
+                        menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
+                        menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
+                    }
+                    if (position != 0) {
+                        firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
+                                .whereEqualTo("category", menuItem.getText())
+                                .get()
+                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                                        productList.clear();
+                                        adapter.notifyDataSetChanged();
+
+                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                            if (documentSnapshot.exists()) {
+                                                String name = documentSnapshot.getId();
+
+                                                ItemsModelClass itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
+
+                                                itemsModelClass.setUserName(name);
+                                                itemsModelClass.setItemName(name);
+                                                itemsModelClass.setId(getDateTime());
+
+                                                productList.add(itemsModelClass);
+
+                                                rvItems.setAdapter(adapter);
+                                            }
+                                        }
+                                        progressDialog.dismiss();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        progressDialog.dismiss();
+                                        Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(getApplicationContext(), R.color.myColor)).show();
+                                    }
+                                });
+                    }
+                    else {
+                        getData();
+                    }
+                }
+            });
+        }
+        else {
+            menuView.addItem("All", R.drawable.all);
+            menuView.addItem("Main Course", R.drawable.main_course);
+            menuView.addItem("Drinks", R.drawable.soft_drink);
+            menuView.addItem("Frozen", R.drawable.frozen);
+            menuView.addItem("Sides", R.drawable.sides);
+            menuView.addItem("Mess", R.drawable.mess);
 //        menuView.addItem("Desserts", R.drawable.desserts);
 
-        menuView.setOnHSMenuClickListener(new HorizontalScrollMenuView.OnHSMenuClickListener() {
-            @Override
-            public void onHSMClick(com.darwindeveloper.horizontalscrollmenulibrary.extras.MenuItem menuItem, int position) {
-                if (position == 0) {
-                    menuView.editItem(position, "All", R.drawable.all_color, false, 0);
-                    menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
-                    menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
-                    menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
-                    menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
-                    menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
-                } else if (position == 1) {
-                    menuView.editItem(position, "Main Course", R.drawable.main_course_color, false, 0);
-                    menuView.editItem(0, "All", R.drawable.all, false, 0);
-                    menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
-                    menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
-                    menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
-                    menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
-                } else if (position == 2) {
-                    menuView.editItem(position, "Drinks", R.drawable.soft_drink_color, false, 0);
-                    menuView.editItem(0, "All", R.drawable.all, false, 0);
-                    menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
-                    menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
-                    menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
-                    menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
-                } else if (position == 3) {
-                    menuView.editItem(position, "Frozen", R.drawable.frozen_color, false, 0);
-                    menuView.editItem(0, "All", R.drawable.all, false, 0);
-                    menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
-                    menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
-                    menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
-                    menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
-                } else if (position == 4) {
-                    menuView.editItem(position, "Sides", R.drawable.sides_color, false, 0);
-                    menuView.editItem(0, "All", R.drawable.all, false, 0);
-                    menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
-                    menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
-                    menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
-                    menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
-                } else if (position == 5) {
-                    menuView.editItem(position, "Mess", R.drawable.mess_colored, false, 0);
-                    menuView.editItem(0, "All", R.drawable.all, false, 0);
-                    menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
-                    menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
-                    menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
-                    menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
+            menuView.setOnHSMenuClickListener(new HorizontalScrollMenuView.OnHSMenuClickListener() {
+                @Override
+                public void onHSMClick(com.darwindeveloper.horizontalscrollmenulibrary.extras.MenuItem menuItem, int position) {
+                    if (position == 0) {
+                        menuView.editItem(position, "All", R.drawable.all_color, false, 0);
+                        menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
+                        menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
+                        menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
+                        menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
+                        menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
+                    } else if (position == 1) {
+                        menuView.editItem(position, "Main Course", R.drawable.main_course_color, false, 0);
+                        menuView.editItem(0, "All", R.drawable.all, false, 0);
+                        menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
+                        menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
+                        menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
+                        menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
+                    } else if (position == 2) {
+                        menuView.editItem(position, "Drinks", R.drawable.soft_drink_color, false, 0);
+                        menuView.editItem(0, "All", R.drawable.all, false, 0);
+                        menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
+                        menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
+                        menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
+                        menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
+                    } else if (position == 3) {
+                        menuView.editItem(position, "Frozen", R.drawable.frozen_color, false, 0);
+                        menuView.editItem(0, "All", R.drawable.all, false, 0);
+                        menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
+                        menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
+                        menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
+                        menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
+                    } else if (position == 4) {
+                        menuView.editItem(position, "Sides", R.drawable.sides_color, false, 0);
+                        menuView.editItem(0, "All", R.drawable.all, false, 0);
+                        menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
+                        menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
+                        menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
+                        menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
+                    } else if (position == 5) {
+                        menuView.editItem(position, "Mess", R.drawable.mess_colored, false, 0);
+                        menuView.editItem(0, "All", R.drawable.all, false, 0);
+                        menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
+                        menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
+                        menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
+                        menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
+                    }
+
+                    if (getIntent().getStringExtra("DOD") != null) {
+                        if (position != 0) {
+                            firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
+                                    .whereEqualTo("category", menuItem.getText())
+                                    .whereEqualTo("isDODAvailable", "yes")
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                                            productList.clear();
+                                            adapter.notifyDataSetChanged();
+
+                                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                                if (documentSnapshot.exists()) {
+                                                    String name = documentSnapshot.getId();
+
+                                                    ItemsModelClass itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
+
+                                                    itemsModelClass.setUserName(name);
+                                                    itemsModelClass.setItemName(name);
+                                                    itemsModelClass.setId(getDateTime());
+
+                                                    productList.add(itemsModelClass);
+
+                                                    rvItems.setAdapter(adapter);
+                                                }
+                                            }
+                                            progressDialog.dismiss();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            progressDialog.dismiss();
+                                            Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(getApplicationContext(), R.color.myColor)).show();
+                                        }
+                                    });
+                        } else {
+                            getData();
+                        }
+                    } else if (getIntent().getStringExtra("UFG") != null) {
+                        if (position != 0) {
+                            firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
+                                    .whereEqualTo("category", menuItem.getText())
+                                    .whereEqualTo("scheduled", "1")
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                                            productList.clear();
+                                            adapter.notifyDataSetChanged();
+
+                                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                                if (documentSnapshot.exists()) {
+                                                    String name = documentSnapshot.getId();
+
+                                                    ItemsModelClass itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
+
+                                                    itemsModelClass.setUserName(name);
+                                                    itemsModelClass.setItemName(name);
+                                                    itemsModelClass.setId(getDateTime());
+
+                                                    productList.add(itemsModelClass);
+
+                                                    rvItems.setAdapter(adapter);
+                                                }
+                                            }
+                                            progressDialog.dismiss();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            progressDialog.dismiss();
+                                            Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(getApplicationContext(), R.color.myColor)).show();
+                                        }
+                                    });
+                        } else {
+                            getData();
+                        }
+                    } else {
+                        if (position != 0) {
+                            firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
+                                    .whereEqualTo("category", menuItem.getText())
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                                            productList.clear();
+                                            adapter.notifyDataSetChanged();
+
+                                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                                if (documentSnapshot.exists()) {
+                                                    String name = documentSnapshot.getId();
+
+                                                    ItemsModelClass itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
+
+                                                    itemsModelClass.setUserName(name);
+                                                    itemsModelClass.setItemName(name);
+                                                    itemsModelClass.setId(getDateTime());
+
+                                                    productList.add(itemsModelClass);
+
+                                                    rvItems.setAdapter(adapter);
+                                                }
+                                            }
+                                            progressDialog.dismiss();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            progressDialog.dismiss();
+                                            Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(getApplicationContext(), R.color.myColor)).show();
+                                        }
+                                    });
+                        } else {
+                            getData();
+                        }
+                    }
+
                 }
+            });
+        }
 
-                if (getIntent().getStringExtra("DOD") != null) {
-                    if (position != 0) {
-                        firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
-                                .whereEqualTo("category", menuItem.getText())
-                                .whereEqualTo("isDODAvailable", "yes")
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
-                                        productList.clear();
-                                        adapter.notifyDataSetChanged();
-
-                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                            if (documentSnapshot.exists()) {
-                                                String name = documentSnapshot.getId();
-
-                                                ItemsModelClass itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
-
-                                                itemsModelClass.setUserName(name);
-                                                itemsModelClass.setItemName(name);
-                                                itemsModelClass.setId(getDateTime());
-
-                                                productList.add(itemsModelClass);
-
-                                                rvItems.setAdapter(adapter);
-                                            }
-                                        }
-                                        progressDialog.dismiss();
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        progressDialog.dismiss();
-                                        Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(getApplicationContext(), R.color.myColor)).show();
-                                    }
-                                });
-                    } else {
-                        getData();
-                    }
-                } else if (getIntent().getStringExtra("UFG") != null) {
-                    if (position != 0) {
-                        firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
-                                .whereEqualTo("category", menuItem.getText())
-                                .whereEqualTo("scheduled", "1")
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-
-                                        productList.clear();
-                                        adapter.notifyDataSetChanged();
-
-                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                            if (documentSnapshot.exists()) {
-                                                String name = documentSnapshot.getId();
-
-                                                ItemsModelClass itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
-
-                                                itemsModelClass.setUserName(name);
-                                                itemsModelClass.setItemName(name);
-                                                itemsModelClass.setId(getDateTime());
-
-                                                productList.add(itemsModelClass);
-
-                                                rvItems.setAdapter(adapter);
-                                            }
-                                        }
-                                        progressDialog.dismiss();
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        progressDialog.dismiss();
-                                        Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(getApplicationContext(), R.color.myColor)).show();
-                                    }
-                                });
-                    } else {
-                        getData();
-                    }
-                } else {
-                    if (position != 0) {
-                        firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
-                                .whereEqualTo("category", menuItem.getText())
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-
-                                        productList.clear();
-                                        adapter.notifyDataSetChanged();
-
-                                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                            if (documentSnapshot.exists()) {
-                                                String name = documentSnapshot.getId();
-
-                                                ItemsModelClass itemsModelClass = documentSnapshot.toObject(ItemsModelClass.class);
-
-                                                itemsModelClass.setUserName(name);
-                                                itemsModelClass.setItemName(name);
-                                                itemsModelClass.setId(getDateTime());
-
-                                                productList.add(itemsModelClass);
-
-                                                rvItems.setAdapter(adapter);
-                                            }
-                                        }
-                                        progressDialog.dismiss();
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        progressDialog.dismiss();
-                                        Snackbar.make(findViewById(android.R.id.content), e.getMessage(), Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(getApplicationContext(), R.color.myColor)).show();
-                                    }
-                                });
-                    } else {
-//                        getData();
-                    }
-                }
-
-            }
-        });
     }
 
     private void getOrganicData() {
