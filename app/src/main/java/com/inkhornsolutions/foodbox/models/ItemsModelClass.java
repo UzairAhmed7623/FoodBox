@@ -3,12 +3,12 @@ package com.inkhornsolutions.foodbox.models;
 import java.io.Serializable;
 
 public class ItemsModelClass implements Serializable {
-    private String UserName, id, itemName, price, imageUri, itemDescription, timestamp, availability, from, to, available, discountPercentage, resName, UFG;
+    private String UserName, id, itemName, price, imageUri, itemDescription, timestamp, availability, from, to, available, discountPercentage, resName, UFG, category;
 
     public ItemsModelClass() {
     }
 
-    public ItemsModelClass(String userName, String id, String itemName, String price, String imageUri, String itemDescription, String timestamp, String availability, String from, String to, String available, String discountPercentage, String resName) {
+    public ItemsModelClass(String userName, String id, String itemName, String price, String imageUri, String itemDescription, String timestamp, String availability, String from, String to, String available, String discountPercentage, String resName, String UFG, String category) {
         UserName = userName;
         this.id = id;
         this.itemName = itemName;
@@ -22,6 +22,16 @@ public class ItemsModelClass implements Serializable {
         this.available = available;
         this.discountPercentage = discountPercentage;
         this.resName = resName;
+        this.UFG = UFG;
+        this.category = category;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public ItemsModelClass(String UFG) {

@@ -140,7 +140,8 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
             menuView.setVisibility(View.GONE);
             SharedPreferences sharedPreferences = getSharedPreferences("resName", MODE_PRIVATE);
             sharedPreferences.edit().clear().apply();
-        } else if (getIntent().getStringExtra("items") != null) {
+        }
+        else if (getIntent().getStringExtra("items") != null) {
             getOrganicData();
         } else {
             getData();
@@ -150,67 +151,218 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
 
         if (getIntent().getStringExtra("items") != null) {
 
-            menuView.addItem("All", R.drawable.all);
-            menuView.addItem("Vegetables", R.drawable.main_course);
-            menuView.addItem("Fruits", R.drawable.soft_drink);
-            menuView.addItem("Flour", R.drawable.frozen);
-            menuView.addItem("Grains", R.drawable.sides);
-            menuView.addItem("Super Foods", R.drawable.mess);
-            menuView.addItem("Meat", R.drawable.all);
-            menuView.addItem("Seafood", R.drawable.main_course);
-            menuView.addItem("Eggs", R.drawable.soft_drink);
-            menuView.addItem("Dairy", R.drawable.frozen);
-            menuView.addItem("Drinks", R.drawable.sides);
-            menuView.addItem("Ghee", R.drawable.mess);
-            menuView.addItem("Oil", R.drawable.mess);
+            menuView.addItem("All_Foods", R.drawable.all);
+            menuView.addItem("Vegetables", R.drawable.vegetables);
+            menuView.addItem("Fruits", R.drawable.fruits);
+            menuView.addItem("Flour", R.drawable.flour);
+            menuView.addItem("Grains", R.drawable.grains);
+            menuView.addItem("SuperFoods", R.drawable.super_foods);
+            menuView.addItem("Meat", R.drawable.meat);
+            menuView.addItem("Seafood", R.drawable.sea_food);
+            menuView.addItem("Eggs", R.drawable.eggs);
+            menuView.addItem("Dairy", R.drawable.dairy);
+            menuView.addItem("Drinks", R.drawable.drinks);
+            menuView.addItem("Ghee", R.drawable.ghee);
+            menuView.addItem("Oil", R.drawable.oil);
 
             menuView.setOnHSMenuClickListener(new HorizontalScrollMenuView.OnHSMenuClickListener() {
                 @Override
                 public void onHSMClick(com.darwindeveloper.horizontalscrollmenulibrary.extras.MenuItem menuItem, int position) {
                     if (position == 0) {
-                        menuView.editItem(position, "All", R.drawable.all_color, false, 0);
-                        menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
-                        menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
-                        menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
-                        menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
-                        menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
+                        menuView.editItem(position, "All_Foods", R.drawable.all_color, false, 0);
+                        menuView.editItem(1, "Vegetables", R.drawable.vegetables, false, 0);
+                        menuView.editItem(2, "Fruits", R.drawable.fruits, false, 0);
+                        menuView.editItem(3, "Flour", R.drawable.flour, false, 0);
+                        menuView.editItem(4, "Grains", R.drawable.grains, false, 0);
+                        menuView.editItem(5, "SuperFoods", R.drawable.super_foods, false, 0);
+                        menuView.editItem(6, "Meat", R.drawable.meat, false, 0);
+                        menuView.editItem(7, "Seafood", R.drawable.sea_food, false, 0);
+                        menuView.editItem(8, "Eggs", R.drawable.eggs, false, 0);
+                        menuView.editItem(9, "Dairy", R.drawable.dairy, false, 0);
+                        menuView.editItem(10, "Drinks", R.drawable.drinks, false, 0);
+                        menuView.editItem(11, "Ghee", R.drawable.ghee, false, 0);
+                        menuView.editItem(12, "Oil", R.drawable.oil, false, 0);
                     } else if (position == 1) {
-                        menuView.editItem(position, "Main Course", R.drawable.main_course_color, false, 0);
-                        menuView.editItem(0, "All", R.drawable.all, false, 0);
-                        menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
-                        menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
-                        menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
-                        menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
+                        menuView.editItem(0, "All_Foods", R.drawable.all, false, 0);
+                        menuView.editItem(position, "Vegetables", R.drawable.vegetables_coloured, false, 0);
+                        menuView.editItem(2, "Fruits", R.drawable.fruits, false, 0);
+                        menuView.editItem(3, "Flour", R.drawable.flour, false, 0);
+                        menuView.editItem(4, "Grains", R.drawable.grains, false, 0);
+                        menuView.editItem(5, "SuperFoods", R.drawable.super_foods, false, 0);
+                        menuView.editItem(6, "Meat", R.drawable.meat, false, 0);
+                        menuView.editItem(7, "Seafood", R.drawable.sea_food, false, 0);
+                        menuView.editItem(8, "Eggs", R.drawable.eggs, false, 0);
+                        menuView.editItem(9, "Dairy", R.drawable.dairy, false, 0);
+                        menuView.editItem(10, "Drinks", R.drawable.drinks, false, 0);
+                        menuView.editItem(11, "Ghee", R.drawable.ghee, false, 0);
+                        menuView.editItem(12, "Oil", R.drawable.oil, false, 0);
                     } else if (position == 2) {
-                        menuView.editItem(position, "Drinks", R.drawable.soft_drink_color, false, 0);
-                        menuView.editItem(0, "All", R.drawable.all, false, 0);
-                        menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
-                        menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
-                        menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
-                        menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
+                        menuView.editItem(0, "All_Foods", R.drawable.all, false, 0);
+                        menuView.editItem(1, "Vegetables", R.drawable.vegetables, false, 0);
+                        menuView.editItem(position, "Fruits", R.drawable.fruits_colored, false, 0);
+                        menuView.editItem(3, "Flour", R.drawable.flour, false, 0);
+                        menuView.editItem(4, "Grains", R.drawable.grains, false, 0);
+                        menuView.editItem(5, "SuperFoods", R.drawable.super_foods, false, 0);
+                        menuView.editItem(6, "Meat", R.drawable.meat, false, 0);
+                        menuView.editItem(7, "Seafood", R.drawable.sea_food, false, 0);
+                        menuView.editItem(8, "Eggs", R.drawable.eggs, false, 0);
+                        menuView.editItem(9, "Dairy", R.drawable.dairy, false, 0);
+                        menuView.editItem(10, "Drinks", R.drawable.drinks, false, 0);
+                        menuView.editItem(11, "Ghee", R.drawable.ghee, false, 0);
+                        menuView.editItem(12, "Oil", R.drawable.oil, false, 0);
                     } else if (position == 3) {
-                        menuView.editItem(position, "Frozen", R.drawable.frozen_color, false, 0);
-                        menuView.editItem(0, "All", R.drawable.all, false, 0);
-                        menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
-                        menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
-                        menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
-                        menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
+                        menuView.editItem(0, "All_Foods", R.drawable.all, false, 0);
+                        menuView.editItem(1, "Vegetables", R.drawable.vegetables, false, 0);
+                        menuView.editItem(2, "Fruits", R.drawable.fruits, false, 0);
+                        menuView.editItem(position, "Flour", R.drawable.flour_coloured, false, 0);
+                        menuView.editItem(4, "Grains", R.drawable.grains, false, 0);
+                        menuView.editItem(5, "SuperFoods", R.drawable.super_foods, false, 0);
+                        menuView.editItem(6, "Meat", R.drawable.meat, false, 0);
+                        menuView.editItem(7, "Seafood", R.drawable.sea_food, false, 0);
+                        menuView.editItem(8, "Eggs", R.drawable.eggs, false, 0);
+                        menuView.editItem(9, "Dairy", R.drawable.dairy, false, 0);
+                        menuView.editItem(10, "Drinks", R.drawable.drinks, false, 0);
+                        menuView.editItem(11, "Ghee", R.drawable.ghee, false, 0);
+                        menuView.editItem(12, "Oil", R.drawable.oil, false, 0);
                     } else if (position == 4) {
-                        menuView.editItem(position, "Sides", R.drawable.sides_color, false, 0);
-                        menuView.editItem(0, "All", R.drawable.all, false, 0);
-                        menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
-                        menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
-                        menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
-                        menuView.editItem(5, "Mess", R.drawable.mess, false, 0);
+                        menuView.editItem(0, "All_Foods", R.drawable.all, false, 0);
+                        menuView.editItem(1, "Vegetables", R.drawable.vegetables, false, 0);
+                        menuView.editItem(2, "Fruits", R.drawable.fruits, false, 0);
+                        menuView.editItem(3, "Flour", R.drawable.flour, false, 0);
+                        menuView.editItem(position, "Grains", R.drawable.grains_colored, false, 0);
+                        menuView.editItem(5, "SuperFoods", R.drawable.super_foods, false, 0);
+                        menuView.editItem(6, "Meat", R.drawable.meat, false, 0);
+                        menuView.editItem(7, "Seafood", R.drawable.sea_food, false, 0);
+                        menuView.editItem(8, "Eggs", R.drawable.eggs, false, 0);
+                        menuView.editItem(9, "Dairy", R.drawable.dairy, false, 0);
+                        menuView.editItem(10, "Drinks", R.drawable.drinks, false, 0);
+                        menuView.editItem(11, "Ghee", R.drawable.ghee, false, 0);
+                        menuView.editItem(12, "Oil", R.drawable.oil, false, 0);
+
                     } else if (position == 5) {
-                        menuView.editItem(position, "Mess", R.drawable.mess_colored, false, 0);
-                        menuView.editItem(0, "All", R.drawable.all, false, 0);
-                        menuView.editItem(1, "Main Course", R.drawable.main_course, false, 0);
-                        menuView.editItem(2, "Drinks", R.drawable.soft_drink, false, 0);
-                        menuView.editItem(3, "Frozen", R.drawable.frozen, false, 0);
-                        menuView.editItem(4, "Sides", R.drawable.sides, false, 0);
+                        menuView.editItem(0, "All_Foods", R.drawable.all, false, 0);
+                        menuView.editItem(1, "Vegetables", R.drawable.vegetables, false, 0);
+                        menuView.editItem(2, "Fruits", R.drawable.fruits, false, 0);
+                        menuView.editItem(3, "Flour", R.drawable.flour, false, 0);
+                        menuView.editItem(4, "Grains", R.drawable.grains, false, 0);
+                        menuView.editItem(position, "SuperFoods", R.drawable.super_foods_colored, false, 0);
+                        menuView.editItem(6, "Meat", R.drawable.meat, false, 0);
+                        menuView.editItem(7, "Seafood", R.drawable.sea_food, false, 0);
+                        menuView.editItem(8, "Eggs", R.drawable.eggs, false, 0);
+                        menuView.editItem(9, "Dairy", R.drawable.dairy, false, 0);
+                        menuView.editItem(10, "Drinks", R.drawable.drinks, false, 0);
+                        menuView.editItem(11, "Ghee", R.drawable.ghee, false, 0);
+                        menuView.editItem(12, "Oil", R.drawable.oil, false, 0);
+
                     }
+                    else if (position == 6) {
+                        menuView.editItem(0, "All_Foods", R.drawable.all, false, 0);
+                        menuView.editItem(1, "Vegetables", R.drawable.vegetables, false, 0);
+                        menuView.editItem(2, "Fruits", R.drawable.fruits, false, 0);
+                        menuView.editItem(3, "Flour", R.drawable.flour, false, 0);
+                        menuView.editItem(4, "Grains", R.drawable.grains, false, 0);
+                        menuView.editItem(5, "SuperFoods", R.drawable.super_foods, false, 0);
+                        menuView.editItem(position, "Meat", R.drawable.meat_colored, false, 0);
+                        menuView.editItem(7, "Seafood", R.drawable.sea_food, false, 0);
+                        menuView.editItem(8, "Eggs", R.drawable.eggs, false, 0);
+                        menuView.editItem(9, "Dairy", R.drawable.dairy, false, 0);
+                        menuView.editItem(10, "Drinks", R.drawable.drinks, false, 0);
+                        menuView.editItem(11, "Ghee", R.drawable.ghee, false, 0);
+                        menuView.editItem(12, "Oil", R.drawable.oil, false, 0);
+                    }
+                    else if (position == 7) {
+                        menuView.editItem(0, "All_Foods", R.drawable.all, false, 0);
+                        menuView.editItem(1, "Vegetables", R.drawable.vegetables, false, 0);
+                        menuView.editItem(2, "Fruits", R.drawable.fruits, false, 0);
+                        menuView.editItem(3, "Flour", R.drawable.flour, false, 0);
+                        menuView.editItem(4, "Grains", R.drawable.grains, false, 0);
+                        menuView.editItem(5, "SuperFoods", R.drawable.super_foods, false, 0);
+                        menuView.editItem(6, "Meat", R.drawable.meat, false, 0);
+                        menuView.editItem(position, "Seafood", R.drawable.sea_food_colored, false, 0);
+                        menuView.editItem(8, "Eggs", R.drawable.eggs, false, 0);
+                        menuView.editItem(9, "Dairy", R.drawable.dairy, false, 0);
+                        menuView.editItem(10, "Drinks", R.drawable.drinks, false, 0);
+                        menuView.editItem(11, "Ghee", R.drawable.ghee, false, 0);
+                        menuView.editItem(12, "Oil", R.drawable.oil, false, 0);
+                    }
+                    else if (position == 8) {
+                        menuView.editItem(0, "All_Foods", R.drawable.all, false, 0);
+                        menuView.editItem(1, "Vegetables", R.drawable.vegetables, false, 0);
+                        menuView.editItem(2, "Fruits", R.drawable.fruits, false, 0);
+                        menuView.editItem(3, "Flour", R.drawable.flour, false, 0);
+                        menuView.editItem(4, "Grains", R.drawable.grains, false, 0);
+                        menuView.editItem(5, "SuperFoods", R.drawable.super_foods, false, 0);
+                        menuView.editItem(6, "Meat", R.drawable.meat, false, 0);
+                        menuView.editItem(7, "Seafood", R.drawable.sea_food, false, 0);
+                        menuView.editItem(position, "Eggs", R.drawable.eggs_colored, false, 0);
+                        menuView.editItem(9, "Dairy", R.drawable.dairy, false, 0);
+                        menuView.editItem(10, "Drinks", R.drawable.drinks, false, 0);
+                        menuView.editItem(11, "Ghee", R.drawable.ghee, false, 0);
+                        menuView.editItem(12, "Oil", R.drawable.oil, false, 0);
+                    }
+                    else if (position == 9) {
+                        menuView.editItem(0, "All_Foods", R.drawable.all, false, 0);
+                        menuView.editItem(1, "Vegetables", R.drawable.vegetables, false, 0);
+                        menuView.editItem(2, "Fruits", R.drawable.fruits, false, 0);
+                        menuView.editItem(3, "Flour", R.drawable.flour, false, 0);
+                        menuView.editItem(4, "Grains", R.drawable.grains, false, 0);
+                        menuView.editItem(5, "SuperFoods", R.drawable.super_foods, false, 0);
+                        menuView.editItem(6, "Meat", R.drawable.meat, false, 0);
+                        menuView.editItem(7, "Seafood", R.drawable.sea_food, false, 0);
+                        menuView.editItem(8, "Eggs", R.drawable.eggs, false, 0);
+                        menuView.editItem(position, "Dairy", R.drawable.dairy_colored, false, 0);
+                        menuView.editItem(10, "Drinks", R.drawable.drinks, false, 0);
+                        menuView.editItem(11, "Ghee", R.drawable.ghee, false, 0);
+                        menuView.editItem(12, "Oil", R.drawable.oil, false, 0);
+                    }
+                    else if (position == 10) {
+                        menuView.editItem(0, "All_Foods", R.drawable.all, false, 0);
+                        menuView.editItem(1, "Vegetables", R.drawable.vegetables, false, 0);
+                        menuView.editItem(2, "Fruits", R.drawable.fruits, false, 0);
+                        menuView.editItem(3, "Flour", R.drawable.flour, false, 0);
+                        menuView.editItem(4, "Grains", R.drawable.grains, false, 0);
+                        menuView.editItem(5, "SuperFoods", R.drawable.super_foods, false, 0);
+                        menuView.editItem(6, "Meat", R.drawable.meat, false, 0);
+                        menuView.editItem(7, "Seafood", R.drawable.sea_food, false, 0);
+                        menuView.editItem(8, "Eggs", R.drawable.eggs, false, 0);
+                        menuView.editItem(9, "Dairy", R.drawable.dairy, false, 0);
+                        menuView.editItem(position, "Drinks", R.drawable.drinks_colored, false, 0);
+                        menuView.editItem(11, "Ghee", R.drawable.ghee, false, 0);
+                        menuView.editItem(12, "Oil", R.drawable.oil, false, 0);
+                    }
+                    else if (position == 11) {
+                        menuView.editItem(0, "All_Foods", R.drawable.all, false, 0);
+                        menuView.editItem(1, "Vegetables", R.drawable.vegetables, false, 0);
+                        menuView.editItem(2, "Fruits", R.drawable.fruits, false, 0);
+                        menuView.editItem(3, "Flour", R.drawable.flour, false, 0);
+                        menuView.editItem(4, "Grains", R.drawable.grains, false, 0);
+                        menuView.editItem(5, "SuperFoods", R.drawable.super_foods, false, 0);
+                        menuView.editItem(6, "Meat", R.drawable.meat, false, 0);
+                        menuView.editItem(7, "Seafood", R.drawable.sea_food, false, 0);
+                        menuView.editItem(8, "Eggs", R.drawable.eggs, false, 0);
+                        menuView.editItem(9, "Dairy", R.drawable.dairy, false, 0);
+                        menuView.editItem(10, "Drinks", R.drawable.drinks, false, 0);
+                        menuView.editItem(position, "Ghee", R.drawable.ghee_colored, false, 0);
+                        menuView.editItem(12, "Oil", R.drawable.oil, false, 0);
+                    }
+                    else if (position == 12) {
+                        menuView.editItem(0, "All_Foods", R.drawable.all, false, 0);
+                        menuView.editItem(1, "Vegetables", R.drawable.vegetables, false, 0);
+                        menuView.editItem(2, "Fruits", R.drawable.fruits, false, 0);
+                        menuView.editItem(3, "Flour", R.drawable.flour, false, 0);
+                        menuView.editItem(4, "Grains", R.drawable.grains, false, 0);
+                        menuView.editItem(5, "SuperFoods", R.drawable.super_foods, false, 0);
+                        menuView.editItem(6, "Meat", R.drawable.meat, false, 0);
+                        menuView.editItem(7, "Seafood", R.drawable.sea_food, false, 0);
+                        menuView.editItem(8, "Eggs", R.drawable.eggs, false, 0);
+                        menuView.editItem(9, "Dairy", R.drawable.dairy, false, 0);
+                        menuView.editItem(10, "Drinks", R.drawable.drinks, false, 0);
+                        menuView.editItem(11, "Ghee", R.drawable.ghee, false, 0);
+                        menuView.editItem(position, "Oil", R.drawable.oil_colored, false, 0);
+                    }
+
                     if (position != 0) {
+
                         firebaseFirestore.collection("Restaurants").document(restaurant).collection("Items")
                                 .whereEqualTo("category", menuItem.getText())
                                 .get()
@@ -436,8 +588,6 @@ public class RestaurantItems extends AppCompatActivity implements RestaurentItem
                 }
             });
         }
-
-
     }
 
     private void getOrganicData() {
